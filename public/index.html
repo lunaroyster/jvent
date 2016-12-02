@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <title>jvent</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="https://use.fontawesome.com/66ac4a4e29.js"></script>
+    
+    <link rel="stylesheet" href="css/style.css" type="text/css" />
+  </head>
+  <body ng-app="jvent">
+    <nav id="horizontal">
+        <ul>
+            <li><i class="fa fa-2x fa-home" aria-hidden="true"></i></li>
+            <li><i class="fa fa-2x fa-sliders" aria-hidden="true"></i></li>
+            <li><i class="fa fa-2x fa-map-o" aria-hidden="true"></i></li>
+            <li><i class="fa fa-2x fa-bookmark-o" aria-hidden="true"></i></li>
+            <li><i class="fa fa-2x fa-plus" aria-hidden="true"></i></li>
+        </ul>
+    </nav>
+    <nav id="vertical">
+        
+    </nav>
+    <div id="mainbox">
+      <div id="eventcontainer" ng-controller="eventListCtrl">
+        <div class="event" ng-repeat="event in eventArray" style="background-image: url({{ event.image }})">
+          <div class="content">
+            <h2>{{ event.name }}</h2>
+            <p> {{ event.description }} </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer>
+        
+    </footer>
+  </body>
+</html>
