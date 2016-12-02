@@ -3,7 +3,7 @@ var router = express.Router();
 
 var eventController = require('../controllers/event');
 
-router.post('/', eventController.postEvent);
+router.post('/', eventController.createEvent);
 router.get('/', eventController.getEvents);
 
 router.get('/:eventID', eventController.getEventByID);

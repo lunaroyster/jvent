@@ -1,12 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-router.post('/', );
-router.get('/', );
+var postController = require('../controllers/post');
 
-router.get('/:postID', );
-router.patch('/:postID', );
-router.delete('/:postID', );
+router.post('/', postController.createPost);
+router.get('/', postController.getPosts);
+
+router.get('/:postID', postController.getPostByID);
+router.patch('/:postID', postController.updatePostByID);
+router.delete('/:postID', postController.deletePostByID);
 
 router.use('/:postID/comment', require('./comment'));
 
