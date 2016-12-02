@@ -1,0 +1,26 @@
+//
+module.exports.createEvent = function(req, res) {
+    res.json(req);
+    res.send();
+};
+
+module.exports.getEvents = function(req, res) {
+    res.json(req);
+    res.send();
+};
+
+//
+module.exports.getEventByID = function(req, res) {
+    res.json(req);
+    res.send();
+};
+
+module.exports.updateEventByID = function(req, res) {
+    res.json(req);
+    res.send();
+};
+
+module.exports.deleteEventByID = function(req, res) {
+    res.json(req);
+    res.send();
+};
