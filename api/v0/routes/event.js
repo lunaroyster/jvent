@@ -1,12 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-router.post('/', );
-router.get('/', );
+var eventController = require('../controllers/event');
 
-router.get('/:eventID', );
-router.patch('/:eventID', );
-router.delete('/:eventID', );
+router.post('/', eventController.postEvent);
+router.get('/', eventController.getEvents);
+
+router.get('/:eventID', eventController.getEventByID);
+router.patch('/:eventID', eventController.updateEventByID);
+router.delete('/:eventID', eventController.deleteEventByID);
 
 router.use('/:eventID/post', require('./post'));
 
