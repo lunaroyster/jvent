@@ -7,6 +7,7 @@
     
     <!--Stylesheet Libraries and fonts-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <!--Javascript Libraries-->
     <script src="https://use.fontawesome.com/66ac4a4e29.js"></script>
@@ -23,11 +24,16 @@
   <body ng-app="jvent">
     <nav id="horizontal">
       <ul>
-        <li><i class="fa fa-2x fa-home" aria-hidden="true"></i></li>
-        <li><i class="fa fa-2x fa-sliders" aria-hidden="true"></i></li>
-        <li><i class="fa fa-2x fa-map-o" aria-hidden="true"></i></li>
-        <li><i class="fa fa-2x fa-bookmark-o" aria-hidden="true"></i></li>
-        <li><i class="fa fa-2x fa-plus" aria-hidden="true"></i></li>
+        <!--<li><i class="fa fa-2x fa-home" aria-hidden="true"></i></li>-->
+        <!--<li><i class="fa fa-2x fa-sliders" aria-hidden="true"></i></li>-->
+        <!--<li><i class="fa fa-2x fa-map-o" aria-hidden="true"></i></li>-->
+        <!--<li><i class="fa fa-2x fa-bookmark-o" aria-hidden="true"></i></li>-->
+        <!--<li><i class="fa fa-2x fa-plus" aria-hidden="true"></i></li>-->
+        <li><i class="material-icons">home</i></li>
+        <li><i class="material-icons">settings</i></li>
+        <li><i class="material-icons">map</i></i></li>
+        <li><i class="material-icons">bookmark_border</i></li>
+        <li><i class="material-icons">create</i></li>
       </ul>
     </nav>
     <nav id="vertical">
@@ -37,7 +43,7 @@
       <div id="eventcontainer" ng-controller="eventListCtrl">
         <div class="event z-depth-5" ng-repeat="event in eventArray" style="background-image: url({{ event.image }})">
           <div class="content">
-            <h4 ng-bind="event.name"></h4>
+            <h5 ng-bind="event.name"></h5>
             <p ng-bind="event.description"></p>
           </div>
         </div>
