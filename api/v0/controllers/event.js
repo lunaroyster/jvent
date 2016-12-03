@@ -24,3 +24,7 @@ module.exports.deleteEventByID = function(req, res) {
     res.json(req);
     res.send();
 };
+
+module.exports.appendEventID = function(req, res) {
+    req.eventID = req.params.eventID;
+};

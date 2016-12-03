@@ -10,6 +10,6 @@ router.get('/:postID', postController.getPostByID);
 router.patch('/:postID', postController.updatePostByID);
 router.delete('/:postID', postController.deletePostByID);
 
-router.use('/:postID/comment', require('./comment'));
+router.use('/:postID/comment', postController.appendPostID, require('./comment'));
 
 module.exports = router;

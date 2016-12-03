@@ -10,6 +10,6 @@ router.get('/:eventID', eventController.getEventByID);
 router.patch('/:eventID', eventController.updateEventByID);
 router.delete('/:eventID', eventController.deleteEventByID);
 
-router.use('/:eventID/post', require('./post'));
+router.use('/:eventID/post', eventController.appendEventID, require('./post'));
 
 module.exports = router;
