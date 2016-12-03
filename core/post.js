@@ -54,12 +54,12 @@ module.exports.getPosts = function(eventID, callback) {
           var postQuery = Post.find({'_id':{$in:event.posts}});
           postQuery.exec(function(error, posts) {
               if(!error) {
-                  callback(null, posts)
+                  callback(null, posts);
               }
-          })
+          });
         }
-    })
-}
+    });
+};
 
 module.exports.getPostByID = function(eventID, postID, callback) {
     var eventQuery = Event.findOne({_id: eventID});

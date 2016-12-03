@@ -14,13 +14,15 @@ module.exports.createPost = function(req, res) {
 
 module.exports.getPosts = function(req, res) {
     postCore.getPosts(req.eventID, function(err, posts) {
-       res.json(posts); 
+        if(!err){
+           res.json(posts); 
+        }
     });
 };
 
 // /post/:postID
 module.exports.getPostByID = function(req, res) {
-    postCore.getPosts(req.eventID, req.params.postID, function(err, post) {
+    postCore.getPostByID(req.eventID, req.params.postID, function(err, post) {
         res.json(post);
     });
 };
