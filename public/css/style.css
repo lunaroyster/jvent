@@ -1,7 +1,7 @@
 /*TODO: Figure out less or equivalent*/
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
 body {
-    background-color: rgb(50, 50, 50); 
+    background-color: rgb(35, 35, 35); 
     color: #ffffff;
     margin: 0;
     font-family: 'Open Sans', sans-serif;
@@ -11,7 +11,7 @@ body {
 nav {
     opacity: 0.9;
     position: fixed;
-    background-color: #252525;
+    background-color: #181818;
 }
 
 nav li {
@@ -25,8 +25,7 @@ nav ul {
 #horizontal {
     height: 4em;
     width: 100%;
-    border-bottom: 1px solid #ffffff;
-    text-align: center;
+    /*border-bottom: 1px solid #ffffff;*/
     z-index: 487;
     transition-duration: 0.3s;
 }
@@ -42,7 +41,7 @@ nav ul {
 #vertical {
     height: 100%;
     width: 4em;
-    border-right: 1px solid #ffffff;
+    /*border-right: 1px solid #ffffff;*/
     z-index: 486;
     transition-duration: 0.3s;
 }

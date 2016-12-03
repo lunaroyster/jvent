@@ -35,10 +35,10 @@
     </nav>
     <div id="mainbox">
       <div id="eventcontainer" ng-controller="eventListCtrl">
-        <div class="event" ng-repeat="event in eventArray" style="background-image: url({{ event.image }})">
+        <div class="event z-depth-5" ng-repeat="event in eventArray" style="background-image: url({{ event.image }})">
           <div class="content">
-            <h2>{{ event.name }}</h2>
-            <p> {{ event.description }} </p>
+            <h4 ng-bind="event.name"></h4>
+            <p ng-bind="event.description"></p>
           </div>
         </div>
       </div>
