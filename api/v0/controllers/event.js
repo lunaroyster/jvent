@@ -9,16 +9,16 @@ module.exports.createEvent = function(req, res) {
         privacy: req.body.privacy
     };
     eventCore.createEvent(eventSettings, function(state) {
+        res.status(201);
         res.json(state);
-        res.send();
     });
 };
 
 module.exports.getEvents = function(req, res) {
     eventCore.getEvents(function(err, events) {
         if (!err) {
+            res.status(200);
             res.json(events);
-            res.send();
         }
     });
 };

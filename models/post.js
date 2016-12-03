@@ -9,7 +9,8 @@ var postSchema = new Schema({
     comments: {
         type: [Schema.Types.ObjectId]
     },
-    timeOfCreation: Date
+    timeOfCreation: Date,
+    parentEvent: Schema.Types.ObjectId
     // poster
     // resource: String, // Can be URL or something else
     // resourceType: String, // Stores the type of resource

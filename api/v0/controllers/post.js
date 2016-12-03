@@ -7,8 +7,8 @@ module.exports.createPost = function(req, res) {
         contentText: req.body.content.text
     };
     postCore.createPost(postSettings, req.eventID, function(state) {
+        res.status(201);
         res.json(state);
-        res.send();
     });
 };
 
