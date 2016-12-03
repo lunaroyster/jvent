@@ -1,23 +1,38 @@
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
 var Event = mongoose.model('Event');
+var Post = mongoose.model('Post');
 
 // Information in -> Queries DB -> Object out
-module.exports.createEvent = function(eventSettings, callback) {
-    var newEvent = new Event({
-        name: eventSettings.name,
-        byline: eventSettings.byline,
-        description: eventSettings.description,
-        privacy: eventSettings.privacy,
+module.exports.createPost = function(postSettings, eventID, callback) {
+    var newPost = new Post({
+        title: postSettings.title,
+        parentEvent: eventID,
+        content: {
+            text: postSettings.contentText
+        },
         timeOfCreation: Date.now()
     });
-    newEvent.save(function(err) {
+    var eventQuery = Event.findOne({_id:eventID});
+    eventQuery.exec(function(err, event) {
         if (!err) {
-            var state = {
-                status: "Created",
-                event: newEvent._id
-            };
-            callback(state);
+            newPost.save(function(error) {
+                if (!error) {
+                    var state = {
+                        status: "Created",
+                        event: newPost.parentEvent,
+                        post: newPost._id
+                    };
+                    callback(state);
+                }
+                else {
+                    var errState = {
+                        status: "Error",
+                        error: error
+                    };
+                    callback(errState);
+                }
+            });
         }
         else {
             var errState = {

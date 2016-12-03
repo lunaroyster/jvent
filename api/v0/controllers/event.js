@@ -1,4 +1,4 @@
-var eventCore = require('../../../core/event')
+var eventCore = require('../../../core/event');
 
 // /event/
 module.exports.createEvent = function(req, res) {

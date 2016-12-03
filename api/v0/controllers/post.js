@@ -1,7 +1,15 @@
+var postCore = require('../../../core/post')
+
 // /post/
 module.exports.createPost = function(req, res) {
-    res.json(req);
-    res.send();
+    var postSettings = {
+        title: req.body.title,
+        contentText: req.body.content.text
+    };
+    postCore.createPost(postSettings, req.eventID, function(state) {
+        res.json(state);
+        res.send();
+    });
 };
 
 module.exports.getPosts = function(req, res) {
