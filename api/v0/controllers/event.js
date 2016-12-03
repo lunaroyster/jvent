@@ -15,8 +15,12 @@ module.exports.createEvent = function(req, res) {
 };
 
 module.exports.getEvents = function(req, res) {
-    res.json(req);
-    res.send();
+    eventCore.getEvents(function(err, events) {
+        if (!err) {
+            res.json(events);
+            res.send();
+        }
+    });
 };
 
 // /event/:eventID

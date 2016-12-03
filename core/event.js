@@ -26,5 +26,28 @@ module.exports.createEvent = function(eventSettings, callback) {
             };
             callback(errState);
         }
-    })
+    });
 };
+
+// TODO: query to select events based on time/location/rating/uploader etc
+module.exports.getEvents = function(callback) {
+    var eventQuery = Event.find();
+    eventQuery.exec(function(err, events) {
+        if (!err) {
+            // var state = {
+            //     status: "Success",
+            //     eventCount: events.length
+            // };
+            // callback(state, events);
+            callback(null, events);
+        }
+        else {
+            // var errState = {
+            //     status: "Failed",
+            //     error: err
+            // };
+            // callback(errState);
+            callback(err, null);
+        }
+    })
+}
