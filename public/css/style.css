@@ -12,6 +12,7 @@ nav {
     opacity: 0.9;
     position: fixed;
     background-color: #0a0b0c;
+    display: flex;
 }
 
 nav li {
@@ -20,6 +21,7 @@ nav li {
 }
 nav ul {
     padding: 0;
+    margin: 0 auto 0 auto;
 }
 
 #horizontal {
