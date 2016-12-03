@@ -18,6 +18,7 @@ module.exports.createPost = function(postSettings, eventID, callback) {
         if (!err) {
             newPost.save(function(error) {
                 event.posts.push(mongoose.Types.ObjectId(newPost._id));
+                event.save();
                 if (!error) {
                     var state = {
                         status: "Created",
