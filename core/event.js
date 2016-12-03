@@ -3,3 +3,6 @@ var mongoose = require('mongoose');
 var Event = mongoose.model('Event');
 
 // Information in -> Queries DB -> Object out
+module.exports.createEvent = function(eventSettings, callback) {
+    
+};

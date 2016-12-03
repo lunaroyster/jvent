@@ -1,7 +1,16 @@
+var eventCore = require('../../../core/event')
+
 // /event/
 module.exports.createEvent = function(req, res) {
-    res.json(req);
-    res.send();
+    var eventSettings = {
+        name: req.body.eventName,
+        byline: req.body.byline,
+        description: req.body.desc,
+        privacy: req.body.privacy
+    };
+    eventCore.createEvent(eventSettings, function() {
+        
+    });
 };
 
 module.exports.getEvents = function(req, res) {
