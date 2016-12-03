@@ -8,8 +8,9 @@ module.exports.createEvent = function(req, res) {
         description: req.body.desc,
         privacy: req.body.privacy
     };
-    eventCore.createEvent(eventSettings, function() {
-        
+    eventCore.createEvent(eventSettings, function(state) {
+        res.json(state);
+        res.send();
     });
 };
 

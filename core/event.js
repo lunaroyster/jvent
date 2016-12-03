@@ -11,4 +11,20 @@ module.exports.createEvent = function(eventSettings, callback) {
         privacy: eventSettings.privacy,
         timeOfCreation: Date.now()
     });
+    newEvent.save(function(err) {
+        if (!err) {
+            var state = {
+                status: "Created",
+                event: newEvent._id
+            };
+            callback(state);
+        }
+        else {
+            var errState = {
+                status: "Error",
+                error: err
+            };
+            callback(errState);
+        }
+    })
 };
