@@ -46,25 +46,17 @@ module.exports.createPost = function(postSettings, eventID, callback) {
     });
 };
 
-// TODO: query to select events based on time/location/rating/uploader etc
-module.exports.getEvents = function(callback) {
-    var eventQuery = Event.find();
-    eventQuery.exec(function(err, events) {
-        if (!err) {
-            // var state = {
-            //     status: "Success",
-            //     eventCount: events.length
-            // };
-            // callback(state, events);
-            callback(null, events);
-        }
-        else {
-            // var errState = {
-            //     status: "Failed",
-            //     error: err
-            // };
-            // callback(errState);
-            callback(err, null);
+// TODO: query to select posts based on time/location/rating/poster etc
+module.exports.getPosts = function(eventID, callback) {
+    var eventQuery = Event.findOne({_id: eventID});
+    eventQuery.exec(function(err, event) {
+        if(!err) {
+          var postQuery = Post.find({'_id':{$in:event.posts}});
+          postQuery.exec(function(error, posts) {
+              if(!error) {
+                  callback(null, posts)
+              }
+          })
         }
     })
 }

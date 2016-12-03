@@ -25,8 +25,10 @@ module.exports.getEvents = function(req, res) {
 
 // /event/:eventID
 module.exports.getEventByID = function(req, res) {
-    res.json(req);
-    res.send();
+    // TODO: Handle Error
+    eventCore.getEventByID(req.params.eventID, function(err, event) {
+        res.json(event);    
+    });
 };
 
 module.exports.updateEventByID = function(req, res) {

@@ -53,3 +53,10 @@ module.exports.getEvents = function(callback) {
     })
 }
 
+module.exports.getEventByID = function(eventID, callback) {
+    var eventQuery = Event.findOne({_id: eventID});
+    eventQuery.exec(function(err, event) {
+        callback(err, event);
+    });
+};
+
