@@ -8,7 +8,8 @@ var eventSchema = new Schema({
     privacy: String,
     posts: {
         type: [Schema.Types.ObjectId]
-    }
+    },
+    timeOfCreation: Date
     // organiser (id? or object?)
     // event images
     // moderators
