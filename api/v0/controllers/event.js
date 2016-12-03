@@ -25,6 +25,7 @@ module.exports.deleteEventByID = function(req, res) {
     res.send();
 };
 
-module.exports.appendEventID = function(req, res) {
+module.exports.appendEventID = function(req, res, next) {
     req.eventID = req.params.eventID;
+    next();
 };

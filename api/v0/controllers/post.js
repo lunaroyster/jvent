@@ -25,6 +25,7 @@ module.exports.deletePostByID = function(req, res) {
     res.send();
 };
 
-module.exports.appendPostID = function(req, res) {
+module.exports.appendPostID = function(req, res, next) {
     req.postID = req.params.postID;
+    next();
 };
