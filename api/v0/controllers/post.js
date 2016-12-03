@@ -13,8 +13,9 @@ module.exports.createPost = function(req, res) {
 };
 
 module.exports.getPosts = function(req, res) {
-    res.json(req);
-    res.send();
+    postCore.getPosts(req.eventID, function(err, posts) {
+       res.json(posts); 
+    });
 };
 
 // /post/:postID
