@@ -20,8 +20,9 @@ module.exports.getPosts = function(req, res) {
 
 // /post/:postID
 module.exports.getPostByID = function(req, res) {
-    res.json(req);
-    res.send();
+    postCore.getPosts(req.eventID, req.params.postID, function(err, post) {
+        res.json(post);
+    });
 };
 
 module.exports.updatePostByID = function(req, res) {

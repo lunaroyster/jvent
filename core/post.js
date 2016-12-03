@@ -61,3 +61,17 @@ module.exports.getPosts = function(eventID, callback) {
     })
 }
 
+module.exports.getPostByID = function(eventID, postID, callback) {
+    var eventQuery = Event.findOne({_id: eventID});
+    eventQuery.exec(function(err, event) {
+        if (!err) {
+            var postQuery = Post.findOne({_id: postID});
+            postQuery.exec(function(error, post) {
+                if(!error) {
+                    callback(null, post);
+                } 
+            });
+        }
+    });
+};
+
