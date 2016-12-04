@@ -18,6 +18,10 @@ nav {
 nav ul li {
     display: inline-block;
     padding: 0 2em 0 2em;
+    transition-duration: 0.3s;
+}
+nav ul li:hover {
+    background-color: #1b1e21;
 }
 nav ul {
     padding: 0;
