@@ -15,9 +15,9 @@ nav {
     display: flex;
 }
 
-nav li {
+nav ul li {
     display: inline-block;
-    margin: 0 1em 0 1em;
+    padding: 0 2em 0 2em;
 }
 nav ul {
     padding: 0;
@@ -27,8 +27,14 @@ nav ul {
 #horizontal {
     height: 4em;
     width: 100%;
-    /*border-bottom: 1px solid #ffffff;*/
     z-index: 487;
+    transition-duration: 0.3s;
+}
+
+#vertical {
+    height: 100%;
+    width: 4em;
+    z-index: 486;
     transition-duration: 0.3s;
 }
 
@@ -39,15 +45,6 @@ nav ul {
 #vertical:hover {
     width: 12em;
 }
-
-#vertical {
-    height: 100%;
-    width: 4em;
-    /*border-right: 1px solid #ffffff;*/
-    z-index: 486;
-    transition-duration: 0.3s;
-}
-
 
 #mainbox {
     left: 5em;
