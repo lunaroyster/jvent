@@ -1,0 +1,8 @@
+<div id="eventsview" ng-controller="eventListCtrl">
+  <div class="event z-depth-5" ng-repeat="event in eventArray" style="background-image: url({{ event.image }})">
+    <div class="content">
+      <h5 ng-bind="event.name"></h5>
+      <p ng-bind="event.description"></p>
+    </div>
+  </div>
+</div>
