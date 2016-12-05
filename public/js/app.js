@@ -8,8 +8,10 @@ app.service('eventService', function($http, $q) {
         var deferred = $q.defer();
         // $http.get('debugjson/events.json').then(function (data) {
         $http.get('api/v0/event').then(function (data) {
-            deferred.resolve(data);
-            events = data.data;
+            console.log(data);
+            var eventList = data.data.events;
+            deferred.resolve(eventList);
+            events = eventList;
         });
         return deferred.promise;
     };
@@ -51,9 +53,9 @@ app.config(['$routeProvider', function($routeProvider) {
 
 app.controller('eventListCtrl', function($scope, eventService) {
     var eventPromise = eventService.getEvents();
-    eventPromise.then(function (data) {
-        $scope.eventArray = data.data;
-        console.log(data);
+    eventPromise.then(function (eventList) {
+        $scope.eventArray = eventList;
+        console.log(eventList);
     });
 });
 

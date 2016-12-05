@@ -15,10 +15,12 @@ module.exports.createEvent = function(req, res) {
 };
 
 module.exports.getEvents = function(req, res) {
+    var responseObject = {};
     eventCore.getEvents(function(err, events) {
         if (!err) {
+            responseObject.events = events;
             res.status(200);
-            res.json(events);
+            res.json(responseObject);
         }
     });
 };
