@@ -57,7 +57,8 @@ app.controller('eventListCtrl', function($scope, eventService) {
         $scope.eventArray = eventList;
         console.log(eventList);
     });
-    var eventClick = function(eventID) {
+    $scope.eventClick = function(eventID) {
+        console.log("Logging: ", eventID);
         var promise = eventService.getEvent(eventID);
         promise.then(function (event) {
             console.log(event);
