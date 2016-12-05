@@ -31,7 +31,7 @@ module.exports.createEvent = function(eventSettings, callback) {
 
 // TODO: query to select events based on time/location/rating/uploader etc
 module.exports.getEvents = function(callback) {
-    var eventQuery = Event.find();
+    var eventQuery = Event.find().select('-posts -__v');
     eventQuery.exec(function(err, events) {
         // callback(err, events);
         if (!err) {
