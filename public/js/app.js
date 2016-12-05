@@ -17,7 +17,7 @@ app.service('eventService', function($http, $q) {
     };
     this.getEvent = function(eventID) {
         var deferred = $q.defer();
-        $http.get('debugjson/event.json').then(function (data) {
+        $http.get('api/v0/event/' + eventID).then(function (data) {
             deferred.resolve(data);
             event = data.data.event;
         });
@@ -57,6 +57,12 @@ app.controller('eventListCtrl', function($scope, eventService) {
         $scope.eventArray = eventList;
         console.log(eventList);
     });
+    var eventClick = function(eventID) {
+        var promise = eventService.getEvent(eventID);
+        promise.then(function (event) {
+            console.log(event);
+        })
+    }
 });
 
 app.controller('eventCtrl', function($scope) {

@@ -1,5 +1,5 @@
 <div id="eventsview">
-  <div class="event z-depth-5" ng-repeat="event in eventArray" style="background-image: url({{ event.image }})">
+  <div class="event z-depth-5" ng-repeat="event in eventArray" style="background-image: url({{ event.image }})" ng-click="eventClick(event._id)">
     <div class="content">
       <h5 ng-bind="event.name"></h5>
       <div class="secondary">
