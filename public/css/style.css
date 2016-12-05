@@ -52,10 +52,20 @@ nav ul {
 
 #mainbox {
     left: 5em;
-    top: 5em;
-    bottom: 1em;
+    top: 0em;
+    bottom: 0em;
     position: fixed;
     overflow-y: scroll;
+}
+
+#secondary {
+    
+}
+
+#organizer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
 }
 
 .event {
@@ -82,7 +92,8 @@ nav ul {
 
 ::-webkit-scrollbar {
     background-color: rgb(35, 35, 35);
+    width: 0.5em;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #262626
+    background-color: #141414;
 }

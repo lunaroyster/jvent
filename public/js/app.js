@@ -35,6 +35,6 @@ app.controller('eventListCtrl', function($scope, eventService) {
     var promise = eventService.getEvents();
     promise.then(function (data) {
         $scope.eventArray = data.data.events;
-        console.log($scope.eventArray);
+        console.log(data);
     });
 });
