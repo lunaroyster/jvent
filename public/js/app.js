@@ -2,17 +2,24 @@
 var app = angular.module("jvent", ['ngRoute']);
 
 app.service('eventService', function($http, $q) {
-    var deferred = $q.defer();
-    $http.get('test.json').then(function (data) {
-        deferred.resolve(data);
-    });
-    this.getEvents = function () {
+    this.getEvents = function() {
+        var deferred = $q.defer();
+        $http.get('events.json').then(function (data) {
+            deferred.resolve(data);
+        });
+        return deferred.promise;
+    };
+    this.getEvent = function(eventID) {
+        var deferred = $q.defer();
+        $http.get('event.json').then(function (data) {
+            deferred.resolve(data);
+        });
         return deferred.promise;
     };
 });
 
 
-app.config(function($routeProvider) {
+app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
     
     .when('/', {
@@ -27,14 +34,24 @@ app.config(function($routeProvider) {
         templateUrl : './eventsview.html'
     })
     
+    .when('/event', {
+        controller  : 'eventCtrl',
+        controllerAs: 'eventview',
+        templateUrl : 'eventpage.html'
+    })
+    
     .otherwise({redirectTo: '/'});
     
-});
+}]);
 
 app.controller('eventListCtrl', function($scope, eventService) {
-    var promise = eventService.getEvents();
-    promise.then(function (data) {
+    var eventPromise = eventService.getEvents();
+    eventPromise.then(function (data) {
         $scope.eventArray = data.data.events;
         console.log(data);
     });
+});
+
+app.controller('eventCtrl', function($scope) {
+    
 });

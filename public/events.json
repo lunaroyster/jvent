@@ -1,0 +1,77 @@
+{
+    "eventCount"            :   "7",
+    "events"                : 
+    [
+        {
+            "id"            :   "0",
+            "name"          :   "Megadeth Live",
+            "description"   :   "The world's best band is performing live.",
+            "byline"        :   "The world's best band performs live",
+            "votecount"     :   "666",
+            "url"           :   "?",
+            "image"         :   "https://lotrat.files.wordpress.com/2010/10/sam_0290.jpg",
+            "organizer"     :   "?"
+        },
+        
+        {
+            "id"            :   "1",
+            "name"          :   "Occupy Wall Street Protests",
+            "description"   :   "Young grass smokers protest things...",
+            "votecount"     :   "32",
+            "url"           :   "eventurl",
+            "image"         :   "http://central.colostate.edu/wp-content/uploads/2012/07/Occupy-Wall-Street-Turns-Violent-10.jpg",
+            "organizer"     :   "name of organizer"
+        },
+        
+        {
+            "id"            :   "2",
+            "name"          :   "Generic Soccer match",
+            "description"   :   "Generic description of a soccer match. Generic team plays another generic team in a random place.",
+            "votecount"     :   "0",
+            "url"           :   "?",
+            "image"         :   "http://media.new.mensxp.com/media/photogallery/2014/Jul/germanyvsargentina5_1405308192.jpg",
+            "organizer"     :   "?"
+        },
+        
+        {
+            "id"            :   "3",
+            "name"          :   "Microsoft Build",
+            "description"   :   "Nothing to see here. Move on",
+            "votecount"     :   "0",
+            "url"           :   "?",
+            "image"         :   "http://www.thewindowsbulletin.com/wp-content/uploads/2015/05/BUILD-2015-Starting-Time-Across-the-World-479644-2.jpg",
+            "organizer"     :   "?"
+        },
+        
+        {
+            "id"            :   "4",
+            "name"          :   "Bernie Sanders Rally",
+            "description"   :   "Well, you see, you're counting the superdelegates. They haven't voted and shouldn't be considered yet. Sigh... mainstream media...",
+            "votecount"     :   "0",
+            "url"           :   "?",
+            "image"         :   "https://i.ytimg.com/vi/0dJtv9BVYhI/maxresdefault.jpg",
+            "organizer"     :   "?"
+        },
+        
+        {
+            "id"            :   "5",
+            "name"          :   "Generic Football Match",
+            "description"   :   "Meh.",
+            "votecount"     :   "0",
+            "url"           :   "?",
+            "image"         :   "https://upload.wikimedia.org/wikipedia/commons/7/74/Arian_Foster_fumble.jpg",
+            "organizer"     :   "?"
+        },
+        
+        {
+            "id"            :   "6",
+            "name"          :   "Apple WWDC 2016",
+            "description"   :   "All your money are belong to us.",
+            "votecount"     :   "0",
+            "url"           :   "?",
+            "image"         :   "http://media2.s-nbcnews.com/j/streams/2013/june/130610/6c7810706-img-6203.nbcnews-ux-2880-1000.jpg",
+            "organizer"     :   "?"
+        }
+        
+    ]
+}
