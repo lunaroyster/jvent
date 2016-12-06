@@ -18,8 +18,8 @@ app.service('eventService', function($http, $q) {
     this.getEvent = function(eventID) {
         var deferred = $q.defer();
         $http.get('api/v0/event/' + eventID).then(function (data) {
-            deferred.resolve(data);
             event = data.data.event;
+            deferred.resolve(event);
         });
         return deferred.promise;
     };
@@ -41,7 +41,7 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './eventsview.html'
     })
     
-    .when('/event', {
+    .when('/event/:eventID', {
         controller  : 'eventCtrl',
         controllerAs: 'eventview',
         templateUrl : 'eventpage.html'
@@ -51,21 +51,26 @@ app.config(['$routeProvider', function($routeProvider) {
     
 }]);
 
-app.controller('eventListCtrl', function($scope, eventService) {
-    var eventPromise = eventService.getEvents();
-    eventPromise.then(function (eventList) {
+app.controller('eventListCtrl', function($scope, $location, eventService) {
+    var eventListPromise = eventService.getEvents();
+    eventListPromise.then(function (eventList) {
         $scope.eventArray = eventList;
         console.log(eventList);
     });
     $scope.eventClick = function(eventID) {
-        console.log("Logging: ", eventID);
-        var promise = eventService.getEvent(eventID);
-        promise.then(function (event) {
-            console.log(event);
-        })
-    }
+        // console.log("Logging: ", eventID);
+        // var promise = eventService.getEvent(eventID);
+        // promise.then(function (event) {
+        //     console.log(event);
+        $location.path('/event/' + eventID);
+        // })
+    };
 });
 
-app.controller('eventCtrl', function($scope) {
-    
+app.controller('eventCtrl', function($scope, $routeParams, eventService) {
+    var eventPromise = eventService.getEvent($routeParams.eventID);
+    eventPromise.then(function (event) {
+        $scope.event = event;
+        console.log(event);
+    });
 });
