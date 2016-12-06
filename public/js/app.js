@@ -51,6 +51,12 @@ app.config(['$routeProvider', function($routeProvider) {
     
 }]);
 
+app.controller('homeController', function($scope, $location) {
+    $scope.homeClick = function() {
+        $location.path('');
+    };
+});
+
 app.controller('eventListCtrl', function($scope, $location, eventService) {
     var eventListPromise = eventService.getEvents();
     eventListPromise.then(function (eventList) {

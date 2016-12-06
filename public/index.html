@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="css/style.css" type="text/css" />
   
   </head>
-  <body ng-app="jvent">
+  <body ng-app="jvent" ng-controller="homeController">
     <nav id="horizontal">
       <ul>
         <!--<li><i class="fa fa-2x fa-home" aria-hidden="true"></i></li>-->
@@ -29,7 +29,7 @@
         <!--<li><i class="fa fa-2x fa-map-o" aria-hidden="true"></i></li>-->
         <!--<li><i class="fa fa-2x fa-bookmark-o" aria-hidden="true"></i></li>-->
         <!--<li><i class="fa fa-2x fa-plus" aria-hidden="true"></i></li>-->
-        <li><i class="material-icons">home</i></li>
+        <li ng-click="homeClick()"><i class="material-icons">home</i></li>
         <li><i class="material-icons">settings</i></li>
         <li><i class="material-icons">map</i></i></li>
         <li><i class="material-icons">bookmark_border</i></li>
