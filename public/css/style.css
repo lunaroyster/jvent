@@ -42,13 +42,13 @@ nav ul {
     transition-duration: 0.3s;
 }
 
-#horizontal:hover {
-    height: 12em;
-}
+/*#horizontal:hover {*/
+/*    height: 12em;*/
+/*}*/
 
-#vertical:hover {
-    width: 12em;
-}
+/*#vertical:hover {*/
+/*    width: 12em;*/
+/*}*/
 
 #mainbox {
     left: 5em;

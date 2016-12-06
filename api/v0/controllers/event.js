@@ -28,8 +28,11 @@ module.exports.getEvents = function(req, res) {
 // /event/:eventID
 module.exports.getEventByID = function(req, res) {
     // TODO: Handle Error
+    var responseObject = {};
     eventCore.getEventByID(req.params.eventID, function(err, event) {
-        res.json(event);    
+        responseObject.event = event;
+        res.status(200);
+        res.json(responseObject);    
     });
 };
 
