@@ -88,5 +88,10 @@ app.controller('eventCtrl', function($scope, $routeParams, eventService) {
 });
 
 app.controller('loginCtrl', function($scope, eventService) {
-    
+    $scope.email;
+    $scope.password;
+    $scope.signedInMode = false;
+    $scope.signIn = function() {
+        
+    };
 });

@@ -3,16 +3,16 @@
         <div class="col s12 m4 push-m4">
             <form>
                 <div class="input-field col s12">
-                  <input id="email" type="email" class="validate">
+                  <input id="email" type="email" ng-model="email" class="validate">
                   <label for="email">Email</label>
                 </div>
                 <div class="input-field col s12">
-                  <input id="password" type="password" class="validate">
+                  <input id="password" type="password" ng-model="password" class="validate">
                   <label for="password">Password</label>
                 </div>
                 <div class="input-field col s12">
                     <button class="btn waves-effect waves-light">Submit<i class="material-icons right">send</i></button>
-                    <input type="checkbox" id="staysigned" />
+                    <input type="checkbox" id="staysigned" ng-model="signedInMode"/>
                     <label for="staysigned">Stay Signed In</label>
                 </div>
             </form>
