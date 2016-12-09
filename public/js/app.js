@@ -47,6 +47,12 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : 'eventpage.html'
     })
     
+    .when('/login', {
+        controller  : 'loginCtrl',
+        controllerAs: 'loginview',
+        templateUrl : 'login.html'
+    })
+    
     .otherwise({redirectTo: '/'});
     
 }]);
@@ -79,4 +85,8 @@ app.controller('eventCtrl', function($scope, $routeParams, eventService) {
         $scope.event = event;
         console.log(event);
     });
+});
+
+app.controller('loginCtrl', function($scope, eventService) {
+    
 });
