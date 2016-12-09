@@ -54,6 +54,7 @@ nav ul {
 #mainbox {
     left: 5em;
     top: 0em;
+    right: 0em;
     bottom: 0em;
     position: fixed;
     overflow-y: scroll;
