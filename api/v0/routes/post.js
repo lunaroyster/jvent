@@ -3,6 +3,9 @@ var router = express.Router();
 
 var postController = require('../controllers/post');
 
+var passport = require('passport');
+var jwtAuth = passport.authenticate('jwt', { session: false});
+
 router.post('/', postController.createPost);
 router.get('/', postController.getPosts);
 

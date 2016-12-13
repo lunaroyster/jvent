@@ -3,6 +3,9 @@ var router = express.Router();
 
 var commentController = require('../controllers/comment');
 
+var passport = require('passport');
+var jwtAuth = passport.authenticate('jwt', { session: false});
+
 router.post('/', commentController.createComment);
 router.get('/', commentController.getComments);
 

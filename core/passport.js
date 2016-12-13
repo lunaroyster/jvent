@@ -21,7 +21,7 @@ passport.use(new LocalStrategy({
 var JWTopts = {
   jwtFromRequest: ExtractJwt.fromAuthHeader(),
   secretOrKey: "debug"
-}
+};
 
 passport.use(new JwtStrategy(JWTopts, function(jwt_payload, done) {
   User.findOne({_id: jwt_payload.sub}, function(err, user) {

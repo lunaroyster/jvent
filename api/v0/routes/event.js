@@ -3,6 +3,9 @@ var router = express.Router();
 
 var eventController = require('../controllers/event');
 
+var passport = require('passport');
+var jwtAuth = passport.authenticate('jwt', { session: false});
+
 router.post('/', eventController.createEvent);
 router.get('/', eventController.getEvents);
 

@@ -6,9 +6,9 @@ var User = mongoose.model('User');
 module.exports.createUser = function(userObj, callback) {
     var newUser = new User({
         email: userObj.email,
-        username: userObj.username,
-        password: userObj.password //TODO: Replace with hashing
+        username: userObj.username
     });
+    newUser.setPassword(userObj.password);
     newUser.save(function(err) {
         if(!err) {
             var state = {

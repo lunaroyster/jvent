@@ -17,3 +17,7 @@ module.exports.signup = function(req, res) {
         res.json(status);
     });
 };
+
+module.exports.returnAuthenticatedUser = function(req, res) {
+    res.json(req.user);
+};
