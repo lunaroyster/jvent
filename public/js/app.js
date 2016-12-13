@@ -87,11 +87,11 @@ app.controller('eventCtrl', function($scope, $routeParams, eventService) {
     });
 });
 
-app.controller('loginCtrl', function($scope, eventService) {
+app.controller('loginCtrl', function($scope, $location, eventService) {
     $scope.email;
     $scope.password;
     $scope.signedInMode = false;
     $scope.signIn = function() {
-        
+        $location.path('/')
     };
 });
