@@ -101,3 +101,24 @@ app.controller('loginCtrl', function($scope, $location, eventService) {
         $location.path('/')
     };
 });
+
+app.controller('signUpCtrl', function($scope, $location, UserService) {
+    $scope.email;
+    $scope.username;
+    $scope.password;
+    $scope.repassword;
+    $scope.validPassword = function () {
+        if(!$scope.password){return false}
+        if($scope.password == $scope.repassword){return(true)}
+        else {return(false)}
+    };
+    // $scope.createAccount = function () {
+    //     if($scope.validPassword() && $scope.email && $scope.username) {
+    //         UserService.register($scope.email, $scope.username, $scope.password, function(created) {
+    //             if(created) {
+    //                 $location.path('/login');
+    //             }
+    //         });
+    //     }
+    // };
+});
