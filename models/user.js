@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var crypto = require('crypto');
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
@@ -9,22 +10,17 @@ var userSchema = new Schema({
     email: String,
     username: String,
     hash: String,
-    salt: String,
-    password: String //Switch to hash/salt
+    salt: String
 });
 //TODO: Encrypt
-userSchema.methods.setPassword = function(password, callback) {
-    this.password = password;
-    this.save(callback);
+userSchema.methods.setPassword = function(password) {
+    this.salt = crypto.randomBytes(16).toString('hex');
+    this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
 };
 
 userSchema.methods.validPassword = function(password) {
-    if(password==this.password) {
-        return(true);
-    }
-    else {
-        return(false);
-    }
+    var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
+    return this.hash === hash;
 };
 
 mongoose.model('User', userSchema);

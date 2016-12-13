@@ -12,8 +12,8 @@ module.exports.signup = function(req, res) {
         email: req.body.email,
         username: req.body.username,
         password: req.body.password
-    }
+    };
     userCore.createUser(userObj, function(status) {
         res.json(status);
-    })
+    });
 };
