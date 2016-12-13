@@ -12,3 +12,5 @@ var userSchema = new Schema({
     salt: String,
     
 });
+
+mongoose.model('User', userSchema);

@@ -7,4 +7,8 @@ module.exports.authenticate = function(req, res) {
     });
 };
 
-module.exports.signup = function(req, res) {};
+module.exports.signup = function(req, res) {
+    var userObj = {
+        
+    }
+};
