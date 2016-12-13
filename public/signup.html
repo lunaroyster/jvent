@@ -1,0 +1,28 @@
+<div id="signUpView">
+    <div class="row">
+        <div class="col s12 m4 push-m4">
+            <form>
+                <div class="input-field col s12">
+                    <input id="email" type="email" ng-model="email" class="validate">
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="username" type="text" ng-model="username" class="validate">
+                    <label for="username">Username</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input id="password" type="password" ng-model="password" ng-class="{valid: validPassword()}">
+                    <label for="password">Password.</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input id="repassword" type="password" ng-model="repassword" ng-class="{valid: validPassword()}">
+                    <label for="repassword">Password. Again.</label>
+                </div>
+                <div ng-bind=""></div>
+                <div class="input-field col s12">
+                    <button class="btn waves-effect waves-light" ng-click="createAccount()">Create Account<i class="material-icons right">send</i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
