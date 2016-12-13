@@ -20,7 +20,7 @@ passport.use(new LocalStrategy({
 
 var JWTopts = {
   jwtFromRequest: ExtractJwt.fromAuthHeader(),
-  secretOrKey: "test"
+  secretOrKey: "debug"
 }
 
 passport.use(new JwtStrategy(JWTopts, function(jwt_payload, done) {
