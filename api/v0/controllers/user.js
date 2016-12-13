@@ -1,7 +1,7 @@
 var userCore = require('../../../core/user');
 
 module.exports.authenticate = function(req, res) {
-    userCore.getToken(req.user, function(token) {
+    userCore.generateToken(req.user, function(token) {
         res.status(200);
         res.json(token);
     });
@@ -9,6 +9,11 @@ module.exports.authenticate = function(req, res) {
 
 module.exports.signup = function(req, res) {
     var userObj = {
-        
-    }
+        email: req.body.email,
+        username: req.body.username,
+        password: req.body.password
+    };
+    userCore.createUser(userObj, function(status) {
+        res.json(status);
+    });
 };
