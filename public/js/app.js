@@ -2,12 +2,34 @@
 var app = angular.module("jvent", ['ngRoute']);
 
 app.service('authService', function($http, $q) {
-    this.login = function() {};
-    this.getToken = function() {};
+    this.login = function(creds, options, callback) {
+        getToken(creds, function(err, token) {
+            if (err) {return false}
+            //store token in preferred method of token storage
+            setAuthHeader(token);
+            //Update user data in root scope
+            callback(true);
+        });
+    };
+    var setAuthHeader = function(token) {
+        $http.defaults.headers.common['Authentication'] = 'JWT '+ token;
+        console.log("test")
+    };
+    var getToken = function(creds, callback) {
+        var req = {
+            method: 'POST',
+            url: '/api/v0/user/authenticate',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data: 'email='+creds.email+'&password='+creds.password,
+        };
+        $http(req).then(function(data) {
+           callback(null, data.data.token); 
+        });
+    };
     this.register = function(email, username, password, callback) {
         var req = {
                 method: 'POST',
-                url: '/users/signup',
+                url: 'api/v0/user/signup',
                 data: {
                     email: email,
                     username: username,
@@ -20,7 +42,7 @@ app.service('authService', function($http, $q) {
                 }  
             });
     };
-})
+});
 
 app.service('jventService', function($http, $q) {
     var events = [];
@@ -113,16 +135,26 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     });
 });
 
-app.controller('loginCtrl', function($scope, $location) {
+app.controller('loginCtrl', function($scope, $location, authService) {
     $scope.email;
     $scope.password;
     $scope.signedInMode = false;
     $scope.signIn = function() {
-        $location.path('/')
+        if($scope.email && $scope.password) {
+            var creds = {
+                email: $scope.email,
+                password: $scope.password
+            };
+            authService.login(creds, null, function(success) {
+                if (success) {
+                    $location.path('/');
+                }
+            });
+        }
     };
 });
 
-app.controller('signUpCtrl', function($scope, $location) {
+app.controller('signUpCtrl', function($scope, $location, authService) {
     $scope.email;
     $scope.username;
     $scope.password;
@@ -132,13 +164,13 @@ app.controller('signUpCtrl', function($scope, $location) {
         if($scope.password == $scope.repassword){return(true)}
         else {return(false)}
     };
-    // $scope.createAccount = function () {
-    //     if($scope.validPassword() && $scope.email && $scope.username) {
-    //         UserService.register($scope.email, $scope.username, $scope.password, function(created) {
-    //             if(created) {
-    //                 $location.path('/login');
-    //             }
-    //         });
-    //     }
-    // };
+    $scope.createAccount = function () {
+        if($scope.validPassword() && $scope.email && $scope.username) {
+            authService.register($scope.email, $scope.username, $scope.password, function(created) {
+                if(created) {
+                    $location.path('/login');
+                }
+            });
+        }
+    };
 });
