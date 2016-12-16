@@ -2,20 +2,29 @@
 var app = angular.module("jvent", ['ngRoute']);
 
 app.service('authService', function($http, $q) {
+    this.authed = false;
+    this.authStore = null;
     this.login = function(creds, options, callback) {
-        getToken(creds, function(err, token) {
-            if (err) {return false}
+        getTokenFromServer(creds, function(err, token) {
+            if (err) {return(callback(false))}
             //store token in preferred method of token storage
             setAuthHeader(token);
             //Update user data in root scope
             callback(true);
         });
     };
+    var getTokenFromStore = function(){
+        var storage = window.localStorage || window.sessionStorage || null;
+        if(storage) {
+            if(storage.token) {
+                return(storage.token);
+            }
+        }
+    };
     var setAuthHeader = function(token) {
         $http.defaults.headers.common['Authentication'] = 'JWT '+ token;
-        console.log("test")
     };
-    var getToken = function(creds, callback) {
+    var getTokenFromServer = function(creds, callback) {
         var req = {
             method: 'POST',
             url: '/api/v0/user/authenticate',
@@ -28,19 +37,19 @@ app.service('authService', function($http, $q) {
     };
     this.register = function(email, username, password, callback) {
         var req = {
-                method: 'POST',
-                url: 'api/v0/user/signup',
-                data: {
-                    email: email,
-                    username: username,
-                    password: password
-                }
-            };
-            $http(req).then(function(data) {
-                if(data.data.status == "Created. Awaiting Verification") {
-                    callback(true);
-                }  
-            });
+            method: 'POST',
+            url: 'api/v0/user/signup',
+            data: {
+                email: email,
+                username: username,
+                password: password
+            }
+        };
+        $http(req).then(function(data) {
+            if(data.data.status == "Created. Awaiting Verification") {
+                callback(true);
+            }  
+        });
     };
 });
 
