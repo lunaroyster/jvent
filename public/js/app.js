@@ -59,8 +59,9 @@ app.service('authService', function($http, $q) {
     };
     this.logout = function() {
         this.authStore.token = null;
+        deleteAuthHeader();
         //Delete user data in root scope 
-    }
+    };
     var loadUser = function() {
         console.log("Loading User");
         this.authStore = getAuthStore();
@@ -139,6 +140,12 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : 'login.html'
     })
     
+    .when('/logout', {
+        controller  : 'logoutCtrl',
+        controllerAs: 'logoutscreen',
+        templateUrl : 'logout.html'
+    })
+    
     .when('/signup', {
         controller  : 'signUpCtrl',
         controllerAs: 'signUpView',
@@ -193,6 +200,12 @@ app.controller('loginCtrl', function($scope, $location, authService) {
         }
     };
 });
+
+app.controller('logoutCtrl', function($scope, $location, authService) {
+    if(authService.authed) {
+        authService.logout();
+    }
+})
 
 app.controller('signUpCtrl', function($scope, $location, authService) {
     $scope.email;
