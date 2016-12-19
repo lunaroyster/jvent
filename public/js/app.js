@@ -6,10 +6,9 @@ app.service('authService', function($http, $q) {
     this.authStore = null;
     
     var getAuthStore = function() {
-        var storage = [window.localStorage, window.sessionStorage]
+        var storage = [window.localStorage, window.sessionStorage];
         for(var i = 0; i<storage.length;i++) {
             if(storage[i].token) {
-                console.log(storage[i]);
                 return storage[i];
             }
         }
@@ -29,9 +28,13 @@ app.service('authService', function($http, $q) {
         }
     };
     var setAuthHeader = function(token) {
-        console.log("Setting Auth Token");
+        console.log("Setting Auth Header");
         $http.defaults.headers.common['Authentication'] = 'JWT '+ token;
     };
+    var deleteAuthHeader = function() {
+        console.log("Deleting Auth Header");
+        $http.defaults.headers.common['Authentication'] = '';
+    }
     var getTokenFromServer = function(creds, callback) {
         var req = {
             method: 'POST',
@@ -54,6 +57,10 @@ app.service('authService', function($http, $q) {
             callback(true);
         });
     };
+    this.logout = function() {
+        this.authStore.token = null;
+        //Delete user data in root scope 
+    }
     var loadUser = function() {
         console.log("Loading User");
         this.authStore = getAuthStore();
