@@ -4,24 +4,32 @@ var app = angular.module("jvent", ['ngRoute']);
 app.service('authService', function($http, $q) {
     this.authed = false;
     this.authStore = null;
-    this.login = function(creds, options, callback) {
-        getTokenFromServer(creds, function(err, token) {
-            if (err) {return(callback(false))}
-            //store token in preferred method of token storage
-            setAuthHeader(token);
-            //Update user data in root scope
-            callback(true);
-        });
-    };
-    var getTokenFromStore = function(){
-        var storage = window.localStorage || window.sessionStorage || null;
-        if(storage) {
-            if(storage.token) {
-                return(storage.token);
+    
+    var getAuthStore = function() {
+        var storage = [window.localStorage, window.sessionStorage]
+        for(var i = 0; i<storage.length;i++) {
+            if(storage[i].token) {
+                console.log(storage[i]);
+                return storage[i];
             }
+        }
+        return(null);
+    };
+    var setAuthStore = function(remainSignedIn) {
+        if(remainSignedIn) {
+            this.authStore = window.localStorage;
+        }
+        else {
+            this.authStore = window.sessionStorage;
+        }
+    };
+    var storeToken = function(token) {
+        if(this.authStore) {
+            this.authStore.token = token;
         }
     };
     var setAuthHeader = function(token) {
+        console.log("Setting Auth Token");
         $http.defaults.headers.common['Authentication'] = 'JWT '+ token;
     };
     var getTokenFromServer = function(creds, callback) {
@@ -34,6 +42,26 @@ app.service('authService', function($http, $q) {
         $http(req).then(function(data) {
            callback(null, data.data.token); 
         });
+    };
+    
+    this.login = function(creds, options, callback) {
+        getTokenFromServer(creds, function(err, token) {
+            if (err) {return(callback(false))}
+            setAuthStore(options.remainSignedIn);
+            storeToken(token);
+            setAuthHeader(token);
+            //Update user data in root scope
+            callback(true);
+        });
+    };
+    var loadUser = function() {
+        console.log("Loading User");
+        this.authStore = getAuthStore();
+        if(this.authStore){
+            this.authed = true;
+            setAuthHeader(this.authStore.token);
+            //Update user data in root scope
+        }
     };
     this.register = function(email, username, password, callback) {
         var req = {
@@ -51,6 +79,7 @@ app.service('authService', function($http, $q) {
             }  
         });
     };
+    loadUser();
 });
 
 app.service('jventService', function($http, $q) {
@@ -60,7 +89,6 @@ app.service('jventService', function($http, $q) {
         var deferred = $q.defer();
         // $http.get('debugjson/events.json').then(function (data) {
         $http.get('api/v0/event').then(function (data) {
-            console.log(data);
             var eventList = data.data.events;
             deferred.resolve(eventList);
             events = eventList;
@@ -114,7 +142,7 @@ app.config(['$routeProvider', function($routeProvider) {
     
 }]);
 
-app.controller('homeController', function($scope, $location) {
+app.controller('homeController', function($scope, $location, authService) {
     $scope.homeClick = function() {
         $location.path('');
     };
@@ -124,13 +152,10 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     var eventListPromise = jventService.getEvents();
     eventListPromise.then(function (eventList) {
         $scope.eventArray = eventList;
-        console.log(eventList);
     });
     $scope.eventClick = function(eventID) {
-        // console.log("Logging: ", eventID);
         // var promise = jventService.getEvent(eventID);
         // promise.then(function (event) {
-        //     console.log(event);
         $location.path('/event/' + eventID);
         // })
     };
@@ -140,21 +165,20 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     var eventPromise = jventService.getEvent($routeParams.eventID);
     eventPromise.then(function (event) {
         $scope.event = event;
-        console.log(event);
     });
 });
 
 app.controller('loginCtrl', function($scope, $location, authService) {
     $scope.email;
     $scope.password;
-    $scope.signedInMode = false;
+    $scope.remainSignedIn = false;
     $scope.signIn = function() {
         if($scope.email && $scope.password) {
             var creds = {
                 email: $scope.email,
                 password: $scope.password
             };
-            authService.login(creds, null, function(success) {
+            authService.login(creds, {remainSignedIn:$scope.remainSignedIn}, function(success) {
                 if (success) {
                     $location.path('/');
                 }
