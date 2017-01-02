@@ -182,7 +182,7 @@ app.factory('authService', function($http, $q) {
             }
         };
         $http(req).then(function(data) {
-            if(data.data.status == "Created") {
+            if(data.status == 201) {
                 callback(true);
             }  
         });

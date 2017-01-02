@@ -13,8 +13,11 @@ module.exports.signup = function(req, res) {
         username: req.body.username,
         password: req.body.password
     };
-    userCore.createUser(userObj, function(status) {
-        res.json(status);
+    userCore.createUser(userObj, function(err, status) {
+        if(!err) {
+            res.status(201);
+            res.json(status);
+        }
     });
 };
 

@@ -15,7 +15,7 @@ module.exports.createUser = function(userObj, callback) {
                 status: "Created",
                 _id: newUser._id
             };
-            callback(state);
+            callback(null, state);
         }
     });
 };
