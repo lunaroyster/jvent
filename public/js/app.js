@@ -166,7 +166,7 @@ app.factory('authService', function($http, $q) {
         });
     };
     obj.logout = function() {
-        obj.authStore.token = null;
+        obj.authStore.removeItem("token");
         deleteAuthHeader();
         //Delete user data in root scope 
         obj.authed = false
@@ -182,7 +182,7 @@ app.factory('authService', function($http, $q) {
             }
         };
         $http(req).then(function(data) {
-            if(data.data.status == "Created. Awaiting Verification") {
+            if(data.data.status == "Created") {
                 callback(true);
             }  
         });
