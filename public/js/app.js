@@ -1,9 +1,105 @@
 /* global angular */
 var app = angular.module("jvent", ['ngRoute']);
 
-app.service('authService', function($http, $q) {
-    this.authed = false;
-    this.authStore = null;
+// app.service('authService', function($http, $q) {
+//     this.authed = false;
+//     this.authStore = null;
+    
+//     var getAuthStore = function() {
+//         var storage = [window.localStorage, window.sessionStorage];
+//         for(var i = 0; i<storage.length;i++) {
+//             if(storage[i].token) {
+//                 return storage[i];
+//             }
+//         }
+//         return(null);
+//     };
+//     var setAuthStore = function(remainSignedIn) {
+//         if(remainSignedIn) {
+//             this.authStore = window.localStorage;
+//         }
+//         else {
+//             this.authStore = window.sessionStorage;
+//         }
+//     };
+//     var storeToken = function(token) {
+//         if(this.authStore) {
+//             this.authStore.token = token;
+//         }
+//     };
+//     var setAuthHeader = function(token) {
+//         console.log("Setting Auth Header");
+//         $http.defaults.headers.common['Authentication'] = 'JWT '+ token;
+//     };
+//     var deleteAuthHeader = function() {
+//         console.log("Deleting Auth Header");
+//         $http.defaults.headers.common['Authentication'] = '';
+//     }
+//     var getTokenFromServer = function(creds, callback) {
+//         var req = {
+//             method: 'POST',
+//             url: '/api/v0/user/authenticate',
+//             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+//             data: 'email='+creds.email+'&password='+creds.password,
+//         };
+//         $http(req).then(function(data) {
+//           callback(null, data.data.token); 
+//         });
+//     };
+    
+//     this.isAuthed = function() {return(this.authed)};
+    
+//     this.login = function(creds, options, callback) {
+//         getTokenFromServer(creds, function(err, token) {
+//             if (err) {return(callback(false))}
+//             setAuthStore(options.remainSignedIn);
+//             storeToken(token);
+//             setAuthHeader(token);
+//             //Update user data in root scope
+//             this.authed = true;
+//             callback(true);
+//         });
+//     };
+//     this.logout = function() {
+//         this.authStore.token = null;
+//         deleteAuthHeader();
+//         //Delete user data in root scope 
+//         this.authed = false
+//     };
+//     var loadUser = function() {
+//         console.log("Searching for User");
+//         this.authStore = getAuthStore();
+//         if(this.authStore){
+//             this.authed = true;
+//             setAuthHeader(this.authStore.token);
+//             //Update user data in root scope
+//             console.log("Loaded User");
+//         }
+//     };
+//     this.register = function(email, username, password, callback) {
+//         var req = {
+//             method: 'POST',
+//             url: 'api/v0/user/signup',
+//             data: {
+//                 email: email,
+//                 username: username,
+//                 password: password
+//             }
+//         };
+//         $http(req).then(function(data) {
+//             if(data.data.status == "Created. Awaiting Verification") {
+//                 callback(true);
+//             }  
+//         });
+//     };
+//     loadUser();
+// });
+
+app.factory('authService', function($http, $q) {
+    var obj = {};
+    obj.authed = false;
+    obj.authStore = null;
+    obj.timeCreated = Date.now();
     
     var getAuthStore = function() {
         var storage = [window.localStorage, window.sessionStorage];
@@ -16,15 +112,15 @@ app.service('authService', function($http, $q) {
     };
     var setAuthStore = function(remainSignedIn) {
         if(remainSignedIn) {
-            this.authStore = window.localStorage;
+            obj.authStore = window.localStorage;
         }
         else {
-            this.authStore = window.sessionStorage;
+            obj.authStore = window.sessionStorage;
         }
     };
     var storeToken = function(token) {
-        if(this.authStore) {
-            this.authStore.token = token;
+        if(obj.authStore) {
+            obj.authStore.token = token;
         }
     };
     var setAuthHeader = function(token) {
@@ -46,32 +142,36 @@ app.service('authService', function($http, $q) {
            callback(null, data.data.token); 
         });
     };
+    var loadUser = function() {
+        console.log("Searching for User");
+        obj.authStore = getAuthStore();
+        if(obj.authStore){
+            obj.authed = true;
+            setAuthHeader(obj.authStore.token);
+            //Update user data in root scope
+            console.log("Loaded User");
+        }
+    };
     
-    this.login = function(creds, options, callback) {
+    obj.isAuthed = function() {return(obj.authed)};
+    obj.login = function(creds, options, callback) {
         getTokenFromServer(creds, function(err, token) {
             if (err) {return(callback(false))}
             setAuthStore(options.remainSignedIn);
             storeToken(token);
             setAuthHeader(token);
             //Update user data in root scope
+            obj.authed = true;
             callback(true);
         });
     };
-    this.logout = function() {
-        this.authStore.token = null;
+    obj.logout = function() {
+        obj.authStore.token = null;
         deleteAuthHeader();
         //Delete user data in root scope 
+        obj.authed = false
     };
-    var loadUser = function() {
-        console.log("Loading User");
-        this.authStore = getAuthStore();
-        if(this.authStore){
-            this.authed = true;
-            setAuthHeader(this.authStore.token);
-            //Update user data in root scope
-        }
-    };
-    this.register = function(email, username, password, callback) {
+    obj.register = function(email, username, password, callback) {
         var req = {
             method: 'POST',
             url: 'api/v0/user/signup',
@@ -88,6 +188,7 @@ app.service('authService', function($http, $q) {
         });
     };
     loadUser();
+    return(obj);
 });
 
 app.service('jventService', function($http, $q) {
@@ -160,6 +261,7 @@ app.controller('homeController', function($scope, $location, authService) {
     $scope.homeClick = function() {
         $location.path('');
     };
+    setInterval(function() {console.log(authService)}, 1000);
 });
 
 app.controller('eventListCtrl', function($scope, $location, jventService) {
@@ -199,11 +301,13 @@ app.controller('loginCtrl', function($scope, $location, authService) {
             });
         }
     };
+    console.log(authService);
 });
 
 app.controller('logoutCtrl', function($scope, $location, authService) {
-    if(authService.authed) {
+    if(authService.isAuthed) {
         authService.logout();
+        $location.path('/login')
     }
 })
 
