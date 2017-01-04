@@ -18,6 +18,10 @@ module.exports.signup = function(req, res) {
             res.status(201);
             res.json(status);
         }
+        else {
+            res.status(400);
+            res.json(status);
+        }
     });
 };
 

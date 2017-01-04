@@ -17,6 +17,12 @@ module.exports.createUser = function(userObj, callback) {
             };
             callback(null, state);
         }
+        else{
+            var state = {
+                status: "Failed"
+            }
+            callback(err, state);
+        }
     });
 };
 
