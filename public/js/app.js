@@ -235,6 +235,12 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : 'eventpage.html'
     })
     
+    .when('/event/:eventID/post', {
+        controller  : 'newPostCtrl',
+        controllerAs: 'newPostView',
+        templateUrl : 'newpost.html'
+    })
+    
     .when('/login', {
         controller  : 'loginCtrl',
         controllerAs: 'loginview',
@@ -331,3 +337,16 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
         }
     };
 });
+
+app.controller('newPostCtrl', function($scope, $location) {
+    $scope.title = "";
+    $scope.validTitle = function() {
+        var l = $scope.title.length;
+        if(l<=144 && l>0){
+            return(true);
+        }
+        else {
+            return(false);
+        }
+    };
+})

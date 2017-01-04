@@ -3,8 +3,8 @@
         <div class="col s12 m10 push-m1">
             <form>
                 <div class="input-field col s12">
-                    <textarea id="title" class="materialize-textarea"></textarea>
-                    <label for="title">Title</label>
+                    <textarea id="title" ng-model="title" ng-class="{valid: validTitle()}" class="materialize-textarea" length=144></textarea>
+                    <label for="title" data-error="That title is invalid.">Title</label>
                 </div>
                 <div class="input-field col s12">
                     <textarea id="body" class="materialize-textarea"></textarea>
