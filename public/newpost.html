@@ -3,34 +3,21 @@
         <div class="col s12 m10 push-m1">
             <form>
                 <div class="input-field col s12">
-                    <textarea id="title" ng-model="title" ng-class="{valid: validTitle()}" class="materialize-textarea" length=144></textarea>
+                    <input id="title" type="text" ng-model="title" ng-class="{valid: validTitle()}" class="validate" length="144" required></textarea>
                     <label for="title" data-error="That title is invalid.">Title</label>
                 </div>
                 <div class="input-field col s12">
-                    <textarea id="body" class="materialize-textarea"></textarea>
+                    <textarea id="body" ng-model="body" class="materialize-textarea"></textarea>
                     <label for="body">Body</label>
                 </div>
-                <!--<div class="input-field col s12">-->
-                <!--    <input id="email" type="email" ng-model="email" class="validate">-->
-                <!--    <label for="email">Email</label>-->
-                <!--</div>-->
-                <!--<div class="input-field col s12">-->
-                <!--    <input id="username" type="text" ng-model="username" class="validate">-->
-                <!--    <label for="username">Username</label>-->
-                <!--</div>-->
-                <!--<div class="input-field col s12 m6">-->
-                <!--    <input id="password" type="password" ng-model="password" ng-class="{valid: validPassword()}">-->
-                <!--    <label for="password">Password.</label>-->
-                <!--</div>-->
-                <!--<div class="input-field col s12 m6">-->
-                <!--    <input id="repassword" type="password" ng-model="repassword" ng-class="{valid: validPassword()}">-->
-                <!--    <label for="repassword">Password. Again.</label>-->
-                <!--</div>-->
-                <!--<div ng-bind=""></div>-->
-                <!--<div class="input-field col s12">-->
-                <!--    <button class="btn waves-effect waves-light" ng-click="createAccount()">Create Account<i class="material-icons right">send</i></button>-->
-                <!--</div>-->
+                <div class="input-field col s12">
+                    <input id="link" type="text" class="validate">
+                    <label for="link">Link</label>
+                </div>
+                <div class="input-field col s12">
+                    <button class="btn waves-effect waves-light" ng-click="post()">Create Post<i class="material-icons right">send</i></button>
+                </div>
             </form>
-        <!--</div>-->
+        </div>
     </div>
 </div>

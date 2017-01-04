@@ -340,6 +340,7 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
 
 app.controller('newPostCtrl', function($scope, $location) {
     $scope.title = "";
+    $scope.body = "";
     $scope.validTitle = function() {
         var l = $scope.title.length;
         if(l<=144 && l>0){
