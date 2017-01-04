@@ -193,33 +193,39 @@ app.factory('authService', function($http, $q) {
 
 app.service('urlService', function() {
     var apiURL = 'api/';
-    var apiVersion = 'v0/'
+    var apiVersion = 'v0/';
     
     this.api = function() {
         return(apiURL+apiVersion);
-    }
+    };
     this.event = function() {
-        return(this.api() + 'event/')
-    }
+        return(this.api() + 'event/');
+    };
     this.eventID = function(eventID) {
-        return(this.event() + eventID + '/')
-    }
+        return(this.event() + eventID + '/');
+    };
     this.post = function(eventID) {
-        return(this.eventID(eventID) + 'post/')
-    }
+        return(this.eventID(eventID) + 'post/');
+    };
     this.postID = function(eventID, postID) {
-        return(this.post(eventID) + postID + '/')
-    }
+        return(this.post(eventID) + postID + '/');
+    };
+    this.comment = function(eventID, postID) {
+        return(this.postID(eventID, postID) + 'comment/');
+    };
+    this.commentID = function(eventID, postID, commentID) {
+        return(this.comment(eventID, postID) + commentID + '/');
+    };
     
-})
+});
 
-app.service('jventService', function($http, $q) {
+app.service('jventService', function($http, $q, urlService) {
     var events = [];
     var event = {};
     this.getEvents = function() {
         var deferred = $q.defer();
         // $http.get('debugjson/events.json').then(function (data) {
-        $http.get('api/v0/event').then(function (data) {
+        $http.get(urlService.event()).then(function (data) {
             var eventList = data.data.events;
             deferred.resolve(eventList);
             events = eventList;
@@ -235,7 +241,8 @@ app.service('jventService', function($http, $q) {
         return deferred.promise;
     };
     this.createPost = function(eventID, post) {
-          
+        var url = urlService.post(eventID);
+        
     };
 });
 
