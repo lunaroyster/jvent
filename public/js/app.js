@@ -191,6 +191,28 @@ app.factory('authService', function($http, $q) {
     return(obj);
 });
 
+app.service('urlService', function() {
+    var apiURL = 'api/';
+    var apiVersion = 'v0/'
+    
+    this.api = function() {
+        return(apiURL+apiVersion);
+    }
+    this.event = function() {
+        return(this.api() + 'event/')
+    }
+    this.eventID = function(eventID) {
+        return(this.event() + eventID + '/')
+    }
+    this.post = function(eventID) {
+        return(this.eventID(eventID) + 'post/')
+    }
+    this.postID = function(eventID, postID) {
+        return(this.post(eventID) + postID + '/')
+    }
+    
+})
+
 app.service('jventService', function($http, $q) {
     var events = [];
     var event = {};
@@ -211,6 +233,9 @@ app.service('jventService', function($http, $q) {
             deferred.resolve(event);
         });
         return deferred.promise;
+    };
+    this.createPost = function(eventID, post) {
+          
     };
 });
 
@@ -338,9 +363,10 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
     };
 });
 
-app.controller('newPostCtrl', function($scope, $location) {
+app.controller('newPostCtrl', function($scope, $location, jventService) {
     $scope.title = "";
     $scope.body = "";
+    $scope.link = "";
     $scope.validTitle = function() {
         var l = $scope.title.length;
         if(l<=144 && l>0){
@@ -349,5 +375,10 @@ app.controller('newPostCtrl', function($scope, $location) {
         else {
             return(false);
         }
+    };
+    $scope.post = function() {
+          if($scope.validTitle()){
+              jventService.createPost()
+          }
     };
 })
