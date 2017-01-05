@@ -240,7 +240,7 @@ app.service('jventService', function($http, $q, urlService) {
         });
         return deferred.promise;
     };
-    this.createPost = function(eventID, post) {
+    this.createPost = function(post, eventID) {
         var url = urlService.post(eventID);
         var deferred = $q.defer();
         var data = {
@@ -377,7 +377,7 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
     };
 });
 
-app.controller('newPostCtrl', function($scope, $location, jventService) {
+app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
     $scope.title = "";
     $scope.body = "";
     $scope.link = "";
@@ -391,8 +391,17 @@ app.controller('newPostCtrl', function($scope, $location, jventService) {
         }
     };
     $scope.post = function() {
-          if($scope.validTitle()){
-              jventService.createPost()
-          }
+        var post = {
+            title: $scope.title,
+            content: {
+                text: $scope.body
+            },
+            link: $scope.link
+        };
+        var eventID = $routeParams.eventID;
+        console.log(eventID);
+        if($scope.validTitle()){
+            jventService.createPost(post, eventID);
+        }
     };
 })
