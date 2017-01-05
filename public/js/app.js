@@ -242,7 +242,14 @@ app.service('jventService', function($http, $q, urlService) {
     };
     this.createPost = function(eventID, post) {
         var url = urlService.post(eventID);
-        
+        var deferred = $q.defer();
+        var data = {
+            post: post,
+        };
+        $http.post(url, data).then(function(data){
+            var postID = data.data.post;
+            deferred.resolve(postID);
+        });
     };
 });
 
@@ -299,7 +306,7 @@ app.controller('homeController', function($scope, $location, authService) {
     $scope.homeClick = function() {
         $location.path('');
     };
-    setInterval(function() {console.log(authService)}, 1000);
+    // setInterval(function() {console.log(authService)}, 1000);
 });
 
 app.controller('eventListCtrl', function($scope, $location, jventService) {
