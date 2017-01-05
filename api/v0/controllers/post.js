@@ -3,8 +3,8 @@ var postCore = require('../../../core/post')
 // /post/
 module.exports.createPost = function(req, res) {
     var postSettings = {
-        title: req.body.title,
-        contentText: req.body.content.text
+        title: req.body.post.title,
+        contentText: req.body.post.content.text
     };
     postCore.createPost(postSettings, req.eventID, function(state) {
         res.status(201);

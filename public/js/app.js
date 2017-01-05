@@ -125,11 +125,11 @@ app.factory('authService', function($http, $q) {
     };
     var setAuthHeader = function(token) {
         console.log("Setting Auth Header");
-        $http.defaults.headers.common['Authentication'] = 'JWT '+ token;
+        $http.defaults.headers.common['Authorization'] = 'JWT '+ token;
     };
     var deleteAuthHeader = function() {
         console.log("Deleting Auth Header");
-        $http.defaults.headers.common['Authentication'] = '';
+        $http.defaults.headers.common['Authorization'] = '';
     }
     var getTokenFromServer = function(creds, callback) {
         var req = {
