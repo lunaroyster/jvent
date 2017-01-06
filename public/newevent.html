@@ -1,0 +1,32 @@
+<div id="newPostView">
+    <div class="row">
+        <div class="col s12 m10 push-m1">
+            <form>
+                <div class="event z-depth-5" style="background-image: url({{ newevent.image }})">
+                    <div class="content">
+                        <h5 ng-bind="newevent.name"></h5>
+                        <div class="secondary">
+                            <span class="description" ng-bind="newevent.description"></span>
+                            <span class="organizer" ng-bind="newevent.organizer"></span>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="input-field col s12">-->
+                <!--    <input id="title" type="text" ng-model="title" ng-class="{valid: validTitle()}" class="validate" length="144" required></textarea>-->
+                <!--    <label for="title" data-error="That title is invalid.">Title</label>-->
+                <!--</div>-->
+                <!--<div class="input-field col s12">-->
+                <!--    <textarea id="body" ng-model="body" class="materialize-textarea"></textarea>-->
+                <!--    <label for="body">Body</label>-->
+                <!--</div>-->
+                <!--<div class="input-field col s12">-->
+                <!--    <input id="link" type="text" class="validate">-->
+                <!--    <label for="link">Link</label>-->
+                <!--</div>-->
+                <!--<div class="input-field col s12">-->
+                <!--    <button class="btn waves-effect waves-light" ng-click="post()">Create Post<i class="material-icons right">send</i></button>-->
+                <!--</div>-->
+            </form>
+        </div>
+    </div>
+</div>
