@@ -1,6 +1,6 @@
 <div id="newEventView">
     <div class="row">
-        <div class="col s12 m10 push-m1">
+        <div class="col s12">
             <div class="row">
                 <div class="col s12 m4">
                     <div class="event z-depth-5" style="background-image: url({{ newevent.image }})">
@@ -22,6 +22,10 @@
                         <input id="byline" type="text" ng-model="newEvent.byline" length="144" required></input>
                         <label for="byline">Byline</label>
                     </div>
+                    <div class="input-field col s12">
+                        <textarea id="description" ng-model="newEvent.description" class="materialize-textarea"></textarea>
+                        <label for="description">Description</label>
+                    </div>
                 </div>
             </div>
             <div class="row">
@@ -42,7 +46,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="input-field col s12 m6 push-m3">
+                <div class="input-field col s12 m4 push-m4">
                     <a class="waves-effect waves-light btn-large" style="width:100%" ng-click="createEvent()">Create Event<i class="material-icons right">send</i></a>
                 </div>
             </div>

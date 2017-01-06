@@ -426,6 +426,6 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 app.controller('newEventCtrl', function($scope, $location, jventService) {
     $scope.newEvent = {};
     $scope.createEvent = function() {
-        
+        jventService.createEvent($scope.newEvent);
     };
 })

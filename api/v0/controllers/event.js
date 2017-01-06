@@ -3,10 +3,10 @@ var eventCore = require('../../../core/event');
 // /event/
 module.exports.createEvent = function(req, res) {
     var eventSettings = {
-        name: req.body.eventName,
-        byline: req.body.byline,
-        description: req.body.desc,
-        privacy: req.body.privacy
+        name: req.body.event.name,
+        byline: req.body.event.byline,
+        description: req.body.event.description,
+        privacy: req.body.event.visibility
     };
     eventCore.createEvent(eventSettings, function(state) {
         res.status(201);
