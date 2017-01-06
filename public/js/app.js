@@ -413,5 +413,5 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 })
 
 app.controller('newEventCtrl', function($scope, $location, jventService) {
-    $scope.newevent = {};
+    $scope.newEvent = {};
 })
