@@ -268,6 +268,12 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './eventsview.html'
     })
     
+    .when('/event/new', {
+        controller  : 'newEventCtrl',
+        controllerAs: 'newEventView',
+        templateUrl : 'newevent.html'
+    })
+    
     .when('/event/:eventID', {
         controller  : 'eventCtrl',
         controllerAs: 'eventview',
@@ -404,4 +410,8 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
             jventService.createPost(post, eventID);
         }
     };
+})
+
+app.controller('newEventCtrl', function($scope, $location, jventService) {
+    $scope.newevent = {};
 })
