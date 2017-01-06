@@ -246,9 +246,20 @@ app.service('jventService', function($http, $q, urlService) {
         var data = {
             post: post,
         };
-        $http.post(url, data).then(function(data){
-            var postID = data.data.post;
+        $http.post(url, data).then(function(response){
+            var postID = response.data.post;
             deferred.resolve(postID);
+        });
+    };
+    this.createEvent = function(event) {
+        var url = urlService.event();
+        var deferred = $q.defer();
+        var data = {
+            event: event
+        };
+        $http.post(url, data).then(function(response) {
+            var eventID = response.data.event;
+            deferred.resolve(eventID);
         });
     };
 });
@@ -414,4 +425,7 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 
 app.controller('newEventCtrl', function($scope, $location, jventService) {
     $scope.newEvent = {};
+    $scope.createEvent = function() {
+        
+    };
 })
