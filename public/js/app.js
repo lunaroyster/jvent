@@ -263,6 +263,7 @@ app.service('jventService', function($http, $q, urlService) {
             var eventID = response.data.event;
             deferred.resolve(eventID);
         });
+        return deferred.promise;
     };
 });
 
@@ -443,6 +444,9 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 app.controller('newEventCtrl', function($scope, $location, jventService) {
     $scope.newEvent = {};
     $scope.createEvent = function() {
-        jventService.createEvent($scope.newEvent);
+        var promise = jventService.createEvent($scope.newEvent);
+        promise.then(function(eventID) {
+            $location.path('/event/' + eventID);
+        });
     };
 })
