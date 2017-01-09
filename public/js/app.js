@@ -293,7 +293,7 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : 'eventpage.html'
     })
     
-    .when('/event/:eventID/post', {
+    .when('/event/:eventID/post/new', {
         controller  : 'newPostCtrl',
         controllerAs: 'newPostView',
         templateUrl : 'newpost.html'
@@ -323,8 +323,16 @@ app.config(['$routeProvider', function($routeProvider) {
 
 app.controller('homeController', function($scope, $location, authService) {
     $scope.homeClick = function() {
-        $location.path('');
+        $location.path('/');
     };
+    $scope.createEventClick = function() {
+        if(authService.authed) {
+            $location.path('/event/new')
+        }
+        else {
+            $location.path('/login')
+        }
+    }
     // setInterval(function() {console.log(authService)}, 1000);
 });
 
@@ -365,6 +373,9 @@ app.controller('loginCtrl', function($scope, $location, authService) {
             });
         }
     };
+    $scope.signUp = function() {
+        $location.path('/signup')
+    }
     console.log(authService);
 });
 
