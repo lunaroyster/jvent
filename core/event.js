@@ -8,7 +8,7 @@ module.exports.createEvent = function(eventSettings, callback) {
         name: eventSettings.name,
         byline: eventSettings.byline,
         description: eventSettings.description,
-        privacy: eventSettings.privacy,
+        visibility: eventSettings.visibility,
         timeOfCreation: Date.now()
     });
     newEvent.save(function(err) {

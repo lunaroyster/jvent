@@ -6,7 +6,7 @@ module.exports.createEvent = function(req, res) {
         name: req.body.event.name,
         byline: req.body.event.byline,
         description: req.body.event.description,
-        privacy: req.body.event.visibility
+        visibility: req.body.event.visibility
     };
     eventCore.createEvent(eventSettings, function(state) {
         res.status(201);

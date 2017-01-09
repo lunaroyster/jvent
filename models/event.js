@@ -5,7 +5,8 @@ var eventSchema = new Schema({
     name: String,
     byline: String,
     description: String,
-    privacy: String,
+    visibility: String,
+    ingress: String,
     posts: {
         type: [Schema.Types.ObjectId]
     },
