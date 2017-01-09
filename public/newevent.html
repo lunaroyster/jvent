@@ -3,7 +3,7 @@
         <div class="col s12">
             <div class="row">
                 <div class="col s12 m4">
-                    <div class="event z-depth-5" style="background-image: url({{ newevent.image }})">
+                    <div class="event z-depth-5" style="background-image: url({{ newEvent.image }})">
                         <div class="content">
                             <h5 ng-bind="newEvent.name"></h5>
                             <div class="secondary">
@@ -32,30 +32,30 @@
                 <div class="col s12 m4">
                     <span>Who can view?</span>
                     <p>
-                        <input type="radio" name="visibility" ng-model="newevent.visibility" id="public" />
+                        <input type="radio" name="visibility" ng-model="newEvent.visibility" id="public" />
                         <label for="public">Everyone</label>
                     </p>
                     <p>
-                        <input type="radio" name="visibility" ng-model="newevent.visibility" id="unlisted" />
+                        <input type="radio" name="visibility" ng-model="newEvent.visibility" id="unlisted" />
                         <label for="unlisted">Anyone with a link</label>
                     </p>
                     <p>
-                        <input type="radio" name="visibility" ng-model="newevent.visibility" id="private"  />
+                        <input type="radio" name="visibility" ng-model="newEvent.visibility" id="private"  />
                         <label for="private">Those invited</label>
                     </p>
                 </div>
                 <div class="col s12 m4">
                     <span>Who can attend?</span>
                     <p>
-                        <input type="radio" name="ingress" ng-model="newevent.ingress" id="everyone"/>
+                        <input type="radio" name="ingress" ng-model="newEvent.ingress" id="everyone"/>
                         <label for="everyone">Everyone</label>
                     </p>
                     <p>
-                        <input type="radio" name="ingress" ng-model="newevent.ingress" id="link"/>
+                        <input type="radio" name="ingress" ng-model="newEvent.ingress" id="link"/>
                         <label for="link">Anyone with a link</label>
                     </p>
                     <p>
-                        <input type="radio" name="ingress" ng-model="newevent.ingress" id="invite"/>
+                        <input type="radio" name="ingress" ng-model="newEvent.ingress" id="invite"/>
                         <label for="invite">Those invited</label>
                     </p>
                 </div>

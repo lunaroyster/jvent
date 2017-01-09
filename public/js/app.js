@@ -130,7 +130,7 @@ app.factory('authService', function($http, $q) {
     var deleteAuthHeader = function() {
         console.log("Deleting Auth Header");
         $http.defaults.headers.common['Authorization'] = '';
-    }
+    };
     var getTokenFromServer = function(creds, callback) {
         var req = {
             method: 'POST',
@@ -328,12 +328,12 @@ app.controller('homeController', function($scope, $location, authService) {
     };
     $scope.createEventClick = function() {
         if(authService.authed) {
-            $location.path('/event/new')
+            $location.path('/event/new');
         }
         else {
-            $location.path('/login')
+            $location.path('/login');
         }
-    }
+    };
     // setInterval(function() {console.log(authService)}, 1000);
 });
 
@@ -343,10 +343,7 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
         $scope.eventArray = eventList;
     });
     $scope.eventClick = function(eventID) {
-        // var promise = jventService.getEvent(eventID);
-        // promise.then(function (event) {
         $location.path('/event/' + eventID);
-        // })
     };
 });
 
@@ -375,17 +372,17 @@ app.controller('loginCtrl', function($scope, $location, authService) {
         }
     };
     $scope.signUp = function() {
-        $location.path('/signup')
-    }
+        $location.path('/signup');
+    };
     console.log(authService);
 });
 
 app.controller('logoutCtrl', function($scope, $location, authService) {
     if(authService.isAuthed) {
         authService.logout();
-        $location.path('/login')
+        $location.path('/login');
     }
-})
+});
 
 app.controller('signUpCtrl', function($scope, $location, authService) {
     if(authService.authed) {
@@ -443,6 +440,7 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 
 app.controller('newEventCtrl', function($scope, $location, jventService) {
     $scope.newEvent = {};
+    //TODO: Filter visibility/ingress combinations
     $scope.createEvent = function() {
         var promise = jventService.createEvent($scope.newEvent);
         promise.then(function(eventID) {
