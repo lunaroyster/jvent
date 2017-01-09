@@ -169,9 +169,10 @@ app.factory('authService', function($http, $q) {
         obj.authStore.removeItem("token");
         deleteAuthHeader();
         //Delete user data in root scope 
-        obj.authed = false
+        obj.authed = false;
     };
-    obj.register = function(email, username, password, callback) {
+    obj.register = function(email, username, password) {
+        var deferred = $q.defer();
         var req = {
             method: 'POST',
             url: 'api/v0/user/signup',
@@ -183,9 +184,10 @@ app.factory('authService', function($http, $q) {
         };
         $http(req).then(function(data) {
             if(data.status == 201) {
-                callback(true);
+                deferred.resolve({success: true, err: null});
             }  
         });
+        return(deferred.promise);
     };
     loadUser();
     return(obj);
@@ -374,6 +376,9 @@ app.controller('logoutCtrl', function($scope, $location, authService) {
 })
 
 app.controller('signUpCtrl', function($scope, $location, authService) {
+    if(authService.authed) {
+        $location.path('/');
+    }
     $scope.email;
     $scope.username;
     $scope.password;
@@ -385,8 +390,9 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
     };
     $scope.createAccount = function () {
         if($scope.validPassword() && $scope.email && $scope.username) {
-            authService.register($scope.email, $scope.username, $scope.password, function(created) {
-                if(created) {
+            var registerPromise = authService.register($scope.email, $scope.username, $scope.password);
+            registerPromise.then(function(status) {
+                if(status.success) {
                     $location.path('/login');
                 }
             });
@@ -421,7 +427,7 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
             jventService.createPost(post, eventID);
         }
     };
-})
+});
 
 app.controller('newEventCtrl', function($scope, $location, jventService) {
     $scope.newEvent = {};
