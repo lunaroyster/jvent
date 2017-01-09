@@ -32,30 +32,30 @@
                 <div class="col s12 m4">
                     <span>Who can view?</span>
                     <p>
-                        <input name="visibility" type="radio" id="public" />
+                        <input type="radio" name="visibility" ng-model="newevent.visibility" id="public" />
                         <label for="public">Everyone</label>
                     </p>
                     <p>
-                        <input name="visibility" type="radio" id="unlisted" />
+                        <input type="radio" name="visibility" ng-model="newevent.visibility" id="unlisted" />
                         <label for="unlisted">Anyone with a link</label>
                     </p>
                     <p>
-                        <input name="visibility" type="radio" id="private"  />
+                        <input type="radio" name="visibility" ng-model="newevent.visibility" id="private"  />
                         <label for="private">Those invited</label>
                     </p>
                 </div>
                 <div class="col s12 m4">
                     <span>Who can attend?</span>
                     <p>
-                        <input name="visibility" type="radio" id="public" />
-                        <label for="public">Everyone</label>
+                        <input type="radio" name="ingress" ng-model="newevent.ingress" id="everyone"/>
+                        <label for="everyone">Everyone</label>
                     </p>
                     <p>
-                        <input name="visibility" type="radio" id="link" />
+                        <input type="radio" name="ingress" ng-model="newevent.ingress" id="link"/>
                         <label for="link">Anyone with a link</label>
                     </p>
                     <p>
-                        <input name="visibility" type="radio" id="invite"  />
+                        <input type="radio" name="ingress" ng-model="newevent.ingress" id="invite"/>
                         <label for="invite">Those invited</label>
                     </p>
                 </div>
