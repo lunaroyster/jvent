@@ -9,6 +9,7 @@ module.exports.createEvent = function(eventSettings, callback) {
         byline: eventSettings.byline,
         description: eventSettings.description,
         visibility: eventSettings.visibility,
+        ingress: eventSettings.ingress,
         timeOfCreation: Date.now()
     });
     newEvent.save(function(err) {

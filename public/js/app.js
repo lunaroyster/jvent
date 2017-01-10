@@ -439,9 +439,14 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 });
 
 app.controller('newEventCtrl', function($scope, $location, jventService) {
-    $scope.newEvent = {};
+    $scope.newEvent = {}
+    //     visibility: "",
+    //     ingress: ""
+    // };
+    
     //TODO: Filter visibility/ingress combinations
     $scope.createEvent = function() {
+        console.log($scope.newEvent)
         var promise = jventService.createEvent($scope.newEvent);
         promise.then(function(eventID) {
             $location.path('/event/' + eventID);
