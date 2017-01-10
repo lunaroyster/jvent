@@ -12,6 +12,8 @@ module.exports.createEvent = function(eventSettings, callback) {
         ingress: eventSettings.ingress,
         timeOfCreation: Date.now()
     });
+    newEvent.organizer.user = eventSettings.user._id;
+    newEvent.organizer.name = eventSettings.user.username;
     newEvent.save(function(err) {
         if (!err) {
             var state = {
@@ -32,7 +34,7 @@ module.exports.createEvent = function(eventSettings, callback) {
 
 // TODO: query to select events based on time/location/rating/uploader etc
 module.exports.getEvents = function(callback) {
-    var eventQuery = Event.find().select('-posts -__v');
+    var eventQuery = Event.find().select('-posts -organizer.user -timeOfCreation -__v');
     eventQuery.exec(function(err, events) {
         // callback(err, events);
         if (!err) {

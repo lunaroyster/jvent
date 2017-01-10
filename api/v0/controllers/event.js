@@ -7,7 +7,8 @@ module.exports.createEvent = function(req, res) {
         byline: req.body.event.byline,
         description: req.body.event.description,
         visibility: req.body.event.visibility,
-        ingress: req.body.event.ingress
+        ingress: req.body.event.ingress,
+        user: req.user
     };
     eventCore.createEvent(eventSettings, function(state) {
         res.status(201);
