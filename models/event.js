@@ -19,8 +19,11 @@ var eventSchema = new Schema({
     posts: {
         type: [Schema.Types.ObjectId]
     },
-    timeOfCreation: Date
-    // organiser (id? or object?)
+    timeOfCreation: Date,
+    organizer: {
+        user: {type: Schema.Types.ObjectId, ref: 'User'},
+        name: {type: String}
+    }
     // event images
     // moderators
 });
