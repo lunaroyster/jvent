@@ -184,31 +184,31 @@ app.config(['$routeProvider', function($routeProvider) {
     .when('/', {
         controller  : 'eventListCtrl',
         controllerAs: 'eventsview',
-        templateUrl : './views/event/eventsview.html'
+        templateUrl : './views/event/list.html'
     })
     
     .when('/events', {
         controller  : 'eventListCtrl',
         controllerAs: 'eventsview',
-        templateUrl : './views/event/eventsview.html'
+        templateUrl : './views/event/list.html'
     })
     
     .when('/event/new', {
         controller  : 'newEventCtrl',
         controllerAs: 'newEventView',
-        templateUrl : './views/event/newevent.html'
+        templateUrl : './views/event/new.html'
     })
     
     .when('/event/:eventID', {
         controller  : 'eventCtrl',
         controllerAs: 'eventview',
-        templateUrl : './views/event/eventpage.html'
+        templateUrl : './views/event/page.html'
     })
     
     .when('/event/:eventID/post/new', {
         controller  : 'newPostCtrl',
         controllerAs: 'newPostView',
-        templateUrl : './views/post/newpost.html'
+        templateUrl : './views/post/new.html'
     })
     
     .when('/login', {
@@ -372,4 +372,5 @@ app.controller('404Ctrl', function($scope, $location) {
         window.history.back();
     };
     setTimeout($scope.redirect, 5000);
-})
+    //TODO: The back function still triggers, even if the user has navigated away from the page, bringing them back to the 404. FIX.
+})  
