@@ -229,13 +229,11 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/user/signup.html'
     })
     
-    .when('/404', {
+    .otherwise({
         controller  : '404Ctrl',
         controllerAs: '404View',
         templateUrl : './views/misc/404.html'
-    })
-    
-    .otherwise({redirectTo: '/404'});
+    });
     
 }]);
 
@@ -366,4 +364,12 @@ app.controller('newEventCtrl', function($scope, $location, jventService) {
             $location.path('/event/' + eventID);
         });
     };
+});
+
+app.controller('404Ctrl', function($scope, $location) {
+    $scope.wrongPath = $location.path();
+    $scope.redirect = function() {
+        window.history.back();
+    };
+    setTimeout($scope.redirect, 5000);
 })
