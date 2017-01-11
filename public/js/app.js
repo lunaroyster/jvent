@@ -184,49 +184,49 @@ app.config(['$routeProvider', function($routeProvider) {
     .when('/', {
         controller  : 'eventListCtrl',
         controllerAs: 'eventsview',
-        templateUrl : './eventsview.html'
+        templateUrl : './views/event/eventsview.html'
     })
     
     .when('/events', {
         controller  : 'eventListCtrl',
         controllerAs: 'eventsview',
-        templateUrl : './eventsview.html'
+        templateUrl : './views/event/eventsview.html'
     })
     
     .when('/event/new', {
         controller  : 'newEventCtrl',
         controllerAs: 'newEventView',
-        templateUrl : 'newevent.html'
+        templateUrl : './views/event/newevent.html'
     })
     
     .when('/event/:eventID', {
         controller  : 'eventCtrl',
         controllerAs: 'eventview',
-        templateUrl : 'eventpage.html'
+        templateUrl : './views/event/eventpage.html'
     })
     
     .when('/event/:eventID/post/new', {
         controller  : 'newPostCtrl',
         controllerAs: 'newPostView',
-        templateUrl : 'newpost.html'
+        templateUrl : './views/post/newpost.html'
     })
     
     .when('/login', {
         controller  : 'loginCtrl',
         controllerAs: 'loginview',
-        templateUrl : 'login.html'
+        templateUrl : './views/user/login.html'
     })
     
     .when('/logout', {
         controller  : 'logoutCtrl',
         controllerAs: 'logoutscreen',
-        templateUrl : 'logout.html'
+        templateUrl : './views/user/logout.html'
     })
     
     .when('/signup', {
         controller  : 'signUpCtrl',
         controllerAs: 'signUpView',
-        templateUrl : 'signup.html'
+        templateUrl : './views/user/signup.html'
     })
     
     .otherwise({redirectTo: '/'});
