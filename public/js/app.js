@@ -229,7 +229,13 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/user/signup.html'
     })
     
-    .otherwise({redirectTo: '/'});
+    .when('/404', {
+        controller  : '404Ctrl',
+        controllerAs: '404View',
+        templateUrl : './views/misc/404.html'
+    })
+    
+    .otherwise({redirectTo: '/404'});
     
 }]);
 
