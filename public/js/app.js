@@ -1,101 +1,40 @@
 /* global angular */
 var app = angular.module("jvent", ['ngRoute']);
 
-// app.service('authService', function($http, $q) {
-//     this.authed = false;
-//     this.authStore = null;
+app.service('urlService', function() {
+    var apiURL = 'api/';
+    var apiVersion = 'v0/';
     
-//     var getAuthStore = function() {
-//         var storage = [window.localStorage, window.sessionStorage];
-//         for(var i = 0; i<storage.length;i++) {
-//             if(storage[i].token) {
-//                 return storage[i];
-//             }
-//         }
-//         return(null);
-//     };
-//     var setAuthStore = function(remainSignedIn) {
-//         if(remainSignedIn) {
-//             this.authStore = window.localStorage;
-//         }
-//         else {
-//             this.authStore = window.sessionStorage;
-//         }
-//     };
-//     var storeToken = function(token) {
-//         if(this.authStore) {
-//             this.authStore.token = token;
-//         }
-//     };
-//     var setAuthHeader = function(token) {
-//         console.log("Setting Auth Header");
-//         $http.defaults.headers.common['Authentication'] = 'JWT '+ token;
-//     };
-//     var deleteAuthHeader = function() {
-//         console.log("Deleting Auth Header");
-//         $http.defaults.headers.common['Authentication'] = '';
-//     }
-//     var getTokenFromServer = function(creds, callback) {
-//         var req = {
-//             method: 'POST',
-//             url: '/api/v0/user/authenticate',
-//             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-//             data: 'email='+creds.email+'&password='+creds.password,
-//         };
-//         $http(req).then(function(data) {
-//           callback(null, data.data.token); 
-//         });
-//     };
-    
-//     this.isAuthed = function() {return(this.authed)};
-    
-//     this.login = function(creds, options, callback) {
-//         getTokenFromServer(creds, function(err, token) {
-//             if (err) {return(callback(false))}
-//             setAuthStore(options.remainSignedIn);
-//             storeToken(token);
-//             setAuthHeader(token);
-//             //Update user data in root scope
-//             this.authed = true;
-//             callback(true);
-//         });
-//     };
-//     this.logout = function() {
-//         this.authStore.token = null;
-//         deleteAuthHeader();
-//         //Delete user data in root scope 
-//         this.authed = false
-//     };
-//     var loadUser = function() {
-//         console.log("Searching for User");
-//         this.authStore = getAuthStore();
-//         if(this.authStore){
-//             this.authed = true;
-//             setAuthHeader(this.authStore.token);
-//             //Update user data in root scope
-//             console.log("Loaded User");
-//         }
-//     };
-//     this.register = function(email, username, password, callback) {
-//         var req = {
-//             method: 'POST',
-//             url: 'api/v0/user/signup',
-//             data: {
-//                 email: email,
-//                 username: username,
-//                 password: password
-//             }
-//         };
-//         $http(req).then(function(data) {
-//             if(data.data.status == "Created. Awaiting Verification") {
-//                 callback(true);
-//             }  
-//         });
-//     };
-//     loadUser();
-// });
+    this.api = function() {
+        return(apiURL+apiVersion);
+    };
+    this.user = function() {
+        return(this.api() + 'user/');
+    };
+    this.event = function() {
+        return(this.api() + 'event/');
+    };
+    this.eventID = function(eventID) {
+        return(this.event() + eventID + '/');
+    };
+    this.post = function(eventID) {
+        return(this.eventID(eventID) + 'post/');
+    };
+    this.postID = function(eventID, postID) {
+        return(this.post(eventID) + postID + '/');
+    };
+    this.comment = function(eventID, postID) {
+        return(this.postID(eventID, postID) + 'comment/');
+    };
+    this.commentID = function(eventID, postID, commentID) {
+        return(this.comment(eventID, postID) + commentID + '/');
+    };
+    this.authenticate = function() {
+        return(this.user() + 'authenticate/');
+    };
+});
 
-app.factory('authService', function($http, $q) {
+app.factory('authService', function($http, $q, urlService) {
     var obj = {};
     obj.authed = false;
     obj.authStore = null;
@@ -134,7 +73,7 @@ app.factory('authService', function($http, $q) {
     var getTokenFromServer = function(creds, callback) {
         var req = {
             method: 'POST',
-            url: '/api/v0/user/authenticate',
+            url: urlService.authenticate(),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             data: 'email='+creds.email+'&password='+creds.password,
         };
@@ -191,34 +130,6 @@ app.factory('authService', function($http, $q) {
     };
     loadUser();
     return(obj);
-});
-
-app.service('urlService', function() {
-    var apiURL = 'api/';
-    var apiVersion = 'v0/';
-    
-    this.api = function() {
-        return(apiURL+apiVersion);
-    };
-    this.event = function() {
-        return(this.api() + 'event/');
-    };
-    this.eventID = function(eventID) {
-        return(this.event() + eventID + '/');
-    };
-    this.post = function(eventID) {
-        return(this.eventID(eventID) + 'post/');
-    };
-    this.postID = function(eventID, postID) {
-        return(this.post(eventID) + postID + '/');
-    };
-    this.comment = function(eventID, postID) {
-        return(this.postID(eventID, postID) + 'comment/');
-    };
-    this.commentID = function(eventID, postID, commentID) {
-        return(this.comment(eventID, postID) + commentID + '/');
-    };
-    
 });
 
 app.service('jventService', function($http, $q, urlService) {
@@ -439,10 +350,7 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 });
 
 app.controller('newEventCtrl', function($scope, $location, jventService) {
-    $scope.newEvent = {}
-    //     visibility: "",
-    //     ingress: ""
-    // };
+    $scope.newEvent = {};
     
     //TODO: Filter visibility/ingress combinations
     $scope.createEvent = function() {
