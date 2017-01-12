@@ -1,7 +1,9 @@
 var eventCore = require('../../../core/event');
+var eventRequestSchema = require('../requests/event');
 
 // /event/
 module.exports.createEvent = function(req, res) {
+    req.check(eventRequestSchema.postEvent);
     var eventSettings = {
         name: req.body.event.name,
         byline: req.body.event.byline,
