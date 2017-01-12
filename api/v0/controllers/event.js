@@ -4,18 +4,25 @@ var eventRequestSchema = require('../requests/event');
 // /event/
 module.exports.createEvent = function(req, res) {
     req.check(eventRequestSchema.postEvent);
-    var eventSettings = {
-        name: req.body.event.name,
-        byline: req.body.event.byline,
-        description: req.body.event.description,
-        visibility: req.body.event.visibility,
-        ingress: req.body.event.ingress,
-        user: req.user
-    };
-    eventCore.createEvent(eventSettings, function(state) {
-        res.status(201);
-        res.json(state);
-    });
+    req.getValidationResult().then(function(result) {
+        if(!result.isEmpty()) {
+            res.status(400);
+            res.json(result.array());
+            return;
+        }
+        var eventSettings = {
+            name: req.body.event.name,
+            byline: req.body.event.byline,
+            description: req.body.event.description,
+            visibility: req.body.event.visibility,
+            ingress: req.body.event.ingress,
+            user: req.user
+        };
+        eventCore.createEvent(eventSettings, function(state) {
+            res.status(201);
+            res.json(state);
+        });
+    })
 };
 
 module.exports.getEvents = function(req, res) {
