@@ -173,6 +173,9 @@ app.service('jventService', function($http, $q, urlService) {
         $http.post(url, data).then(function(response) {
             var eventID = response.data.event;
             deferred.resolve(eventID);
+        },
+        function(response) {
+            deferred.reject(response.data);
         });
         return deferred.promise;
     };
@@ -362,6 +365,11 @@ app.controller('newEventCtrl', function($scope, $location, jventService) {
         var promise = jventService.createEvent($scope.newEvent);
         promise.then(function(eventID) {
             $location.path('/event/' + eventID);
+        },
+        function(err) {
+            for (var i = 0; i < err.length; i++) {
+                Materialize.toast(err[i].param + ' ' + err[i].msg, 4000) 
+            }
         });
     };
 });
