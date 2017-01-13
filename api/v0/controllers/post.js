@@ -1,14 +1,23 @@
-var postCore = require('../../../core/post')
+var postCore = require('../../../core/post');
+var postRequestSchema = require('../requests/post');
 
 // /post/
 module.exports.createPost = function(req, res) {
-    var postSettings = {
-        title: req.body.post.title,
-        contentText: req.body.post.content.text
-    };
-    postCore.createPost(postSettings, req.eventID, function(state) {
-        res.status(201);
-        res.json(state);
+    req.check(postRequestSchema.createPost);
+    req.getValidationResult().then(function(result) {
+        if(!result.isEmpty()) {
+            res.status(400);
+            res.json(result.array());
+            return;
+        }
+        var postSettings = {
+            title: req.body.post.title,
+            contentText: req.body.post.content.text
+        };
+        postCore.createPost(postSettings, req.eventID, function(state) {
+            res.status(201);
+            res.json(state);
+        });
     });
 };
 
