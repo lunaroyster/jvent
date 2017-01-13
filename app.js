@@ -25,7 +25,7 @@ app.set('view engine', 'jade');
 app.use(passport.initialize());
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(expressValidator());
+app.use(expressValidator(require('./core/requestOptions')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

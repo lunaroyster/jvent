@@ -1,5 +1,4 @@
 module.exports.postEvent = {
-    //'event.name': {
     'event.name': {
         notEmpty: true,
         isLength: {
@@ -23,10 +22,16 @@ module.exports.postEvent = {
         }
     },
     'event.visibility': {
-        notEmpty: true
+        notEmpty: true,
+        isVisibility: {
+            errorMessage: 'Invalid visibility setting'
+        }
     },
     'event.ingress': {
-        notEmpty: true
+        notEmpty: true,
+        isIngress: {
+            errorMessage: 'Invalid ingress setting'
+        }
     }
 };
 
