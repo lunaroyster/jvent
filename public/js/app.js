@@ -361,7 +361,6 @@ app.controller('newEventCtrl', function($scope, $location, jventService) {
     
     //TODO: Filter visibility/ingress combinations
     $scope.createEvent = function() {
-        console.log($scope.newEvent)
         var promise = jventService.createEvent($scope.newEvent);
         promise.then(function(eventID) {
             $location.path('/event/' + eventID);

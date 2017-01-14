@@ -22,7 +22,7 @@ module.exports.createEvent = function(req, res) {
             res.status(201);
             res.json(state);
         });
-    })
+    });
 };
 
 module.exports.getEvents = function(req, res) {
