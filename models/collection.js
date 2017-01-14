@@ -8,4 +8,8 @@ var collectionSchema = new Schema({
     }
 });
 
+collectionSchema.methods.postCount = function() {
+    return this.posts.length;
+};
+
 mongoose.model('Collection', collectionSchema);

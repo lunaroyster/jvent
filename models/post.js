@@ -10,8 +10,17 @@ var postSchema = new Schema({
         type: [Schema.Types.ObjectId]
     },
     timeOfCreation: Date,
-    parentEvent: Schema.Types.ObjectId
-    // poster
+    parentEvent: {
+        type: Schema.Types.ObjectId
+    },
+    parentCollections: {
+        type: [Schema.Types.ObjectId],
+        ref: 'Collection'
+    },
+    poster: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }
     // resource: String, // Can be URL or something else
     // resourceType: String, // Stores the type of resource
 });
