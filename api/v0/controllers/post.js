@@ -10,6 +10,7 @@ module.exports.createPost = function(req, res) {
             res.json(result.array());
             return;
         }
+        //TODO: Cannot read property 'text' of undefined
         var postSettings = {
             title: req.body.post.title,
             contentText: req.body.post.content.text
