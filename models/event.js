@@ -19,6 +19,10 @@ var eventSchema = new Schema({
     posts: {
         type: [Schema.Types.ObjectId]
     },
+    collections: {
+        type: [Schema.Types.ObjectId]
+    },
+    superCollection: {type: Schema.Types.ObjectId, ref: 'Collection'},
     timeOfCreation: Date,
     organizer: {
         user: {type: Schema.Types.ObjectId, ref: 'User'},
