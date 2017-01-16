@@ -25,4 +25,8 @@ var postSchema = new Schema({
     // resourceType: String, // Stores the type of resource
 });
 
+postSchema.methods.collectionCount = function() {
+    return this.parentCollections.length;
+};
+
 mongoose.model('Post', postSchema);

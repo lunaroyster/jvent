@@ -22,11 +22,19 @@ var eventSchema = new Schema({
     collections: {
         type: [Schema.Types.ObjectId]
     },
-    superCollection: {type: Schema.Types.ObjectId, ref: 'Collection'},
+    superCollection: {
+        type: Schema.Types.ObjectId, 
+        ref: 'Collection'
+    },
     timeOfCreation: Date,
     organizer: {
-        user: {type: Schema.Types.ObjectId, ref: 'User'},
-        name: {type: String}
+        user: {
+            type: Schema.Types.ObjectId, 
+            ref: 'User'
+        },
+        name: {
+            type: String
+        }
     }
     // event images
     // moderators
