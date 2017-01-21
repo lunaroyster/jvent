@@ -25,6 +25,34 @@ module.exports.createEvent = function(req, res) {
     });
 };
 
+module.exports.createEvent = function(req, res) {
+    req.check(eventRequestSchema.postEvent);
+    req.getValidationResult()
+    .then(function(result) {
+        if(!result.isEmpty()) {
+            // throw new Error({
+            //     msg: "Request Validation Failed",
+            //     errors: result.array()
+            // });
+            result.throw();
+        }
+        return;
+    })
+    .then(function() {
+        //Check User Privilige
+    })
+    .then(function() {
+        return eventCore.createEvent()
+        .then(function(event) {
+            //Add event to User's collection
+        });
+    })
+    .catch(function(error) {
+        console.log(error.array());
+        res.status(400).json(error.array());
+    });
+};
+
 module.exports.getEvents = function(req, res) {
     var responseObject = {};
     eventCore.getEvents(function(err, events) {
