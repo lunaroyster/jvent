@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 var collectionCore = require('./supercollection')
 var Event = mongoose.model('Event');
 
-// Information in -> Queries DB -> Object out
 module.exports.createEvent = function(eventSettings, callback) {
     var newEvent = new Event({
         name: eventSettings.name,
@@ -42,20 +41,22 @@ module.exports.createEvent = function(eventSettings) {
         ingress: eventSettings.ingress,
         timeOfCreation: Date.now()
     });
+    newEvent.organizer.user = eventSettings.user._id;
+    newEvent.organizer.name = eventSettings.user.username;
     return newEvent.save()
     .then(function(event) {
         collectionCore.createSuperCollection(event)
         .then(function(sc) {
             event.superCollection = sc;
             return event.save();
-        })
+        });
+        // TODO:
         // userListCore.createUserList(event)
+        // Use a promise array for userListCore
     })
-    .then(function(event) {
+    // .fail(function(error) {
         
-    })
-    // Update (and save) event with SuperCollection and userList(s)
-    // Return event as promise outcome
+    // });
 };
 
 // TODO: query to select events based on time/location/rating/uploader etc
