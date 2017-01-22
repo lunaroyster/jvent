@@ -32,6 +32,27 @@ module.exports.createEvent = function(eventSettings, callback) {
     });
 };
 
+module.exports.createEvent = function(eventSettings) {
+    var newEvent = new Event({
+        name: eventSettings.name,
+        byline: eventSettings.byline,
+        description: eventSettings.description,
+        visibility: eventSettings.visibility,
+        ingress: eventSettings.ingress,
+        timeOfCreation: Date.now()
+    });
+    return newEvent.save()
+    .then(function(event) {
+        // collectionCore.createSuperCollection(event)
+        // userListCore.createUserList(event)
+    })
+    .then(function(event) {
+        
+    })
+    // Update (and save) event with SuperCollection and userList(s)
+    // Return event as promise outcome
+};
+
 // TODO: query to select events based on time/location/rating/uploader etc
 module.exports.getEvents = function(callback) {
     var eventQuery = Event.find().select('-posts -organizer.user -timeOfCreation -__v');
