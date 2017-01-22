@@ -83,6 +83,12 @@ module.exports.getEvents = function(callback) {
     })
 }
 
+// TODO: query to select events based on time/location/rating/uploader etc
+module.exports.getEvents = function(callback) {
+    var eventQuery = Event.find().select('-posts -organizer.user -timeOfCreation -__v');
+    return eventQuery.exec();
+};
+
 module.exports.getEventByID = function(eventID, callback) {
     var eventQuery = Event.findOne({_id: eventID});
     eventQuery.exec(function(err, event) {
