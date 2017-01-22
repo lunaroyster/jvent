@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
-var collectionCore = require('./supercollection')
+var collectionCore = require('./supercollection');
 var Event = mongoose.model('Event');
 
 module.exports.createEvent = function(eventSettings, callback) {
@@ -83,8 +83,8 @@ module.exports.getEvents = function(callback) {
     })
 }
 
-// TODO: query to select events based on time/location/rating/uploader etc
-module.exports.getEvents = function(callback) {
+module.exports.getEvents = function() {
+    // TODO: query to select events based on time/location/rating/uploader etc
     var eventQuery = Event.find().select('-posts -organizer.user -timeOfCreation -__v');
     return eventQuery.exec();
 };
@@ -96,3 +96,9 @@ module.exports.getEventByID = function(eventID, callback) {
     });
 };
 
+module.exports.getEventByID = function(eventID) {
+    var eventQuery = Event.findOne({_id: eventID});
+    return eventQuery.exec();
+};
+
+// TODO: Remove callback based handlers
