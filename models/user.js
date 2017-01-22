@@ -18,7 +18,13 @@ var userSchema = new Schema({
         required: true
     },
     hash: String,
-    salt: String
+    salt: String,
+    privileges: {
+        createEvent: {
+            type: Boolean,
+            default: false
+        }
+    }
 });
 
 userSchema.methods.setPassword = function(password) {
