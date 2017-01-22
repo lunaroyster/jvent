@@ -83,6 +83,20 @@ module.exports.getEvents = function(req, res) {
     });
 };
 
+module.exports.getEvents = function(req, res) {
+    var responseObject;
+    eventCore.getEvents()
+    .then(function(events) {
+        responseObject.events = events;
+        res.status(200);
+        res.json(responseObject);
+    }, function(error) {
+        responseObject.error = error;
+        res.status(400);
+        res.json(responseObject);
+    })
+}
+
 // /event/:eventID
 module.exports.getEventByID = function(req, res) {
     var responseObject = {};
@@ -97,6 +111,20 @@ module.exports.getEventByID = function(req, res) {
             res.status(400);
             res.json(responseObject);
         }
+    });
+};
+
+module.exports.getEventByID = function(req, res) {
+    var responseObject = {};
+    eventCore.getEventByID(req.params.eventID)
+    .then(function(event) {
+        responseObject.event = event;
+        res.status(200);
+        res.json(responseObject);  
+    }, function(error) {
+        responseObject.error = error;
+        res.status(400);
+        res.json(responseObject);
     });
 };
 
