@@ -39,7 +39,12 @@ module.exports.createEvent = function(req, res) {
         return;
     })
     .then(function() {
-        //Check User Privilige
+        if(req.user.privileges.createEvent) {
+            return;
+        }
+        else {
+            throw new Error("Bad privileges");
+        }
     })
     .then(function() {
         return eventCore.createEvent()
@@ -48,8 +53,17 @@ module.exports.createEvent = function(req, res) {
         });
     })
     .catch(function(error) {
-        console.log(error.array());
-        res.status(400).json(error.array());
+        var err;
+        try {
+            err = error.array();
+        } catch (e) {
+            console.log(e);
+            if(e.name=="TypeError") {
+                err = [{param:error.name, msg: error.message}];
+            }
+        }
+        console.log(err);
+        res.status(400).json(err);
     });
 };
 
