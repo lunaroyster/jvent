@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
+var collectionCore = require('./supercollection')
 var Event = mongoose.model('Event');
 
 // Information in -> Queries DB -> Object out
@@ -43,7 +44,11 @@ module.exports.createEvent = function(eventSettings) {
     });
     return newEvent.save()
     .then(function(event) {
-        // collectionCore.createSuperCollection(event)
+        collectionCore.createSuperCollection(event)
+        .then(function(sc) {
+            event.superCollection = sc;
+            return event.save();
+        })
         // userListCore.createUserList(event)
     })
     .then(function(event) {
