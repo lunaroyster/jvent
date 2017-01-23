@@ -142,3 +142,5 @@ module.exports.appendEventID = function(req, res, next) {
     req.eventID = req.params.eventID;
     next();
 };
+
+// TODO: Remove callback functions

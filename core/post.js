@@ -1,9 +1,10 @@
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
+var eventCore = require('./event');
+var collectionCore = require('./collection')
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 
-// Information in -> Queries DB -> Object out
 module.exports.createPost = function(postSettings, eventID, callback) {
     var newPost = new Post({
         title: postSettings.title,
@@ -46,6 +47,29 @@ module.exports.createPost = function(postSettings, eventID, callback) {
     });
 };
 
+module.exports.createPost = function(postSettings, event, superCollection) {
+    var newPost = new Post({
+        title: postSettings.title,
+        parentEvent: event._id,
+        superCollection: superCollection._id,
+        content: {
+            text: postSettings.contentText
+        },
+        timeOfCreation: Date.now()
+    });
+    //TODO: other collections
+    return newPost.save();
+    // eventCore.getEventByID(eventID)
+    // .then(function(event) {
+    //     return collectionCore.findSuperCollection(event._id)
+    //     // return newPost.save()
+    //     // .then(function(post) {
+    //     //     // TODO Finish and commit this method/file
+    //     //     eventCore.addPost(post, event)
+    //     // })
+    // })
+};
+
 // TODO: query to select posts based on time/location/rating/poster etc
 module.exports.getPosts = function(eventID, callback) {
     var eventQuery = Event.findOne({_id: eventID});
@@ -58,6 +82,14 @@ module.exports.getPosts = function(eventID, callback) {
               }
           });
         }
+    });
+};
+
+module.exports.getPosts = function(eventID) {
+    return collectionCore.findSuperCollection(eventID)
+    .then(function(superCollection) {
+        var postQuery = Post.find({'_id':{$in:superCollection.posts}});
+        return postQuery.exec();
     });
 };
 
@@ -75,3 +107,7 @@ module.exports.getPostByID = function(eventID, postID, callback) {
     });
 };
 
+module.exports.getPostByID = function(eventID, postID) {
+    var postQuery = Post.findOne({parentEvent: eventID, _id: postID});
+    return postQuery.exec();
+};
