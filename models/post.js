@@ -17,6 +17,10 @@ var postSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref: 'Collection'
     },
+    superCollection: {
+        type: Schema.Types.ObjectId,
+        ref: 'SuperCollection'
+    },
     poster: {
         type: Schema.Types.ObjectId,
         ref: 'User'
