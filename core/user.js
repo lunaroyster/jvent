@@ -26,9 +26,22 @@ module.exports.createUser = function(userObj, callback) {
     });
 };
 
+module.exports.createUser = function(userObj) {
+    var newUser = new User({
+        email: userObj.email,
+        username: userObj.username
+    });
+    newUser.setPassword(userObj.password);
+    return newUser.save();
+};
+
 module.exports.getUserByID = function(userID, callback) {};
 module.exports.getUserByEmail = function(email, callback) {};
 module.exports.getUserByUsername = function(username, callback) {};
+
+module.exports.getUserByID = function(userID) {};
+module.exports.getUserByEmail = function(email) {};
+module.exports.getUserByUsername = function(username) {};
 
 module.exports.generateToken = function(user, callback) {
     var token = jwt.sign({
@@ -36,3 +49,12 @@ module.exports.generateToken = function(user, callback) {
     }, "debug");
     callback(token);
 };
+
+//TODO: Write promise based function
+module.exports.generateToken = function(user) {
+    var token = jwt.sign({
+        sub: user._id
+    }, "debug");
+    callback(token);
+};
+

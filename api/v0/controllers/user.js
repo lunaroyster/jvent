@@ -41,6 +41,7 @@ module.exports.signup = function(req, res) {
     };
     userCore.createUser(userObj)
     .then(function(status) {
+        // Change status to user; figure out status by reading user object
         res.status(201);
         res.json(status);
     });
