@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
-var collectionCore = require('./supercollection');
+var collectionCore = require('./collection');
 var Event = mongoose.model('Event');
 
 module.exports.createEvent = function(eventSettings, callback) {

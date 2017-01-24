@@ -18,6 +18,7 @@ passport.use(new LocalStrategy({
   }
 ));
 
+//TODO: store secret more securely
 var JWTopts = {
   jwtFromRequest: ExtractJwt.fromAuthHeader(),
   secretOrKey: "debug"
