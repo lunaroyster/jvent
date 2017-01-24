@@ -47,7 +47,15 @@ module.exports.createEvent = function(req, res) {
         }
     })
     .then(function() {
-        return eventCore.createEvent()
+        var eventSettings = {
+            name: req.body.event.name,
+            byline: req.body.event.byline,
+            description: req.body.event.description,
+            visibility: req.body.event.visibility,
+            ingress: req.body.event.ingress,
+            user: req.user
+        };
+        return eventCore.createEvent(eventSettings)
         .then(function(event) {
             //Add event to User's collection
         });

@@ -1,6 +1,7 @@
-var mongoose = require('mongoose');
+var Q = require('q');
 var jwt = require('jsonwebtoken');
 
+var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
 module.exports.createUser = function(userObj, callback) {
@@ -64,6 +65,8 @@ module.exports.generateToken = function(user) {
     var token = jwt.sign({
         sub: user._id
     }, "debug");
-    callback(token);
+    return Q.fcall(function() {
+        return token;
+    });
 };
 
