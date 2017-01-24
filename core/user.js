@@ -39,9 +39,18 @@ module.exports.getUserByID = function(userID, callback) {};
 module.exports.getUserByEmail = function(email, callback) {};
 module.exports.getUserByUsername = function(username, callback) {};
 
-module.exports.getUserByID = function(userID) {};
-module.exports.getUserByEmail = function(email) {};
-module.exports.getUserByUsername = function(username) {};
+module.exports.getUserByID = function(userID) {
+    var userQuery = User.findOne({_id: userID});
+    return userQuery.exec();
+};
+module.exports.getUserByEmail = function(email) {
+    var userQuery = User.findOne({email: email});
+    return userQuery.exec();
+};
+module.exports.getUserByUsername = function(username) {
+    var userQuery = User.findOne({username: username});
+    return userQuery.exec();    
+};
 
 module.exports.generateToken = function(user, callback) {
     var token = jwt.sign({

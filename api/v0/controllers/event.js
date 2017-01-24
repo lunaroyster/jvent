@@ -84,7 +84,7 @@ module.exports.getEvents = function(req, res) {
 };
 
 module.exports.getEvents = function(req, res) {
-    var responseObject;
+    var responseObject = {};
     eventCore.getEvents()
     .then(function(events) {
         responseObject.events = events;
@@ -94,8 +94,8 @@ module.exports.getEvents = function(req, res) {
         responseObject.error = error;
         res.status(400);
         res.json(responseObject);
-    })
-}
+    });
+};
 
 // /event/:eventID
 module.exports.getEventByID = function(req, res) {
