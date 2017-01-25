@@ -54,9 +54,9 @@ module.exports.createEvent = function(eventSettings) {
         // userListCore.createUserList(event)
         // Use a promise array for userListCore
     })
-    // .fail(function(error) {
-        
-    // });
+    .fail(function(error) {
+        return error;
+    });
 };
 
 // TODO: query to select events based on time/location/rating/uploader etc

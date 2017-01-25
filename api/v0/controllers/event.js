@@ -60,6 +60,13 @@ module.exports.createEvent = function(req, res) {
             //Add event to User's collection
         });
     })
+    .then(function(event) {
+        var state = {
+            status: "Created",
+            event: event._id
+        };
+        res.status(200).json(state);
+    })
     .catch(function(error) {
         var err;
         try {
