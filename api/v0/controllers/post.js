@@ -4,7 +4,8 @@ var postRequestSchema = require('../requests/post');
 // /post/
 module.exports.createPost = function(req, res) {
     req.check(postRequestSchema.createPost);
-    req.getValidationResult().then(function(result) {
+    req.getValidationResult()
+    .then(function(result) {
         if(!result.isEmpty()) {
             res.status(400);
             res.json(result.array());
@@ -21,6 +22,28 @@ module.exports.createPost = function(req, res) {
             res.json(state);
         });
     });
+};
+
+module.exports.createPost = function(req, res) {
+    req.check(postRequestSchema.createPost);
+    req.getValidationResult()
+    .then(function(result) {
+        if(!result.isEmpty()) {
+            result.throw();
+        }
+        return;
+    })
+    .then(function() {
+        if(req.user.privileges.createPost) {
+            return;
+        }
+        else {
+            throw new Error("Bad privileges");
+        }
+    })
+    .then(function() {
+        
+    })
 };
 
 module.exports.getPosts = function(req, res) {

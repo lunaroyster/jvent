@@ -30,10 +30,6 @@ module.exports.createEvent = function(req, res) {
     req.getValidationResult()
     .then(function(result) {
         if(!result.isEmpty()) {
-            // throw new Error({
-            //     msg: "Request Validation Failed",
-            //     errors: result.array()
-            // });
             result.throw();
         }
         return;
