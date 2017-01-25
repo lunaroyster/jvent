@@ -70,15 +70,16 @@ app.factory('authService', function($http, $q, urlService) {
         console.log("Deleting Auth Header");
         $http.defaults.headers.common['Authorization'] = '';
     };
-    var getTokenFromServer = function(creds, callback) {
+    var getTokenFromServer = function(creds) {
         var req = {
             method: 'POST',
             url: urlService.authenticate(),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             data: 'email='+creds.email+'&password='+creds.password,
         };
-        $http(req).then(function(data) {
-           callback(null, data.data.token); 
+        return $http(req)
+        .then(function(data) {
+           return data.data.token; 
         });
     };
     var loadUser = function() {
@@ -93,15 +94,27 @@ app.factory('authService', function($http, $q, urlService) {
     };
     
     obj.isAuthed = function() {return(obj.authed)};
-    obj.login = function(creds, options, callback) {
-        getTokenFromServer(creds, function(err, token) {
-            if (err) {return(callback(false))}
+    obj.login = function(creds, options) {
+        // getTokenFromServer(creds, function(err, token) {
+        //     if (err) {return(callback(false))}
+        //     setAuthStore(options.remainSignedIn);
+        //     storeToken(token);
+        //     setAuthHeader(token);
+        //     //Update user data in root scope
+        //     obj.authed = true;
+        //     callback(true);
+        // });
+        return getTokenFromServer(creds)
+        .then(function(token) {
             setAuthStore(options.remainSignedIn);
             storeToken(token);
             setAuthHeader(token);
             //Update user data in root scope
             obj.authed = true;
-            callback(true);
+            return true;
+        })
+        .catch(function(error) {
+            return false;
         });
     };
     obj.logout = function() {
@@ -282,7 +295,8 @@ app.controller('loginCtrl', function($scope, $location, authService) {
                 email: $scope.email,
                 password: $scope.password
             };
-            authService.login(creds, {remainSignedIn:$scope.remainSignedIn}, function(success) {
+            authService.login(creds, {remainSignedIn:$scope.remainSignedIn})
+            .then(function(success) {
                 if (success) {
                     $location.path('/');
                 }
