@@ -1,5 +1,6 @@
 var postCore = require('../../../core/post');
-var eventCore = require('../../../core/event')
+var eventCore = require('../../../core/event');
+var collectionCore = require('../../../core/collection');
 var postRequestSchema = require('../requests/post');
 
 // /post/
@@ -48,7 +49,7 @@ module.exports.createPost = function(req, res) {
     .then(function(event) {
         var connections = {};
         connections.event = event;
-        return collectionCore.getSuperCollectionByID(event.superCollection) //TODO: Implement
+        return collectionCore.getSuperCollectionByID(event.superCollection)
         .then(function(sc) {
             connections.superCollection = sc;
             return connections;

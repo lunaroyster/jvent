@@ -10,3 +10,18 @@ module.exports.createSuperCollection = function(event) {
     });
     return superCollection.save();
 };
+
+module.exports.getSuperCollectionByID = function(superCollectionID) {
+    var superCollectionQuery = SuperCollection.findOne({_id: superCollectionID});
+    return superCollectionQuery.exec();
+};
+
+module.exports.addPostToSuperCollection = function(post, superCollection) {
+    superCollection.posts.push(post._id);
+    return superCollection.save();
+};
+
+module.exports.addPostToCollections = function(post, collections) {
+    return true;
+    //TODO: Implement
+}
