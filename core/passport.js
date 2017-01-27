@@ -31,3 +31,5 @@ passport.use(new JwtStrategy(JWTopts, function(jwt_payload, done) {
     else {return done(null, false)}
   });
 }));
+
+// TODO: Use the userCore library instead of directly querying?
