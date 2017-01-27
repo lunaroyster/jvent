@@ -54,6 +54,7 @@ module.exports.createEvent = function(req, res) {
         return eventCore.createEvent(eventSettings)
         .then(function(event) {
             //Add event to User's collection
+            return event;
         });
     })
     .then(function(event) {

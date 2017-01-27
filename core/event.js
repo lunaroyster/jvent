@@ -45,7 +45,7 @@ module.exports.createEvent = function(eventSettings) {
     newEvent.organizer.name = eventSettings.user.username;
     return newEvent.save()
     .then(function(event) {
-        collectionCore.createSuperCollection(event)
+        return collectionCore.createSuperCollection(event)
         .then(function(sc) {
             event.superCollection = sc;
             return event.save();
