@@ -44,7 +44,7 @@ module.exports.createPost = function(req, res) {
         }
     })
     .then(function() {
-        return eventCore.getEventIfAttendee(req.eventID, req.user)
+        return eventCore.getEventIfAttendee(req.eventID, req.user);
     })
     .then(function(event) {
         var connections = {};
@@ -60,24 +60,34 @@ module.exports.createPost = function(req, res) {
         var postSettings = {
             title: req.body.post.title,
             contentText: req.body.post.content.text
-        }
+        };
         postCore.createPost(postSettings, connections.event, connections.superCollection)
         .then(function(post) {
             return collectionCore.addPostToSuperCollection(post, connections.superCollection)
             .then(function() {
-                return collectionCore.addPostToCollections(post, connections.collections)
+                return collectionCore.addPostToCollections(post, connections.collections);
             })
             .then(function() {
                 return post;
-            })
-        })
+            });
+        });
     })
     .then(function(post) {
         res.status(201).json(post);  
     })
     .catch(function(error) {
-        
-    })
+        var err;
+        try {
+            err = error.array();
+        } catch (e) {
+            console.log(e);
+            if(e.name=="TypeError") {
+                err = [{param:error.name, msg: error.message}];
+            }
+        }
+        console.log(err);
+        res.status(400).json(err);
+    });
 };
 
 module.exports.getPosts = function(req, res) {
