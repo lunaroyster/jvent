@@ -1,4 +1,5 @@
 var postCore = require('../../../core/post');
+var eventCore = require('../../../core/event')
 var postRequestSchema = require('../requests/post');
 
 // /post/
@@ -42,6 +43,38 @@ module.exports.createPost = function(req, res) {
         }
     })
     .then(function() {
+        return eventCore.getEventIfAttendee(req.eventID, req.user)
+    })
+    .then(function(event) {
+        var connections = {};
+        connections.event = event;
+        return collectionCore.getSuperCollectionByID(event.superCollection) //TODO: Implement
+        .then(function(sc) {
+            connections.superCollection = sc;
+            return connections;
+        });
+        // Add Regular Collections
+    })
+    .then(function(connections) {
+        var postSettings = {
+            title: req.body.post.title,
+            contentText: req.body.post.content.text
+        }
+        postCore.createPost(postSettings, connections.event, connections.superCollection)
+        .then(function(post) {
+            return collectionCore.addPostToSuperCollection(post, connections.superCollection)
+            .then(function() {
+                return collectionCore.addPostToCollections(post, connections.collections)
+            })
+            .then(function() {
+                return post;
+            })
+        })
+    })
+    .then(function(post) {
+        res.status(201).json(post);  
+    })
+    .catch(function(error) {
         
     })
 };

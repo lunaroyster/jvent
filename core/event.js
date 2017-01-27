@@ -101,4 +101,8 @@ module.exports.getEventByID = function(eventID) {
     return eventQuery.exec();
 };
 
+module.exports.getEventIfAttendee = function(eventID, user) {
+      
+};
+
 // TODO: Remove callback based handlers
