@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
 var eventCore = require('./event');
-var collectionCore = require('./collection')
+var collectionCore = require('./collection');
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 
@@ -57,17 +57,7 @@ module.exports.createPost = function(postSettings, event, superCollection) {
         },
         timeOfCreation: Date.now()
     });
-    //TODO: other collections
     return newPost.save();
-    // eventCore.getEventByID(eventID)
-    // .then(function(event) {
-    //     return collectionCore.findSuperCollection(event._id)
-    //     // return newPost.save()
-    //     // .then(function(post) {
-    //     //     // TODO Finish and commit this method/file
-    //     //     eventCore.addPost(post, event)
-    //     // })
-    // })
 };
 
 // TODO: query to select posts based on time/location/rating/poster etc
