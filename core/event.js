@@ -101,6 +101,11 @@ module.exports.getEventByID = function(eventID) {
     return eventQuery.exec();
 };
 
+module.exports.getEventByURL = function(url) {
+    var eventQuery = Event.findOne({urlID: url});
+    return eventQuery.exec();
+};
+
 module.exports.getEventIfAttendee = function(eventID, user) {
       
 };

@@ -18,7 +18,7 @@ var eventSchema = new Schema({
     },
     posts: {
         type: [Schema.Types.ObjectId]
-    },
+    },   //TODO: Get rid of obsolete field
     collections: {
         type: [Schema.Types.ObjectId]
     },
@@ -35,6 +35,10 @@ var eventSchema = new Schema({
         name: {
             type: String
         }
+    },
+    urlID: {
+        type: String, //TODO: Implement better
+        unique: true
     }
     // event images
     // moderators
