@@ -36,8 +36,8 @@ var eventSchema = new Schema({
             type: String
         }
     },
-    urlID: {
-        type: String, //TODO: Implement better
+    url: {
+        type: String, //TODO: Implement better.
         unique: true
     }
     // event images

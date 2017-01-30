@@ -102,12 +102,12 @@ module.exports.getEventByID = function(eventID) {
 };
 
 module.exports.getEventByURL = function(url) {
-    var eventQuery = Event.findOne({urlID: url});
+    var eventQuery = Event.findOne({url: url});
     return eventQuery.exec();
 };
 
 module.exports.getEventIfAttendee = function(eventID, user) {
-      
+    
 };
 
 // TODO: Remove callback based handlers
