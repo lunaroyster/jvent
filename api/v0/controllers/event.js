@@ -155,4 +155,32 @@ module.exports.appendEventID = function(req, res, next) {
     next();
 };
 
+module.exports.appendEventIfVisible = function(req, res, next) {
+    eventCore.getEventByURL(req.params.eventID)
+    .then(function(event) {
+        if(event.visibility=="public") {
+            req.event = event;
+            next();
+            return;
+        }
+        else if(event.visibility=="unlisted") {
+            if(req.user) {
+                req.event = event;
+                next();
+                return;
+            }
+            else {
+                throw new Error("Bad Auth");
+            }
+        }
+        else if(event.visibility=="private") {
+            //Queries and stuff
+        }
+    })
+    .catch(function(error) {
+        res.status(400);
+        
+    });
+      
+};
 // TODO: Remove callback functions
