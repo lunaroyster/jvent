@@ -11,6 +11,7 @@ router.get('/:eventID', authController.nonblockingjwtAuth, eventController.getEv
 router.patch('/:eventID', authController.blockingjwtAuth, eventController.updateEventByID);
 router.delete('/:eventID', authController.blockingjwtAuth, eventController.deleteEventByID);
 
-router.use('/:eventID/post', eventController.appendEventID, require('./post'));
+// router.use('/:eventID/post', eventController.appendEventID, require('./post'));
+router.use('/:eventID/post', authController.nonblockingjwtAuth, eventController.appendEventIfVisible, require('./post'));
 
 module.exports = router;

@@ -100,9 +100,8 @@ module.exports.createPost = function(req, res) {
 
 module.exports.getPosts = function(req, res) {
     // get a promise
-    // check user privilege
     // check req for querystring or parameters and format query
-    return postCore.getPosts(req.eventID)
+    return postCore.getPosts(req.event._id) //TODO: Amend post core to directly use event objects.
     .then(function(posts) {
         res.status(200);
         res.json(posts);
@@ -119,7 +118,7 @@ module.exports.getPosts = function(req, res) {
 module.exports.getPostByID = function(req, res) {
     // Check user privilege
     // Perhaps check querystring (for comment sorting maybe?)
-    return postCore.getPostByID(req.eventID, req.params.postID)
+    return postCore.getPostByID(req.event._id, req.params.postID)
     .then(function(post) {
         res.status(200);
         res.json(post);

@@ -11,3 +11,12 @@ module.exports.nonblockingjwtAuth = function(req, res, next) {
         next();
     })(req, res, next);
 };
+
+module.exports.AuthOnly = function(req, res, next) {
+    if(req.user) {
+        next();
+    }
+    else {
+        next(Error("Bad auth"));
+    }
+};
