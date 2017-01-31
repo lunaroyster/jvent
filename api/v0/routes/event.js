@@ -4,12 +4,12 @@ var router = express.Router();
 var eventController = require('../controllers/event');
 var authController = require('../controllers/auth');
 
-router.post('/', authController.jwtAuth, eventController.createEvent);
-router.get('/', eventController.getEvents);
+router.post('/', authController.blockingjwtAuth, eventController.createEvent);
+router.get('/', authController.nonblockingjwtAuth, eventController.getEvents);
 
-router.get('/:eventID', eventController.getEventByID);
-router.patch('/:eventID', authController.jwtAuth, eventController.updateEventByID);
-router.delete('/:eventID', authController.jwtAuth, eventController.deleteEventByID);
+router.get('/:eventID', authController.nonblockingjwtAuth, eventController.getEventByID);
+router.patch('/:eventID', authController.blockingjwtAuth, eventController.updateEventByID);
+router.delete('/:eventID', authController.blockingjwtAuth, eventController.deleteEventByID);
 
 router.use('/:eventID/post', eventController.appendEventID, require('./post'));
 

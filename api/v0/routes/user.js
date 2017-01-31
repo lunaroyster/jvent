@@ -5,7 +5,7 @@ var userController = require('../controllers/user');
 var authController = require('../controllers/auth');
 
 router.post('/authenticate', authController.localAuth, userController.authenticate);
-router.post('/signup', userController.signup);
-router.get('/', authController.jwtAuth, userController.returnAuthenticatedUser);
+router.post('/signup', authController.nonblockingjwtAuth, userController.signup);
+router.get('/', authController.blockingjwtAuth, userController.returnAuthenticatedUser);
 
 module.exports = router;
