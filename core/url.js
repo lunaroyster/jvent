@@ -1,6 +1,6 @@
 module.exports.generateRandomUrl = function(length) {
-    var min = 36**(length-1);
-    var max = (36**length)-1;
+    var min = Math.pow(36,(length-1));
+    var max = (Math.pow(36,length))-1;
     return Math.floor(Math.random()*(max-min+1)+min).toString(36);
 };
 

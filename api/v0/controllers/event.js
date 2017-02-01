@@ -28,6 +28,7 @@ module.exports.createEvent = function(req, res) {
             description: req.body.event.description,
             visibility: req.body.event.visibility,
             ingress: req.body.event.ingress,
+            url: urlCore.generateRandomUrl(6),
             user: req.user
         };
         return eventCore.createEvent(eventSettings)
@@ -91,7 +92,7 @@ module.exports.deleteEvent = function(req, res) {
 };
 
 module.exports.appendEventIfVisible = function(req, res, next) {
-    eventCore.getEventByID(req.params.eventID)
+    eventCore.getEventByURL(req.params.eventURL)
     .then(function(event) {
         if(event.visibility=="public") {
             req.event = event;
