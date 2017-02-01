@@ -3,35 +3,6 @@ var mongoose = require('mongoose');
 var collectionCore = require('./collection');
 var Event = mongoose.model('Event');
 
-// module.exports.createEvent = function(eventSettings, callback) {
-//     var newEvent = new Event({
-//         name: eventSettings.name,
-//         byline: eventSettings.byline,
-//         description: eventSettings.description,
-//         visibility: eventSettings.visibility,
-//         ingress: eventSettings.ingress,
-//         timeOfCreation: Date.now()
-//     });
-//     newEvent.organizer.user = eventSettings.user._id;
-//     newEvent.organizer.name = eventSettings.user.username;
-//     newEvent.save(function(err) {
-//         if (!err) {
-//             var state = {
-//                 status: "Created",
-//                 event: newEvent._id
-//             };
-//             callback(state);
-//         }
-//         else {
-//             var errState = {
-//                 status: "Error",
-//                 error: err
-//             };
-//             callback(errState);
-//         }
-//     });
-// };
-
 module.exports.createEvent = function(eventSettings) {
     var newEvent = new Event({
         name: eventSettings.name,
@@ -61,41 +32,12 @@ module.exports.createEvent = function(eventSettings) {
 };
 
 // TODO: query to select events based on time/location/rating/uploader etc
-// module.exports.getEvents = function(callback) {
-//     var eventQuery = Event.find().select('-posts -organizer.user -timeOfCreation -__v');
-//     eventQuery.exec(function(err, events) {
-//         // callback(err, events);
-//         if (!err) {
-//             // var state = {
-//             //     status: "Success",
-//             //     eventCount: events.length
-//             // };
-//             // callback(state, events);
-//             callback(null, events);
-//         }
-//         else {
-//             // var errState = {
-//             //     status: "Failed",
-//             //     error: err
-//             // };
-//             // callback(errState);
-//             callback(err, null);
-//         }
-//     })
-// }
 
 module.exports.getEvents = function() {
     // TODO: query to select events based on time/location/rating/uploader etc
     var eventQuery = Event.find().select('-posts -organizer.user -timeOfCreation -__v');
     return eventQuery.exec();
 };
-
-// module.exports.getEventByID = function(eventID, callback) {
-//     var eventQuery = Event.findOne({_id: eventID});
-//     eventQuery.exec(function(err, event) {
-//         callback(err, event);
-//     });
-// };
 
 module.exports.getEventByID = function(eventID) {
     var eventQuery = Event.findOne({_id: eventID});
@@ -110,5 +52,3 @@ module.exports.getEventByURL = function(url) {
 module.exports.getEventIfAttendee = function(eventID, user) {
     
 };
-
-// TODO: Remove callback based handlers
