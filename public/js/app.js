@@ -14,20 +14,20 @@ app.service('urlService', function() {
     this.event = function() {
         return(this.api() + 'event/');
     };
-    this.eventID = function(eventID) {
-        return(this.event() + eventID + '/');
+    this.eventURL = function(eventURL) {
+        return(this.event() + eventURL + '/');
     };
-    this.post = function(eventID) {
-        return(this.eventID(eventID) + 'post/');
+    this.post = function(eventURL) {
+        return(this.eventURL(eventURL) + 'post/');
     };
-    this.postID = function(eventID, postID) {
-        return(this.post(eventID) + postID + '/');
+    this.postID = function(eventURL, postID) {
+        return(this.post(eventURL) + postID + '/');
     };
-    this.comment = function(eventID, postID) {
-        return(this.postID(eventID, postID) + 'comment/');
+    this.comment = function(eventURL, postID) {
+        return(this.postID(eventURL, postID) + 'comment/');
     };
-    this.commentID = function(eventID, postID, commentID) {
-        return(this.comment(eventID, postID) + commentID + '/');
+    this.commentID = function(eventURL, postID, commentID) {
+        return(this.comment(eventURL, postID) + commentID + '/');
     };
     this.authenticate = function() {
         return(this.user() + 'authenticate/');
@@ -158,16 +158,16 @@ app.service('jventService', function($http, $q, urlService) {
         });
         return deferred.promise;
     };
-    this.getEvent = function(eventID) {
+    this.getEvent = function(eventURL) {
         var deferred = $q.defer();
-        $http.get('api/v0/event/' + eventID).then(function (data) {
+        $http.get('api/v0/event/' + eventURL).then(function (data) {
             event = data.data.event;
             deferred.resolve(event);
         });
         return deferred.promise;
     };
-    this.createPost = function(post, eventID) {
-        var url = urlService.post(eventID);
+    this.createPost = function(post, eventURL) {
+        var url = urlService.post(eventURL);
         var deferred = $q.defer();
         var data = {
             post: post,
@@ -184,8 +184,8 @@ app.service('jventService', function($http, $q, urlService) {
             event: event
         };
         $http.post(url, data).then(function(response) {
-            var eventID = response.data.event;
-            deferred.resolve(eventID);
+            var eventURL = response.data.event;
+            deferred.resolve(eventURL);
         },
         function(response) {
             deferred.reject(response.data);
@@ -215,13 +215,13 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/event/new.html'
     })
     
-    .when('/event/:eventID', {
+    .when('/event/:eventURL', {
         controller  : 'eventCtrl',
         controllerAs: 'eventview',
         templateUrl : './views/event/page.html'
     })
     
-    .when('/event/:eventID/post/new', {
+    .when('/event/:eventURL/post/new', {
         controller  : 'newPostCtrl',
         controllerAs: 'newPostView',
         templateUrl : './views/post/new.html'
@@ -279,7 +279,7 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
 });
 
 app.controller('eventCtrl', function($scope, $routeParams, jventService) {
-    var eventPromise = jventService.getEvent($routeParams.eventID);
+    var eventPromise = jventService.getEvent($routeParams.eventURL);
     eventPromise.then(function (event) {
         $scope.event = event;
     });
@@ -362,10 +362,10 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
             },
             link: $scope.link
         };
-        var eventID = $routeParams.eventID;
-        console.log(eventID);
+        var eventURL = $routeParams.eventURL;
+        console.log(eventURL);
         if($scope.validTitle()){
-            jventService.createPost(post, eventID);
+            jventService.createPost(post, eventURL);
         }
     };
 });
@@ -378,8 +378,8 @@ app.controller('newEventCtrl', function($scope, $location, jventService) {
         if($scope.newEventEnabled) {
             $scope.newEventEnabled = false;
             jventService.createEvent($scope.newEvent)
-            .then(function(eventID) {
-                $location.path('/event/' + eventID);
+            .then(function(eventURL) {
+                $location.path('/event/' + eventURL);
             },
             function(err) {
                 for (var i = 0; i < err.length; i++) {
