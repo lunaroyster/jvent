@@ -1,4 +1,5 @@
 var eventCore = require('../../../core/event');
+var urlCore = require('../../../core/url');
 var eventRequestSchema = require('../requests/event');
 
 // /event/
