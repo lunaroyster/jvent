@@ -33,9 +33,9 @@ module.exports.createEvent = function(eventSettings) {
 
 // TODO: query to select events based on time/location/rating/uploader etc
 
-module.exports.getEvents = function() {
+module.exports.getPublicEvents = function() {
     // TODO: query to select events based on time/location/rating/uploader etc
-    var eventQuery = Event.find().select('-posts -organizer.user -timeOfCreation -__v');
+    var eventQuery = Event.find().select('-_id name description byline url organizer.name ingress');
     return eventQuery.exec();
 };
 

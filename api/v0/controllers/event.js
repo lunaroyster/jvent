@@ -61,7 +61,7 @@ module.exports.createEvent = function(req, res) {
 
 module.exports.getEvents = function(req, res) {
     var responseObject = {};
-    eventCore.getEvents()
+    eventCore.getPublicEvents()
     .then(function(events) {
         responseObject.events = events;
         res.status(200);
