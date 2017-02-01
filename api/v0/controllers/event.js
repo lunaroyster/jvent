@@ -73,39 +73,20 @@ module.exports.getEvents = function(req, res) {
 
 // /event/:eventID
 
-module.exports.getEventByID = function(req, res) {
-    var responseObject = {};
-    eventCore.getEventByID(req.params.eventID)
-    .then(function(event) {
-        responseObject.event = event;
-        res.status(200);
-        res.json(responseObject);  
-    }, function(error) {
-        responseObject.error = error;
-        res.status(400);
-        res.json(responseObject);
-    });
-};
-
 module.exports.getEvent = function(req, res) {
     var responseObject = {};
     responseObject.event = req.event;
     res.status(200).json(responseObject);
 };
 
-module.exports.updateEventByID = function(req, res) {
+module.exports.updateEvent = function(req, res) {
     res.json(req);
     res.send();
 };
 
-module.exports.deleteEventByID = function(req, res) {
+module.exports.deleteEvent = function(req, res) {
     res.json(req);
     res.send();
-};
-
-module.exports.appendEventID = function(req, res, next) {
-    req.eventID = req.params.eventID;
-    next();
 };
 
 module.exports.appendEventIfVisible = function(req, res, next) {
