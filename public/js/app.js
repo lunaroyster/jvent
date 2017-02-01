@@ -1,4 +1,4 @@
-/* global angular */
+/* global angular Materialize*/
 var app = angular.module("jvent", ['ngRoute']);
 
 app.service('urlService', function() {
@@ -383,7 +383,7 @@ app.controller('newEventCtrl', function($scope, $location, jventService) {
             },
             function(err) {
                 for (var i = 0; i < err.length; i++) {
-                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000) 
+                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
                 }
                 $scope.newEventEnabled = true;
             });

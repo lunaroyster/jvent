@@ -178,8 +178,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         }
     })
     .catch(function(error) {
-        res.status(400);
-        
+        next(error);
     });
       
 };

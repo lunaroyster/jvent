@@ -7,9 +7,9 @@ var authController = require('../controllers/auth');
 router.post('/', authController.AuthOnly, eventController.createEvent);
 router.get('/', eventController.getEvents);
 
-router.get('/:eventID', eventController.getEventByID);
-router.patch('/:eventID', authController.AuthOnly, eventController.updateEventByID);
-router.delete('/:eventID', authController.AuthOnly, eventController.deleteEventByID);
+router.get('/:eventID', eventController.appendEventIfVisible, eventController.getEventByID);
+router.patch('/:eventID', authController.AuthOnly, eventController.appendEventIfVisible, eventController.updateEventByID);
+router.delete('/:eventID', authController.AuthOnly, eventController.appendEventIfVisible, eventController.deleteEventByID);
 
 // router.use('/:eventID/post', eventController.appendEventID, require('./post'));
 router.use('/:eventID/post', eventController.appendEventIfVisible, require('./post'));
