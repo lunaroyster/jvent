@@ -140,6 +140,12 @@ module.exports.getEventByID = function(req, res) {
     });
 };
 
+module.exports.getEvent = function(req, res) {
+    var responseObject = {};
+    responseObject.event = req.event;
+    res.status(200).json(responseObject);
+};
+
 module.exports.updateEventByID = function(req, res) {
     res.json(req);
     res.send();
@@ -156,7 +162,7 @@ module.exports.appendEventID = function(req, res, next) {
 };
 
 module.exports.appendEventIfVisible = function(req, res, next) {
-    eventCore.getEventByURL(req.params.eventID)
+    eventCore.getEventByID(req.params.eventID)
     .then(function(event) {
         if(event.visibility=="public") {
             req.event = event;

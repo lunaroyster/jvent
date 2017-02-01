@@ -7,7 +7,7 @@ var authController = require('../controllers/auth');
 router.post('/', authController.AuthOnly, eventController.createEvent);
 router.get('/', eventController.getEvents);
 
-router.get('/:eventID', eventController.appendEventIfVisible, eventController.getEventByID);
+router.get('/:eventID', eventController.appendEventIfVisible, eventController.getEvent);
 router.patch('/:eventID', authController.AuthOnly, eventController.appendEventIfVisible, eventController.updateEventByID);
 router.delete('/:eventID', authController.AuthOnly, eventController.appendEventIfVisible, eventController.deleteEventByID);
 
