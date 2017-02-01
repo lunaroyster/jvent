@@ -44,7 +44,7 @@ module.exports.createPost = function(req, res) {
         }
     })
     .then(function() {
-        return eventCore.getEventIfAttendee(req.eventID, req.user);
+        return req.event; //TODO: return only if user has post privileges
     })
     .then(function(event) {
         var connections = {};
