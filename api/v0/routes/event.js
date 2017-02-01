@@ -11,7 +11,6 @@ router.get('/:eventURL', eventController.appendEventIfVisible, eventController.g
 router.patch('/:eventURL', authController.AuthOnly, eventController.appendEventIfVisible, eventController.updateEvent);
 router.delete('/:eventURL', authController.AuthOnly, eventController.appendEventIfVisible, eventController.deleteEvent);
 
-// router.use('/:eventID/post', eventController.appendEventID, require('./post'));
 router.use('/:eventURL/post', eventController.appendEventIfVisible, require('./post'));
 
 module.exports = router;

@@ -91,12 +91,18 @@ module.exports.getPostByID = function(req, res) {
     });
 };
 
-module.exports.updatePostByID = function(req, res) {
+module.exports.getPost = function(req, res) {
+    var responseObject = {};
+    responseObject.post = req.post;
+    res.status(200).json(responseObject);
+};
+
+module.exports.updatePost = function(req, res) {
     res.json(req);
     res.send();
 };
 
-module.exports.deletePostByID = function(req, res) {
+module.exports.deletePost = function(req, res) {
     res.json(req);
     res.send();
 };
