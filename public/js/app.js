@@ -372,18 +372,22 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 
 app.controller('newEventCtrl', function($scope, $location, jventService) {
     $scope.newEvent = {};
-    
+    $scope.newEventEnabled = true;
     //TODO: Filter visibility/ingress combinations
     $scope.createEvent = function() {
-        var promise = jventService.createEvent($scope.newEvent);
-        promise.then(function(eventID) {
-            $location.path('/event/' + eventID);
-        },
-        function(err) {
-            for (var i = 0; i < err.length; i++) {
-                Materialize.toast(err[i].param + ' ' + err[i].msg, 4000) 
-            }
-        });
+        if($scope.newEventEnabled) {
+            $scope.newEventEnabled = false;
+            jventService.createEvent($scope.newEvent)
+            .then(function(eventID) {
+                $location.path('/event/' + eventID);
+            },
+            function(err) {
+                for (var i = 0; i < err.length; i++) {
+                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000) 
+                }
+                $scope.newEventEnabled = true;
+            });
+        }
     };
 });
 
