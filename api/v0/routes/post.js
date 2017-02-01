@@ -4,12 +4,12 @@ var router = express.Router();
 var postController = require('../controllers/post');
 var authController = require('../controllers/auth');
 
-router.post('/', authController.blockingjwtAuth, postController.createPost);
-router.get('/', authController.nonblockingjwtAuth, postController.getPosts);
+router.post('/', authController.AuthOnly, postController.createPost);
+router.get('/', postController.getPosts);
 
-router.get('/:postID', authController.nonblockingjwtAuth, postController.getPostByID);
-router.patch('/:postID', authController.blockingjwtAuth, postController.updatePostByID);
-router.delete('/:postID', authController.blockingjwtAuth, postController.deletePostByID);
+router.get('/:postID', postController.getPostByID);
+router.patch('/:postID', authController.AuthOnly, postController.updatePostByID);
+router.delete('/:postID', authController.AuthOnly, postController.deletePostByID);
 
 router.use('/:postID/comment', postController.appendPostID, require('./comment'));
 
