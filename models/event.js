@@ -16,9 +16,6 @@ var eventSchema = new Schema({
         type: String,
         required: true
     },
-    posts: {
-        type: [Schema.Types.ObjectId]
-    },   //TODO: Get rid of obsolete field
     collections: {
         type: [Schema.Types.ObjectId]
     },
@@ -38,6 +35,7 @@ var eventSchema = new Schema({
     },
     url: {
         type: String, //TODO: Implement better.
+        index: true,
         unique: true
     }
     // event images

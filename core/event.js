@@ -35,7 +35,7 @@ module.exports.createEvent = function(eventSettings) {
 
 module.exports.getPublicEvents = function() {
     // TODO: query to select events based on time/location/rating/uploader etc
-    var eventQuery = Event.find().select('-_id name description byline url organizer.name ingress');
+    var eventQuery = Event.find({visibility: "public"}).select('-_id name description byline url organizer.name ingress');
     return eventQuery.exec();
 };
 
