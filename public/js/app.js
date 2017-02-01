@@ -273,8 +273,8 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     eventListPromise.then(function (eventList) {
         $scope.eventArray = eventList;
     });
-    $scope.eventClick = function(eventID) {
-        $location.path('/event/' + eventID);
+    $scope.eventClick = function(eventURL) {
+        $location.path('/event/' + eventURL);
     };
 });
 

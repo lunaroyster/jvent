@@ -39,6 +39,7 @@ module.exports.createEvent = function(eventSettings) {
         description: eventSettings.description,
         visibility: eventSettings.visibility,
         ingress: eventSettings.ingress,
+        url: eventSettings.url,
         timeOfCreation: Date.now()
     });
     newEvent.organizer.user = eventSettings.user._id;
