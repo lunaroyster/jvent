@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var collectionCore = require('./collection');
-var Event = mongoose.model('Event');
+var UserList = mongoose.model('UserList');
 
 module.exports.createDefaultUserLists = function(event) {
     var visibility = event.visibility;
@@ -15,3 +15,11 @@ module.exports.createDefaultUserLists = function(event) {
     //Create Moderator list
     //Create Attendee list
 }
+
+module.exports.addUserToAttendeeList = function(user, event) {
+    return UserList.findOne({_id: event.userLists.attendee})
+    .then(function(userlist) {
+        userlist.users.addToSet(user._id);
+        return userlist.save();
+    });
+};
