@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Q = require('q');
 var collectionCore = require('./collection');
 var UserList = mongoose.model('UserList');
 
@@ -6,14 +7,19 @@ module.exports.createDefaultUserLists = function(event) {
     var visibility = event.visibility;
     var ingress = event.ingress;
     var UserLists = {};
+    var userListPromises = [];
     if(visibility=="private") {
-        //Create viewer list
+        userListPromises.push(module.exports.createViewerList(event));
     }
     if(ingress=="invite") {
-        //Create invite list
+        userListPromises.push(module.exports.createInviteList(event));
     }
-    //Create Moderator list
-    //Create Attendee list
+    userListPromises.push(module.exports.createModeratorList(event));
+    userListPromises.push(module.exports.createAttendeeList(event));
+    Q.allSettled(userListPromises)
+    .then(function(results) {
+        //TODO: Handle results. Return UserLists object with required fields. Or rewrite the entire thing, if required.
+    })
 }
 
 module.exports.addUserToAttendeeList = function(user, event) {
