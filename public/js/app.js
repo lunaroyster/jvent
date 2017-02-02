@@ -394,8 +394,9 @@ app.controller('newEventCtrl', function($scope, $location, jventService) {
 app.controller('404Ctrl', function($scope, $location) {
     $scope.wrongPath = $location.path();
     $scope.redirect = function() {
-        window.history.back();
+        if($location.path()==$scope.wrongPath) {
+            window.history.back();
+        }
     };
     setTimeout($scope.redirect, 5000);
-    //TODO: The back function still triggers, even if the user has navigated away from the page, bringing them back to the 404. FIX.
 })  
