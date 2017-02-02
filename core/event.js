@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
 var collectionCore = require('./collection');
+var userListCore = require('./userList');
 var Event = mongoose.model('Event');
 
 module.exports.createEvent = function(eventSettings) {
@@ -23,7 +24,7 @@ module.exports.createEvent = function(eventSettings) {
             return;
         })
         .then(function() {
-            return userListCore.createUserLists(event)
+            return userListCore.createDefaultUserLists(event)
             .then(function(userLists) {
                 event.assignUserLists(userLists);
                 return event.save()
