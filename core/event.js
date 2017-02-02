@@ -20,10 +20,17 @@ module.exports.createEvent = function(eventSettings) {
         return collectionCore.createSuperCollection(event)
         .then(function(sc) {
             event.superCollection = sc;
-            return event.save();
-        });
+            return;
+        })
+        .then(function() {
+            return userListCore.createUserLists(event)
+            .then(function(userLists) {
+                event.assignUserLists(userLists);
+                return event.save()
+            })
+        })
         // TODO:
-        // userListCore.createUserList(event)
+        // Remove unnecessary event save if possible.
         // Use a promise array for userListCore
     })
     .fail(function(error) {
@@ -50,5 +57,5 @@ module.exports.getEventByURL = function(url) {
 };
 
 module.exports.getEventIfAttendee = function(eventID, user) {
-    
+
 };
