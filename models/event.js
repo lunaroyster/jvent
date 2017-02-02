@@ -23,6 +23,11 @@ var eventSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Collection'
     },
+    userLists: {
+        moderator: { type: Schema.Types.ObjectId },
+        attendee: { type: Schema.Types.ObjectId },
+        viewer: { type: Schema.Types.ObjectId }
+    },
     timeOfCreation: Date,
     organizer: {
         user: {
