@@ -81,6 +81,22 @@ module.exports.getEvent = function(req, res) {
     res.status(200).json(responseObject);
 };
 
+module.exports.joinEvent = function(req, res) {
+    var ingress = req.event.ingress
+    if(ingress=="everyone") {
+        //Join
+    }
+    else if(ingress=="link") {
+        if(req.query.c==event.joinLink) {
+            //Join()
+        }
+    }
+    else if(ingress=="invite") {
+        //Query event's invited (or attendee) userList
+        //If successful, Join()
+    }
+};
+
 module.exports.updateEvent = function(req, res) {
     res.json(req);
     res.send();
