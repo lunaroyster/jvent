@@ -47,4 +47,10 @@ var eventSchema = new Schema({
     // moderators
 });
 
+eventSchema.methods.assignUserLists = function(userLists) {
+    if (userLists.attendee) { this.userLists.attendee = userLists.attendee; }
+    if (userLists.moderator) { this.userLists.moderator = userLists.moderator; }
+    if (userLists.viewer) { this.userLists.viewer = userLists.viewer; }
+};
+
 mongoose.model('Event', eventSchema);
