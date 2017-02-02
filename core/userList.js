@@ -23,3 +23,31 @@ module.exports.addUserToAttendeeList = function(user, event) {
         return userlist.save();
     });
 };
+
+module.exports.createViewerList = function(event) {
+    var newViewerList = new UserList({
+        listType: "viewer"
+    })
+    return newViewerList.save();
+};
+
+module.exports.createInviteList = function(event) {
+    var newInviteList = new UserList({
+        listType: "invite"
+    })
+    return newInviteList.save();
+};
+
+module.exports.createModeratorList = function(event) {
+    var newModeratorList = new UserList({
+        listType: "moderator"
+    })
+    return newModeratorList.save();
+};
+
+module.exports.createAttendeeList = function(event) {
+    var newAttendeeList = new UserList({
+        listType: "attendee"
+    })
+    return newAttendeeList.save();
+};
