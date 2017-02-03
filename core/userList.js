@@ -11,22 +11,22 @@ module.exports.createDefaultUserLists = function(event) {
     if(visibility=="private") {
         userListPromises.push(module.exports.createViewerList(event)
         .then(function(viewerlist) {
-            return UserLists.viewerlist = viewerlist;
+            return UserLists.viewer = viewerlist;
         }));
     }
     if(ingress=="invite") {
         userListPromises.push(module.exports.createInviteList(event)
         .then(function(invitelist) {
-            return UserLists.invitelist = invitelist;
+            return UserLists.invite = invitelist;
         }));
     }
     userListPromises.push(module.exports.createModeratorList(event)
     .then(function(moderatorlist) {
-        return UserLists.moderatorlist = moderatorlist;
+        return UserLists.moderator = moderatorlist;
     }));
     userListPromises.push(module.exports.createAttendeeList(event)
     .then(function(attendeelist) {
-        return UserLists.attendeelist = attendeelist;
+        return UserLists.attendee = attendeelist;
     }));
     return Q.allSettled(userListPromises)
     .then(function(results) {

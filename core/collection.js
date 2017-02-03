@@ -6,7 +6,7 @@ var Event = mongoose.model('Event');
 
 module.exports.createSuperCollection = function(event) {
     var superCollection = new SuperCollection({
-        event: event
+        event: event._id
     });
     return superCollection.save();
 };

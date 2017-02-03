@@ -21,7 +21,7 @@ var eventSchema = new Schema({
     },
     superCollection: {
         type: Schema.Types.ObjectId, 
-        ref: 'Collection'
+        ref: 'SuperCollection'
     },
     userLists: {
         moderator: { type: Schema.Types.ObjectId },

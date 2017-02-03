@@ -23,9 +23,9 @@ module.exports.createEvent = function(eventSettings) {
         promises.push(collectionCore.createSuperCollection(event));
         promises.push(userListCore.createDefaultUserLists(event));
         return Q.all(promises)
-        .then(function(sc, userLists) {
-            event.superCollection = sc;
-            event.assignUserLists(userLists);
+        .then(function(results) {
+            event.superCollection = results[0];
+            event.assignUserLists(results[1]);
         })
         .then(function() {
             return event.save();
