@@ -1,3 +1,4 @@
+var Q = require('q');
 var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
 var urlCore = require('../../../core/url');
@@ -83,19 +84,30 @@ module.exports.getEvent = function(req, res) {
 };
 
 module.exports.joinEvent = function(req, res) {
-    var ingress = req.event.ingress;
-    if(ingress=="everyone") {
-        userListCore.addUserToAttendeeList(req.user, req.event);
-    }
-    else if(ingress=="link") {
-        if(req.query.c==event.joinLink) {
-            userListCore.addUserToAttendeeList(req.user, req.event);
+    Q.fcall(function() {
+        var ingress = req.event.ingress;
+        if(ingress=="everyone") {
+            return userListCore.addUserToAttendeeList(req.user, req.event);
         }
-    }
-    else if(ingress=="invite") {
-        //TODO: Query event's invited (or attendee) userList
-        //If successful, Join()
-    }
+        else if(ingress=="link") {
+            if(req.query.c==event.joinLink) {
+                return userListCore.addUserToAttendeeList(req.user, req.event);
+            }
+            else {
+                throw new Error("Bad link");
+            }
+        }
+        else if(ingress=="invite") {
+            //TODO: Query event's invited (or attendee) userList
+            //If successful, Join()
+        }
+    })
+    .then(function() {
+        req.status(200).json("Success!");
+    })
+    .fail(function(error) {
+        req.status(401).json("Failed.");
+    });
 };
 
 module.exports.updateEvent = function(req, res) {
