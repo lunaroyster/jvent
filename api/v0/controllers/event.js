@@ -103,11 +103,12 @@ module.exports.joinEvent = function(req, res) {
         }
     })
     .then(function() {
-        req.status(200).json("Success!");
+        res.status(200).json("Success!");
     })
     .fail(function(error) {
-        req.status(401).json("Failed.");
-    });
+        res.status(401).json("Failed.");
+    })
+    .done();
 };
 
 module.exports.updateEvent = function(req, res) {
