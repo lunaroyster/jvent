@@ -1,5 +1,6 @@
 var postCore = require('../../../core/post');
 var eventCore = require('../../../core/event');
+var userListCore = require('../../../core/userList');
 var collectionCore = require('../../../core/collection');
 var postRequestSchema = require('../requests/post');
 
@@ -23,7 +24,10 @@ module.exports.createPost = function(req, res) {
         }
     })
     .then(function() {
-        return req.event; //TODO: return only if user has post privileges
+        userListCore.isUserAttendee(req.user, req.event)
+        .then(function() {
+            return req.event; //TODO: return only if user has post privileges
+        });
     })
     .then(function(event) {
         var connections = {};
