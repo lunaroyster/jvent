@@ -1,4 +1,5 @@
 var eventCore = require('../../../core/event');
+var userListCore = require('../../../core/userList');
 var urlCore = require('../../../core/url');
 var eventRequestSchema = require('../requests/event');
 
@@ -82,17 +83,17 @@ module.exports.getEvent = function(req, res) {
 };
 
 module.exports.joinEvent = function(req, res) {
-    var ingress = req.event.ingress
+    var ingress = req.event.ingress;
     if(ingress=="everyone") {
-        //Join
+        userListCore.addUserToAttendeeList(req.user, req.event);
     }
     else if(ingress=="link") {
         if(req.query.c==event.joinLink) {
-            //Join()
+            userListCore.addUserToAttendeeList(req.user, req.event);
         }
     }
     else if(ingress=="invite") {
-        //Query event's invited (or attendee) userList
+        //TODO: Query event's invited (or attendee) userList
         //If successful, Join()
     }
 };
