@@ -9,18 +9,30 @@ module.exports.createDefaultUserLists = function(event) {
     var UserLists = {};
     var userListPromises = [];
     if(visibility=="private") {
-        userListPromises.push(module.exports.createViewerList(event));
+        userListPromises.push(module.exports.createViewerList(event)
+        .then(function(viewerlist) {
+            return UserLists.viewerlist = viewerlist;
+        }));
     }
     if(ingress=="invite") {
-        userListPromises.push(module.exports.createInviteList(event));
+        userListPromises.push(module.exports.createInviteList(event)
+        .then(function(invitelist) {
+            return UserLists.invitelist = invitelist;
+        }));
     }
-    userListPromises.push(module.exports.createModeratorList(event));
-    userListPromises.push(module.exports.createAttendeeList(event));
-    Q.allSettled(userListPromises)
+    userListPromises.push(module.exports.createModeratorList(event)
+    .then(function(moderatorlist) {
+        return UserLists.moderatorlist = moderatorlist;
+    }));
+    userListPromises.push(module.exports.createAttendeeList(event)
+    .then(function(attendeelist) {
+        return UserLists.attendeelist = attendeelist;
+    }));
+    return Q.allSettled(userListPromises)
     .then(function(results) {
-        //TODO: Handle results. Return UserLists object with required fields. Or rewrite the entire thing, if required.
-    })
-}
+        return UserLists;
+    });
+};
 
 module.exports.addUserToAttendeeList = function(user, event) {
     return UserList.findOne({_id: event.userLists.attendee})
