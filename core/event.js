@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var Q = require('q');
 // var User = mongoose.model('User');
 var collectionCore = require('./collection');
 var userListCore = require('./userList');
@@ -18,21 +19,18 @@ module.exports.createEvent = function(eventSettings) {
     newEvent.organizer.name = eventSettings.user.username;
     return newEvent.save()
     .then(function(event) {
-        return collectionCore.createSuperCollection(event)
-        .then(function(sc) {
+        var promises = [];
+        promises.push(collectionCore.createSuperCollection(event));
+        promises.push(userListCore.createDefaultUserLists(event));
+        return Q.all(promises)
+        .then(function(sc, userLists) {
             event.superCollection = sc;
-            return;
+            event.assignUserLists(userLists);
         })
         .then(function() {
-            return userListCore.createDefaultUserLists(event)
-            .then(function(userLists) {
-                event.assignUserLists(userLists);
-                return event.save();
-            });
+            return event.save();
         });
-        // TODO:
-        // Remove unnecessary event save if possible.
-        // Use a promise array for userListCore
+        // TODO: Remove unnecessary event save if possible.
     })
     .fail(function(error) {
         return error;
