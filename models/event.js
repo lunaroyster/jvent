@@ -26,6 +26,7 @@ var eventSchema = new Schema({
     userLists: {
         moderator: { type: Schema.Types.ObjectId },
         attendee: { type: Schema.Types.ObjectId },
+        invite: { type: Schema.Types.ObjectId },
         viewer: { type: Schema.Types.ObjectId }
     },
     timeOfCreation: Date,

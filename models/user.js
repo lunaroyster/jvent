@@ -22,7 +22,7 @@ var userSchema = new Schema({
     privileges: {
         createEvent: {
             type: Boolean,
-            default: false
+            default: true
         }
     }
 });
