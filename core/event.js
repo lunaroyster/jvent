@@ -27,9 +27,9 @@ module.exports.createEvent = function(eventSettings) {
             return userListCore.createDefaultUserLists(event)
             .then(function(userLists) {
                 event.assignUserLists(userLists);
-                return event.save()
-            })
-        })
+                return event.save();
+            });
+        });
         // TODO:
         // Remove unnecessary event save if possible.
         // Use a promise array for userListCore

@@ -24,4 +24,4 @@ module.exports.addPostToSuperCollection = function(post, superCollection) {
 module.exports.addPostToCollections = function(post, collections) {
     return true;
     //TODO: Implement
-}
+};

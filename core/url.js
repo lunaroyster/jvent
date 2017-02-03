@@ -5,5 +5,3 @@ module.exports.generateRandomUrl = function(length) {
 };
 
 //TODO: function to make sure that URL is unique
-
-//TODO: Organize/Rename/Relocate/Do something about this file.

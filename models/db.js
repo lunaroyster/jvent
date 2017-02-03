@@ -53,3 +53,4 @@ require('./post');
 require('./collection');
 require('./supercollection');
 require('./user');
+require('./userlist');
