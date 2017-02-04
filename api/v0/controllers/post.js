@@ -20,8 +20,7 @@ module.exports.createPost = function(req, res) {
             return;
         }
         else {
-            // throw new Error("Bad privileges");
-            return;
+            throw new Error("Bad privileges");
         }
     })
     .then(function() {
@@ -30,32 +29,6 @@ module.exports.createPost = function(req, res) {
             return req.event; //TODO: return only if user has post privileges
         });
     })
-    // .then(function(event) {
-    //     var connections = {};
-    //     connections.event = event;
-    //     return collectionCore.getSuperCollectionByID(event.superCollection)
-    //     .then(function(sc) {
-    //         connections.superCollection = sc;
-    //         return connections;
-    //     });
-    //     // Add Regular Collections
-    // })
-    // .then(function(connections) {
-    //     var postSettings = {
-    //         title: req.body.post.title,
-    //         contentText: req.body.post.content.text
-    //     };
-    //     postCore.createPost(postSettings, connections.event, connections.superCollection)
-    //     .then(function(post) {
-    //         return collectionCore.addPostToSuperCollection(post, connections.superCollection)
-    //         .then(function() {
-    //             return collectionCore.addPostToCollections(post, connections.collections);
-    //         })
-    //         .then(function() {
-    //             return post;
-    //         });
-    //     });
-    // })
     .then(function(event) {
         var postSettings = {
             title: req.body.post.title,

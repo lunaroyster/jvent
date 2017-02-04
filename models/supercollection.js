@@ -15,4 +15,8 @@ superCollectionSchema.methods.postCount = function() {
     return this.posts.length;
 };
 
+superCollectionSchema.methods.addPost = function(post) {
+    this.posts.addToSet(post._id);
+};
+
 mongoose.model('SuperCollection', superCollectionSchema);

@@ -33,7 +33,10 @@ module.exports.createPost = function(user, post, event) {
         return newPost.save()
         .then(function(post) {
             sc.addPost(post);
-            return sc.save();
+            return sc.save()
+            .then(function(sc) {
+                return post;
+            });
         });
         //Regular Collections?
     });
