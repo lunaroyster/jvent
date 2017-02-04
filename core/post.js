@@ -18,6 +18,27 @@ module.exports.createPost = function(postSettings, event, superCollection) {
     return newPost.save();
 };
 
+module.exports.createPost = function(user, post, event) {
+    return collectionCore.getSuperCollectionByID(event.superCollection)
+    .then(function(sc) {
+        var newPost = new Post({
+            title: post.title,
+            parentEvent: event._id,
+            superCollection: sc._id,
+            content: {
+                text: post.contentText
+            },
+            timeOfCreation: Date.now()
+        });
+        return newPost.save()
+        .then(function(post) {
+            sc.addPost(post);
+            return sc.save();
+        });
+        //Regular Collections?
+    });
+};
+
 // TODO: query to select posts based on time/location/rating/poster etc
 
 // module.exports.getPosts = function(eventID) {

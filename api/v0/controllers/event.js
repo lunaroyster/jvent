@@ -103,6 +103,10 @@ module.exports.joinEvent = function(req, res) {
         }
     })
     .then(function() {
+        //TODO: Add to user's event list?
+        return;
+    })
+    .then(function() {
         res.status(200).json("Success!");
     })
     .fail(function(error) {
