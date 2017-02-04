@@ -20,11 +20,12 @@ module.exports.createPost = function(req, res) {
             return;
         }
         else {
-            throw new Error("Bad privileges");
+            // throw new Error("Bad privileges");
+            return;
         }
     })
     .then(function() {
-        userListCore.isUserAttendee(req.user, req.event)
+        return userListCore.isUserAttendee(req.user, req.event)
         .then(function() {
             return req.event; //TODO: return only if user has post privileges
         });
@@ -60,7 +61,7 @@ module.exports.createPost = function(req, res) {
             title: req.body.post.title,
             contentText: req.body.post.content.text
         };
-        return postCore.createEvent(req.user, postSettings, event);
+        return postCore.createPost(req.user, postSettings, event);
     })
     .then(function(post) {
         res.status(201).json(post);
