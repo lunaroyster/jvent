@@ -55,9 +55,15 @@ module.exports.createPost = function(req, res) {
     //         });
     //     });
     // })
-    // .then(function(event) {//postCore.createEvent(user, post, event) (which handles the superCollection)})
+    .then(function(event) {
+        var postSettings = {
+            title: req.body.post.title,
+            contentText: req.body.post.content.text
+        };
+        return postCore.createEvent(req.user, postSettings, event);
+    })
     .then(function(post) {
-        res.status(201).json(post);  
+        res.status(201).json(post);
     })
     .catch(function(error) {
         var err;
