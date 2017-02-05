@@ -19,6 +19,10 @@ var userSchema = new Schema({
     },
     hash: String,
     salt: String,
+    posts: {
+        type: Schema.Types.ObjectId,
+        ref: 'Collection'
+    },
     privileges: {
         createEvent: {
             type: Boolean,

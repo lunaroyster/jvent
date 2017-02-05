@@ -21,6 +21,14 @@ module.exports.addPostToSuperCollection = function(post, superCollection) {
     return superCollection.save();
 };
 
+module.exports.addPostToCollectionByID = function(post, collectionID) {
+    return Collection.findOne({_id: collectionID})
+    .then(function(collection) {
+        collection.posts.addToSet(post._id);
+        return collection.save();
+    });
+};
+
 module.exports.addPostToCollections = function(post, collections) {
     return true;
     //TODO: Implement

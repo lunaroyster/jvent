@@ -34,7 +34,13 @@ module.exports.createPost = function(req, res) {
             title: req.body.post.title,
             contentText: req.body.post.content.text
         };
-        return postCore.createPost(req.user, postSettings, event);
+        return postCore.createPost(req.user, postSettings, event)
+        .then(function(post) {
+            collectionCore.addPostToCollectionByID(post, req.user.posts)
+            .then(function(collection) {
+                return post;
+            });
+        });
     })
     .then(function(post) {
         res.status(201).json(post);
