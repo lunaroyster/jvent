@@ -2,7 +2,7 @@ describe("user account control", function() {
     it("creates a user", function() {
         
     });
-    it("doesn't allow terrible passwords", function() {
+    it("doesn't allow incomplete information", function() {
         
     });
     it("doesn't allow duplicate users", function() {
@@ -15,6 +15,9 @@ describe("user account control", function() {
         
     });
     it("changes password", function() {
+        
+    });
+    it("doesn't allow terrible passwords", function() {
         
     });
     it("deletes user", function() {

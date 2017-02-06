@@ -1,1 +1,2 @@
 require('./userAccountControl');
+require('./userProfileControl');

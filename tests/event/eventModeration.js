@@ -1,0 +1,3 @@
+describe("event moderation", function() {
+    
+});
