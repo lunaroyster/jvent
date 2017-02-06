@@ -6,3 +6,12 @@ function importTest(name, path) {
 
 var data = require("./data");
 
+describe("tests", function () {
+    beforeEach(function () {
+        
+    });
+    importTest("user", './user/index');
+    after(function () {
+        
+    });
+});
