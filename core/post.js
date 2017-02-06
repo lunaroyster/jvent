@@ -44,25 +44,12 @@ module.exports.createPost = function(user, post, event) {
 
 // TODO: query to select posts based on time/location/rating/poster etc
 
-// module.exports.getPosts = function(eventID) {
-//     return collectionCore.findSuperCollection(eventID)
-//     .then(function(superCollection) {
-//         var postQuery = Post.find({'_id':{$in:superCollection.posts}});
-//         return postQuery.exec();
-//     });
-// };
-
 module.exports.getPosts = function(event) {
     //TODO: Queries
     // Can use either supercollection or direct. Change this implementation if required.
     var postQuery = Post.find({parentEvent: event._id});
     postQuery.exec();
 };
-
-// module.exports.getPostByID = function(eventID, postID) {
-//     var postQuery = Post.findOne({parentEvent: eventID, _id: postID});
-//     return postQuery.exec();
-// };
 
 module.exports.getPostByID = function(event, postID) {
     var postQuery = Post.findOne({parentEvent: event._id, _id: postID});
