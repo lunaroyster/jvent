@@ -1,6 +1,7 @@
 
 var data = require("./data");
-var server = require("../app")
+var app = require("../app")
+require('../models/db');
 
 describe("tests", function () {
     beforeEach(function () {
