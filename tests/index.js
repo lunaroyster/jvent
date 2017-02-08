@@ -1,10 +1,6 @@
-// function importTest(name, path) {
-//     describe(name, function () {
-//         require(path);
-//     });
-// }
 
 var data = require("./data");
+var server = require("../app")
 
 describe("tests", function () {
     beforeEach(function () {

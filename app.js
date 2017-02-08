@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var passport = require('passport');
 
-require('./models/db');
+require('./models/models');
 require('./core/passport');
 
 // var routes = require('./routes/index');

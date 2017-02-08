@@ -3,8 +3,8 @@
 /**
  * Module dependencies.
  */
-
 var app = require('../app');
+require('../models/db');
 var debug = require('debug')('jvent:server');
 var http = require('http');
 
