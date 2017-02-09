@@ -1,4 +1,5 @@
 var supertest = require('supertest');
+var async = require('async');
 var data = require("../data");
 var app = data.app;
 // var app = require('../../app.js')
@@ -41,9 +42,31 @@ describe("user account control", function() {
             .end(function(err, res) {
                 done(err);
             });
-        })
-    })
-    it("doesn't allow duplicate users")
+        });
+    });
+    it("doesn't allow duplicate users", function(done) {
+        //TODO: Write new user. reduce redundant code
+        async.series([
+            function(cb) {
+                agent
+                .post('/api/v0/user/signup')
+                .send(data.user)
+                .expect(201)
+                .end(function(err, res) {
+                    cb(err);
+                });
+            },
+            function(cb) {
+                agent
+                .post('/api/v0/user/signup')
+                .send(data.user)
+                .expect(400)
+                .end(function(err, res) {
+                    done(err);
+                });
+            }
+        ], done);
+    });
     it("generates JWT for user")
     it("tests JWT authentication")
     it("changes password")
