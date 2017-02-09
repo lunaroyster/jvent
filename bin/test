@@ -10,11 +10,11 @@ var debug = require('debug')('jvent:server');
 var http = require('http');
 
 var mocha = new Mocha();
+mocha.addFile('./tests/index');
 
 Q.all([
-    require('../models/db')
+    require('../models/db')("mochatest")
 ])
 .then(function() {
-    mocha.addFile('./tests/index');
     mocha.run();
 });

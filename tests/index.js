@@ -1,7 +1,5 @@
-
 var data = require("./data");
 var app = require("../app")
-require('../models/db');
 
 describe("tests", function () {
     beforeEach(function () {

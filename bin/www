@@ -24,8 +24,8 @@ var server = http.createServer(app);
  * Initialize Database
  */
  
-require('../models/db');
-
+require('../models/db')("test");
+//TODO: set up the correct DB here (production?)
 /**
  * Listen on provided port, on all network interfaces.
  */
