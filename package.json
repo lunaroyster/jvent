@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha tests --reporter spec"
+    "oldtest": "mocha tests --reporter spec",
+    "test": "node ./bin/test"
   },
   "dependencies": {
     "body-parser": "~1.15.1",

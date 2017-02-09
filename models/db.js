@@ -1,18 +1,23 @@
 var mongoose = require('mongoose');
+var Q = require('q');
 var gracefulShutdown;
 var dbURI = 'mongodb://localhost/test2';
 if (process.env.NODE_ENV === 'production') {
   dbURI = process.env.MONGOLAB_URI;
 }
 
+var deferred = Q.defer();
+module.exports = deferred.promise;
 mongoose.connect(dbURI);
 
 // CONNECTION EVENTS
 mongoose.connection.on('connected', function() {
   console.log('Mongoose connected to ' + dbURI);
+  return deferred.resolve();
 });
 mongoose.connection.on('error', function(err) {
   console.log('Mongoose connection error: ' + err);
+  return deferred.reject(err);
 });
 mongoose.connection.on('disconnected', function() {
   console.log('Mongoose disconnected');

@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+var Mocha = require('mocha');
+var Q = require('q');
+var app = require('../app');
+var debug = require('debug')('jvent:server');
+var http = require('http');
+
+var mocha = new Mocha();
+
+Q.all([
+    require('../models/db')
+])
+.then(function() {
+    mocha.addFile('./tests/index');
+    mocha.run();
+});
