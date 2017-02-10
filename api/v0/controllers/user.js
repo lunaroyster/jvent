@@ -1,3 +1,4 @@
+var Q = require('q');
 var userCore = require('../../../core/user');
 
 module.exports.authenticate = function(req, res) {
@@ -9,18 +10,21 @@ module.exports.authenticate = function(req, res) {
 };
 
 module.exports.signup = function(req, res) {
-    var userObj = {
-        email: req.body.email,
-        username: req.body.username,
-        password: req.body.password
-    };
-    userCore.createUser(userObj)
+    Q.fcall(function() {
+        var userObj = {
+            email: req.body.email,
+            username: req.body.username,
+            password: req.body.password
+        };
+        return userCore.createUser(userObj);
+    })
     .then(function(status) {
         // Change status to user; figure out status by reading user object
         res.status(201);
         res.json(status);
+        console.log(status);
     })
-    .fail(function(error) {
+    .catch(function(error) {
         res.status(400);
         res.json(error);
     });
