@@ -67,9 +67,68 @@ describe("user account control", function() {
             }
         ], done);
     });
-    it("generates JWT for user")
-    it("tests JWT authentication")
-    it("changes password")
-    it("doesn't allow terrible passwords")
+    it("generates JWT for user", function(done) {
+        agent
+        .post('/api/v0/user/authenticate')
+        .type('form')
+        .field('email', data.user.email)
+        .field('password', data.user.password)
+        .expect(200)
+        .end(function(err, res) {
+            done(err);
+        });
+    })
+    it("tests JWT authentication", function(done) {
+        agent
+        .get('/api/v0/user/me')
+        .expect(200)
+        .end(function(err, res) {
+            done(err);
+        });
+    });
+    it("changes password", function(done) {
+        async.series([
+            function(cb) {
+                agent
+                .post('/api/v0/user/me/changepassword')
+                .type('form')
+                .field('oldpassword')
+                .field('newpassword')
+                .expect(201)
+                .end(function(err, res) {
+                    cb(err);  
+                });
+            },
+            function(cb) {
+                agent
+                .post('/api/v0/user/authenticate')
+                .type('form')
+                .field('email', data.user.email)
+                .field('password', data.user.password)
+                .expect(200)
+                .end(function(err, res) {
+                    done(err);
+                });
+            }
+        ], done);
+    });
+    it("doesn't allow terrible passwords", function(done) {
+        var checkPassword = function(cb, password) {
+            agent
+            .post('/api/v0/user/me/changepassword')
+            .type('form')
+            .field('oldpassword')
+            .field('newpassword')
+            .expect(201)
+            .end(function(err, res) {
+                cb(err);  
+            });
+        };
+        async.series([
+            checkPassword(cb, "test"),
+            //More passwords
+            //Fix Callback error
+        ], done);
+    });
     it("deletes user")
 })
