@@ -19,6 +19,10 @@ module.exports.signup = function(req, res) {
         // Change status to user; figure out status by reading user object
         res.status(201);
         res.json(status);
+    })
+    .fail(function(error) {
+        res.status(400);
+        res.json(error);
     });
 };
 

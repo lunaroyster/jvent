@@ -9,7 +9,7 @@ describe("user account control", function() {
     it("creates a user", function(done) {
         agent
         .post('/api/v0/user/signup')
-        .send(data.user)
+        .send(data.users.test)
         .expect(201)
         .end(function(err, res) {
             done(err);
@@ -50,7 +50,7 @@ describe("user account control", function() {
             function(cb) {
                 agent
                 .post('/api/v0/user/signup')
-                .send(data.user)
+                .send(data.users.jeff)
                 .expect(201)
                 .end(function(err, res) {
                     cb(err);
@@ -59,7 +59,7 @@ describe("user account control", function() {
             function(cb) {
                 agent
                 .post('/api/v0/user/signup')
-                .send(data.user)
+                .send(data.users.jeff)
                 .expect(400)
                 .end(function(err, res) {
                     done(err);
@@ -71,8 +71,8 @@ describe("user account control", function() {
         agent
         .post('/api/v0/user/authenticate')
         .type('form')
-        .field('email', data.user.email)
-        .field('password', data.user.password)
+        .field('email', data.users.test.email)
+        .field('password', data.users.test.password)
         .expect(200)
         .end(function(err, res) {
             done(err);
@@ -103,8 +103,8 @@ describe("user account control", function() {
                 agent
                 .post('/api/v0/user/authenticate')
                 .type('form')
-                .field('email', data.user.email)
-                .field('password', data.user.password)
+                .field('email', data.users.test.email)
+                .field('password', data.users.test.password)
                 .expect(200)
                 .end(function(err, res) {
                     done(err);
