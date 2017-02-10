@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
 var crypto = require('crypto');
 var Schema = mongoose.Schema;
 
@@ -40,5 +41,7 @@ userSchema.methods.validPassword = function(password) {
     var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
     return this.hash === hash;
 };
+
+userSchema.plugin(uniqueValidator);
 
 mongoose.model('User', userSchema);
