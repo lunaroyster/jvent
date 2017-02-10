@@ -77,7 +77,7 @@ describe("user account control", function() {
         .end(function(err, res) {
             done(err);
         });
-    })
+    });
     it("tests JWT authentication", function(done) {
         agent
         .get('/api/v0/user/me')
@@ -113,7 +113,7 @@ describe("user account control", function() {
         ], done);
     });
     it("doesn't allow terrible passwords", function(done) {
-        var checkPassword = function(cb, password) {
+        var tryChangePassword = function(cb, password) {
             agent
             .post('/api/v0/user/me/changepassword')
             .type('form')
@@ -125,10 +125,21 @@ describe("user account control", function() {
             });
         };
         async.series([
-            checkPassword(cb, "test"),
+            function(cb) { tryChangePassword(cb, "T3$t") }, //Too short
+            // function(cb) { tryChangePassword(cb, "test") },
+            // function(cb) { tryChangePassword(cb, "test") }
             //More passwords
             //Fix Callback error
         ], done);
     });
-    it("deletes user")
+    it("deletes user", function(done) {
+        agent
+        .del('/api/v0/user/me')
+        .field('email')
+        .field('password')
+        .expect(202) //Might require different error code?
+        .end(function(err, res) {
+            done(err);
+        });
+    });
 })
