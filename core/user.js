@@ -27,6 +27,14 @@ module.exports.getUserByUsername = function(username) {
     return userQuery.exec();    
 };
 
+module.exports.changePassword = function(user) {
+    //Check password validity
+    //If valid, change password
+    //Perform JWT invalidation stuff
+    //Save user
+    //Return promise
+};
+
 module.exports.generateToken = function(user) {
     var token = jwt.sign({
         sub: user._id

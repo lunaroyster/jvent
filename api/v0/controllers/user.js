@@ -29,6 +29,13 @@ module.exports.signup = function(req, res) {
     });
 };
 
+module.exports.changePassword = function(req, res) {
+    //Sanitize/Validate
+    //Check password from request
+    //userCore.changePassword
+    //Response
+};
+
 // Wait, what's this for?
 module.exports.returnAuthenticatedUser = function(req, res) {
     res.json(req.user);
