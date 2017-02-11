@@ -30,10 +30,28 @@ module.exports.signup = function(req, res) {
 };
 
 module.exports.changePassword = function(req, res) {
-    //Sanitize/Validate
-    //Check password from request
-    //userCore.changePassword
-    //Response
+    Q.fcall(function() {
+        //Sanitize/Validate request
+    })
+    .then(function() {
+        if(req.user.validPassword(req.body.password)) {
+            return;
+        }
+        else {
+            throw new Error("Bad password");
+        }
+    })
+    .then(function(password) {
+        return userCore.changePassword(req.user, password);
+    })
+    .then(function() {
+        res.status(200);
+        res.send();
+    })
+    .fail(function(error) {
+        res.status(400);
+        res.json(error);
+    });
 };
 
 // Wait, what's this for?

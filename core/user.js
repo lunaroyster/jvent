@@ -27,12 +27,21 @@ module.exports.getUserByUsername = function(username) {
     return userQuery.exec();    
 };
 
-module.exports.changePassword = function(user) {
-    //Check password validity
-    //If valid, change password
-    //Perform JWT invalidation stuff
-    //Save user
-    //Return promise
+module.exports.changePassword = function(user, password) {
+    return Q.fcall(function() {
+        //TODO: Check password validity
+        return;
+    })
+    .then(function(Password) {
+        return user.setPassword(Password);
+    })
+    .then(function() {
+        //TODO: Perform JWT invalidation stuff
+        return;
+    })
+    .then(function() {
+        return user.save();
+    });
 };
 
 module.exports.generateToken = function(user) {
