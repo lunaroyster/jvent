@@ -71,10 +71,11 @@ describe("user account control", function() {
         agent
         .post('/api/v0/user/authenticate')
         .type('form')
-        .field('email', data.users.test.email)
-        .field('password', data.users.test.password)
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send({'email':data.users.test.email, 'password':data.users.test.password})
         .expect(200)
         .end(function(err, res) {
+            //Check JWT validity
             done(err);
         });
     });
