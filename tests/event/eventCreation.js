@@ -1,12 +1,27 @@
 describe("event creation", function() {
     describe("event types", function() {
-        it("creates public events")
-        it("creates unlisted events")
-        it("creates private events")
+        it("creates public events");
+        it("creates unlisted events");
+        it("creates private events");
     });
-    it("doesn't create events with incomplete data")
-    it("doesn't create events with invalid settings")
-    it("doesn't create event without authentication")
-    it("retrieves event")
-    it("deletes event")
+});
+
+describe("event non creation", function() {
+    it("doesn't create without authentication");
+    describe("incomplete/invalid data", function() {
+        it("doesn't create without name");
+        it("doesn't create without visibility");
+        it("doesn't create without ingress");
+        it("doesn't create with short name");
+    });
+    describe("invalid settings", function() {
+        //Tests with invalid setting combinations (ingress and visibility)
+    });
+});
+describe("event retrival", function() {
+    it("retrieves public event (without auth)");
+    it("fails to retrieve unlisted event (without auth)");
+    it("retrieves unlisted event (with auth)");
+    it("fails to retrieve private event (without auth)");
+    it("fails to retrieve private event (with auth but no privileges)");
 });
