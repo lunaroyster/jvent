@@ -1,4 +1,5 @@
 var supertest = require('supertest');
+var jwt = require('jsonwebtoken');
 var async = require('async');
 var data = require("../data");
 var app = data.app;
@@ -75,8 +76,12 @@ describe("user account control", function() {
         .send({'email':data.users.test.email, 'password':data.users.test.password})
         .expect(200)
         .end(function(err, res) {
-            //Check JWT validity
-            done(err);
+            if (err) throw err;
+            jwt.verify(res.body.token, "debug", function(err, decoded) {
+                if (err) throw err;
+                done();
+                return;
+            });
         });
     });
     it("tests JWT authentication", function(done) {
