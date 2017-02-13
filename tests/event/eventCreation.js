@@ -29,32 +29,33 @@ describe("event setup", function() {
         .send({'email':data.users.test.email, 'password':data.users.test.password})
         .expect(200)
         .end(function(err, res) {
-            //assign JWT from response
+            if(err) throw err;
+            JWT = res.token.jwt;
             done(err);
         });
     });
     describe("event creation", function() {
         describe("event types", function() {
             it("public x everyone", function() {
-                return successfulEventCreation(data.events.festival);
+                return successfulEventCreation(data.eventTypes.Public.Everyone);
             });
             it("public x link", function() {
-                return successfulEventCreation(data.events.protest);
+                return successfulEventCreation(data.eventTypes.Public.Link);
             });
             it("public x invite", function() {
-                return successfulEventCreation(data.events.concert);
+                return successfulEventCreation(data.eventTypes.Public.Invite);
             });
             it("unlisted x everyone", function() {
-                return successfulEventCreation(data.events.festival);
+                return successfulEventCreation(data.eventTypes.Unlisted.Everyone);
             });
             it("unlisted x link", function() {
-                return successfulEventCreation(data.events.blockParty);
+                return successfulEventCreation(data.eventTypes.Unlisted.Link);
             });
             it("unlisted x invite", function() {
-                return successfulEventCreation(data.events.schoolHackathon);
+                return successfulEventCreation(data.eventTypes.Unlisted.Invite);
             });
             it("private x invite", function() {
-                return successfulEventCreation(data.events.prom);
+                return successfulEventCreation(data.eventTypes.Private.Invite);
             });
         });
     });
