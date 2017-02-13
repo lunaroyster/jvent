@@ -7,17 +7,18 @@ var agent = supertest.agent(app);
 
 var JWT = "";
 var successfulEventCreation = function(event) {
-    return Q.fcall(function() {
-        agent
-        .post('/api/v0/event/')
-        .set('Authorization', JWT)
-        .send(event)
-        .expect(201)
-        .end(function(err, res) {
-            if(err) throw err;
-            return res;
-        });
+    var deferred = Q.defer();
+    agent
+    .post('/api/v0/event')
+    .set('Authorization', JWT)
+    .set('Content-Type', 'application/json')
+    .send({event:event})
+    .expect(201)
+    .end(function(err, res) {
+        if(err) return deferred.reject(new Error(err));
+        return deferred.resolve(res);
     });
+    return deferred.promise; 
 };
 
 describe("event setup", function() {
@@ -30,7 +31,7 @@ describe("event setup", function() {
         .expect(200)
         .end(function(err, res) {
             if(err) throw err; 
-            JWT = res.token.jwt; 
+            JWT = res.body.token;
             done(err);
         });
     });
