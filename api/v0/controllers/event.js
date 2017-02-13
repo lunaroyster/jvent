@@ -44,7 +44,7 @@ module.exports.createEvent = function(req, res) {
             status: "Created",
             event: event.url
         };
-        res.status(200).json(state);
+        res.status(201).json(state);
     })
     .catch(function(error) {
         var err;

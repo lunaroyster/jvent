@@ -10,7 +10,7 @@ var successfulEventCreation = function(event) {
     var deferred = Q.defer();
     agent
     .post('/api/v0/event')
-    .set('Authorization', JWT)
+    .set('Authorization', 'JWT ' + JWT)
     .set('Content-Type', 'application/json')
     .send({event:event})
     .expect(201)

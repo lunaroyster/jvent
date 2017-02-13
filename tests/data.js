@@ -54,7 +54,7 @@ var events = {
         name: "Heavy stuff",
         byline: "Headbanging! Drinking!",
         description: "Whiplash! Hearing loss!",
-        visibility: "Public",
+        visibility: "public",
         ingress: "invite"
     },
     blockParty: {
