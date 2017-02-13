@@ -69,7 +69,7 @@ var events = {
         byline: "Code! Geeks! Pizza! Prizes!",
         description: "Unfinished projects! Awkward presentations!",
         visibility: "unlisted",
-        ingress: "invited"
+        ingress: "invite"
     },
     prom: {
         name: "Generic HS Prom Night",
@@ -91,21 +91,21 @@ var events = {
 module.exports.events = events;
 
 module.exports.eventTypes = {	
-    // Public: {		
-    //     Everyone: events.festival,		
-    //     Link: //,		
-    //     Invite: //		
-    // }		
-    // Unlisted: {		
-    //     Everyone: events.festival,		
-    //     Link: //,		
-    //     Invite: //		
-    // }		
-    // Private: {		
-    //     Everyone: events.festival,		
-    //     Link: //,		
-    //     Invite: //		
-    // }
+    Public: {		
+        Everyone: events.festival,		
+        Link: events.protest,		
+        Invite: events.concert		
+    },	
+    Unlisted: {		
+        Everyone: events.festival,		
+        Link: events.blockParty,		
+        Invite: events.schoolHackathon	
+    },
+    Private: {		
+        // Everyone: ,		
+        // Link: //,		
+        Invite: events.prom		
+    }
 };
 
 // Reduces the number of dependent links that would break if app.js had to be moved.
