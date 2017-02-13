@@ -85,6 +85,32 @@ var events = {
         description: "No BS",
         visibility: "public",
         ingress: "everyone"
+    },
+    incomplete: {
+        noName: {
+            byline: "Nothing interesting",
+            description: "No BS",
+            visibility: "public",
+            ingress: "everyone"
+        },
+        // noByline: {
+        //     name: "Generic Event",
+        //     description: "No BS",
+        //     visibility: "public",
+        //     ingress: "everyone"
+        // },
+        noVisibility: {
+            name: "Generic Event",
+            byline: "Nothing interesting",
+            description: "No BS",
+            ingress: "everyone"
+        },
+        noIngress: {
+            name: "Generic Event",
+            byline: "Nothing interesting",
+            description: "No BS",
+            visibility: "public"
+        }
     }
 };
 

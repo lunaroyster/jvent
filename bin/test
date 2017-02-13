@@ -9,7 +9,9 @@ var app = require('../app');
 var debug = require('debug')('jvent:server');
 var http = require('http');
 
-var mocha = new Mocha();
+var mocha = new Mocha({
+    // reporter: 'html'
+});
 mocha.addFile('./tests/index');
 
 Q.all([
