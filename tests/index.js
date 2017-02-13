@@ -12,6 +12,7 @@ describe("tests", function () {
         
     });
     require('./user/index');
+    require('./event/index');
     after(function () {
         
     });
