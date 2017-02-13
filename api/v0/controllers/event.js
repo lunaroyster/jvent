@@ -51,12 +51,12 @@ module.exports.createEvent = function(req, res) {
         try {
             err = error.array();
         } catch (e) {
-            console.log(e);
+            // console.log(e);
             if(e.name=="TypeError") {
                 err = [{param:error.name, msg: error.message}];
             }
         }
-        console.log(err);
+        // console.log(err);
         res.status(400).json(err);
     });
 };

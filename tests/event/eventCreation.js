@@ -105,11 +105,25 @@ describe("event setup", function() {
         });
     });
     describe("event retrival", function() {
-        it("retrieves public event (without auth)");
-        it("fails to retrieve unlisted event (without auth)");
-        it("retrieves unlisted event (with auth)");
-        it("fails to retrieve private event (without auth)");
-        it("fails to retrieve private event (with auth but no privileges)");
+        it("retrieves publicly viewable events", function() {
+            //Perform get requests
+            //Search for all public events from previous tests
+        });
+        it("retrieves public event (without auth)", function() {
+            //Try to access a public event without authentication
+        });
+        it("fails to retrieve unlisted event (without auth)", function() {
+            //Try to retrieve unlisted event without auth. Fail
+        });
+        it("retrieves unlisted event (with auth)", function() {
+            //Try to retrieve same event, but with JWT
+        });
+        it("fails to retrieve private event (without auth)", function() {
+            //Try to retrieve private event, without authentication. Fail
+        });
+        it("fails to retrieve private event (with auth but no privileges)", function() {
+            //Try to retrieve private event, with authentication, but no access privileges. Fail
+        });
     });
     
 })
