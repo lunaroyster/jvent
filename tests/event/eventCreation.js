@@ -1,10 +1,10 @@
 var supertest = require('supertest');
-var async = require('async');
+// var async = require('async');
 var Q = require('q');
 var data = require("../data");
 var app = data.app;
-// var app = require('../../app.js')
 var agent = supertest.agent(app);
+
 var JWT = "";
 var successfulEventCreation = function(event) {
     return Q.fcall(function() {
@@ -21,8 +21,17 @@ var successfulEventCreation = function(event) {
 };
 
 describe("event setup", function() {
-    before(function() {
-       //Log in and set JWT(s) 
+    before(function(done) {
+       agent
+        .post('/api/v0/user/authenticate')
+        .type('form')
+        .set('Content-Type', 'application/x-www-form-urlencoded')
+        .send({'email':data.users.test.email, 'password':data.users.test.password})
+        .expect(200)
+        .end(function(err, res) {
+            //assign JWT from response
+            done(err);
+        });
     });
     describe("event creation", function() {
         describe("event types", function() {
