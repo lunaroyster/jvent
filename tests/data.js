@@ -43,13 +43,6 @@ module.exports.events = {
         visibility: "public",
         ingress: "link"
     },
-    blockParty: {
-        name: "PARDY mah house",
-        byline: "i got stuffs",
-        description: "bleh",
-        visibility: "unlisted",
-        ingress: "link"
-    },
     fanConvention: {
         name: "GeneriCON",
         byline: "New Stuff! Cosplay! Food!",
@@ -63,6 +56,13 @@ module.exports.events = {
         description: "Whiplash! Hearing loss!",
         visibility: "Public",
         ingress: "invite"
+    },
+    blockParty: {
+        name: "PARDY mah house",
+        byline: "i got stuffs",
+        description: "bleh",
+        visibility: "unlisted",
+        ingress: "link"
     },
     schoolHackathon: {
         name: "Hack 2017",
