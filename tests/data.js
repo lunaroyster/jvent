@@ -28,7 +28,7 @@ module.exports.users = {
     }
 };
 
-var events = {
+module.exports.events = {
     festival: {
         name: "Christmas",
         byline: "Christmas 2017",
@@ -87,26 +87,6 @@ var events = {
         ingress: "everyone"
     }
 };
-
-module.exports.events = events;
-
-module.exports.eventTypes = {
-    Public: {
-        Everyone: events.festival,
-        Link: //,
-        Invite: //
-    }
-    Unlisted: {
-        Everyone: events.festival,
-        Link: //,
-        Invite: //
-    }
-    Private: {
-        Everyone: events.festival,
-        Link: //,
-        Invite: //
-    }
-}
 
 // Reduces the number of dependent links that would break if app.js had to be moved.
 module.exports.app = require("../app.js");
