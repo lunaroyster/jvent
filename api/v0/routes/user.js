@@ -8,5 +8,6 @@ router.post('/changepassword', authController.AuthOnly, userController.changePas
 router.post('/authenticate', authController.localAuth, userController.authenticate);
 router.post('/signup', userController.signup);
 router.get('/', authController.AuthOnly, userController.returnAuthenticatedUser);
+router.get('/me', authController.AuthOnly, userController.returnAuthenticatedUser);
 
 module.exports = router;

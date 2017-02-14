@@ -5,6 +5,7 @@ var data = require("../data");
 var app = data.app;
 // var app = require('../../app.js')
 var agent = supertest.agent(app);
+var JWT = "";
 
 describe("user account control", function() {
     it("creates a user", function(done) {
@@ -79,6 +80,7 @@ describe("user account control", function() {
             if (err) throw err;
             jwt.verify(res.body.token, "debug", function(err, decoded) {
                 if (err) throw err;
+                JWT = res.body.token;
                 done();
                 return;
             });
@@ -87,6 +89,7 @@ describe("user account control", function() {
     it("tests JWT authentication", function(done) {
         agent
         .get('/api/v0/user/me')
+        .set('Authorization', 'JWT ' + JWT)
         .expect(200)
         .end(function(err, res) {
             done(err);
