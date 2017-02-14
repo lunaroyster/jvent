@@ -78,7 +78,13 @@ var events = {
         visibility: "private",
         ingress: "invite"
     },
-    bookSigning: {},
+    bookSigning: {
+        name: "Book signing!",
+        byline: "Meet the author",
+        description: "",
+        visibility: "unlisted",
+        ingress: "everyone"
+    },
     generic: {
         name: "Generic Event",
         byline: "Nothing interesting",
@@ -123,7 +129,7 @@ module.exports.eventTypes = {
         Invite: events.concert		
     },	
     Unlisted: {		
-        Everyone: events.festival,		
+        Everyone: events.bookSigning,		
         Link: events.blockParty,		
         Invite: events.schoolHackathon	
     },
