@@ -59,9 +59,14 @@ var createEvent = function(event, user) {
     .expect(201)
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
+        //assign event (and invite) urls here
         return deferred.resolve(res.body.event);
     });
     return deferred.promise; 
+};
+
+var joinEventWithoutAuth = function(event) {
+    
 };
 
 describe("event moderation", function() {
@@ -84,5 +89,15 @@ describe("event moderation", function() {
             done();
         });
     });
+    it('can not join any event without authentication', function(done) {
+        var eventJoinPromises = [];
+        for(var eventVisibilityType in events) {
+            for(var eventIngressType in events[eventVisibilityType]) {
+                var event = events[eventVisibilityType][eventIngressType];
+                eventJoinPromises += joinEventWithoutAuth(event, users.A);
+            }
+        }
+        return Q.all(eventJoinPromises);
+    })
     
 });

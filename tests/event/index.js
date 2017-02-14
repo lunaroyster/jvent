@@ -1,1 +1,2 @@
 require('./eventCreation');
+require('./eventModeration');
