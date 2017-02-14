@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var passport = require('passport');
-
+var helmet = require('helmet')
 require('./models/index');
 require('./core/passport');
 
@@ -24,6 +24,7 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(passport.initialize());
 // app.use(logger('dev'));
+app.use(helmet());
 app.use(bodyParser.json());
 app.use(expressValidator(require('./core/requestOptions')));
 app.use(bodyParser.urlencoded({ extended: false }));

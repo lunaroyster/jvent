@@ -122,7 +122,7 @@ describe("event setup", function() {
                     cb(err);
                 });
             }
-        ]);
+        ], done);
     });
     describe("event creation", function() {
         describe("event types", function() {
