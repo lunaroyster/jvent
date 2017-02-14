@@ -4,6 +4,11 @@ module.exports.users = {
         email: "test@unpaidinterns.example.org",
         password: "t35tl012D"
     },
+    eventtester: {
+        username: "eventtester",
+        email: "eventtester@unpaidinterns.example.org",
+        password: "t35tl012D"
+    },
     noUsername: {
         email: "test@unpaidinterns.example.org",
         password: "t35tl012D"
