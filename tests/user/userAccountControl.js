@@ -99,10 +99,11 @@ describe("user account control", function() {
         async.series([
             function(cb) {
                 agent
-                .post('/api/v0/user/me/changepassword')
+                .post('/api/v0/user/changepassword')
                 .type('form')
-                .field('oldpassword')
-                .field('newpassword')
+                .set('Authorization', 'JWT ' + JWT)
+                .set('oldpassword', data.users.test.password)
+                .set('newpassword', data.users.test.password + "changed")
                 .expect(201)
                 .end(function(err, res) {
                     cb(err);  

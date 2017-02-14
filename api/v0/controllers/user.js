@@ -34,15 +34,16 @@ module.exports.changePassword = function(req, res) {
         //Sanitize/Validate request
     })
     .then(function() {
-        if(req.user.validPassword(req.body.password)) {
+        if(req.user.validPassword(req.header('oldpassword'))) {
             return;
         }
         else {
+            res.status(401);
             throw new Error("Bad password");
         }
     })
-    .then(function(password) {
-        return userCore.changePassword(req.user, password);
+    .then(function() {
+        return userCore.changePassword(req.user, req.header('newpassword'));
     })
     .then(function() {
         res.status(200);

@@ -30,7 +30,7 @@ module.exports.getUserByUsername = function(username) {
 module.exports.changePassword = function(user, password) {
     return Q.fcall(function() {
         //TODO: Check password validity
-        return;
+        return password;
     })
     .then(function(Password) {
         return user.setPassword(Password);
