@@ -1,6 +1,6 @@
 var supertest = require('supertest');
 var assert = require('assert');
-// var async = require('async');
+var async = require('async');
 var Q = require('q');
 var data = require("../data");
 var app = data.app;
@@ -99,17 +99,30 @@ var failRetrieveEventWithAuth = function(url) {
 
 describe("event setup", function() {
     before(function(done) {
-       agent
-        .post('/api/v0/user/authenticate')
-        .type('form')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        .send({'email':data.users.test.email, 'password':data.users.test.password})
-        .expect(200)
-        .end(function(err, res) {
-            if(err) throw err; 
-            JWT = res.body.token;
-            done(err);
-        });
+        async.series([
+            function(cb) {
+                agent
+                .post('/api/v0/user/signup')
+                .send(data.users.eventtester)
+                .expect(201)
+                .end(function(err, res) {
+                    cb(err);
+                });
+            },
+            function(cb) {
+                agent
+                .post('/api/v0/user/authenticate')
+                .type('form')
+                .set('Content-Type', 'application/x-www-form-urlencoded')
+                .send({'email':data.users.eventtester.email, 'password':data.users.eventtester.password})
+                .expect(200)
+                .end(function(err, res) {
+                    if(err) throw err; 
+                    JWT = res.body.token;
+                    cb(err);
+                });
+            }
+        ]);
     });
     describe("event creation", function() {
         describe("event types", function() {
