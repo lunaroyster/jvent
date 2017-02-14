@@ -30,6 +30,16 @@ module.exports.users = {
         username: "lucida",
         email: "lucida@unpaidinterns.example.org",
         password: "4WJY3RgX"
+    },
+    alice: {
+        username: "alice",
+        email: "alice@unpaidinterns.example.org",
+        password: "FNDMwB6x"
+    },
+    bob: {
+        username: "bob",
+        email: "bob@unpaidinterns.example.org",
+        password: "WyZtrpjF"
     }
 };
 
