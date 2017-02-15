@@ -126,6 +126,32 @@ var failJoinEventWithLink = function(event, user) {
     return deferred.promise;
 };
 
+var inviteToEvent = function(event, inviter, invitee) {
+    var deferred = Q.defer();
+    agent
+    // invite url using event url
+    // JWT from inviter
+    .expect(200) //Or 201?
+    .end(function(err, res) {
+        if(err) return deferred.reject(err);
+        deferred.resolve(); //res?
+    });
+    return deferred.promise;
+};
+
+var failInviteToEvent = function(event, inviter, invitee) {
+    var deferred = Q.defer();
+    agent
+    // invite url using event url
+    // JWT from inviter
+    .expect(400) //Or 401?
+    .end(function(err, res) {
+        if(err) return deferred.reject(err);
+        deferred.resolve(); //res?
+    });
+    return deferred.promise;
+};
+
 describe("event moderation", function() {
     before(function(done) {
         Q.all(function() {
@@ -204,17 +230,21 @@ describe("event moderation", function() {
     });
     describe("inviting users to events", function() {
         it("invites user to public invite-only event", function() {
-            
+            return inviteToEvent(events.Public.Invite, users.A, users.B);
         });
         it("invites user to unlisted invite-only event", function() {
-            
+            return inviteToEvent(events.Unlisted.Invite, users.A, users.B);
         });
         it("invites user to private invite-only event", function() {
-            //User is automatically added to viewerList
+            return inviteToEvent(events.Private.Invite, users.A, users.B);
         });
         //Can't invite users to events without invite lists
-        it("fails to invite user to private 'everyone' event")
-        it("fails to invite user to private 'link' event")
+        it("fails to invite user to private 'everyone' event", function() {
+            return failInviteToEvent(events.Private.Everyone, users.A, users.B);
+        });
+        it("fails to invite user to private 'link' event", function() {
+            return failInviteToEvent(events.Private.Link, users.A, users.B);
+        });
     });
     describe("joining invite-only events", function() {
         it("joins public invite-only event", function() {
@@ -227,7 +257,11 @@ describe("event moderation", function() {
             return joinEventWithoutLink(events.Private.Invite, users.B);
         });
         //Not added to viewer list as there is no invite list
-        it("fails to join private 'everyone' event")
-        it("fails to join private 'link' event")
-    })
+        it("fails to join private 'everyone' event", function() {
+            return failJoinEventWithoutLink(events.Private.Everyone, users.B);
+        });
+        it("fails to join private 'link' event", function() {
+            return failJoinEventWithLink(events.Private.Link, users.B);
+        });
+    });
 });
