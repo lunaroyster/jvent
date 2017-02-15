@@ -66,21 +66,65 @@ var createEvent = function(event, user) {
 };
 
 var failJoinEventWithoutAuth = function(event) {
-    //TODO: Write
+    var deferred = Q.defer();
+    agent
+    // join request using event.url
+    .expect(401)
+    .end(function(err, res) {
+        if(err) return deferred.reject(new Error(err));
+        deferred.resolve(); //Use response?
+    });
+    return deferred.promise;
 };
 
 var joinEventWithoutLink = function(event, user) {
-    
-}
+    var deferred = Q.defer();
+    agent
+    // join request using event.url
+    // append JWT to request
+    .expect(200)
+    .end(function(err, res) {
+        if(err) return deferred.reject(new Error(err));
+        deferred.resolve(); //Use response?
+    });
+    return deferred.promise;
+};
 var failJoinEventWithoutLink = function(event, user) {
-    
-}
+    var deferred = Q.defer();
+    agent
+    // join request using event.url 
+    // append JWT to request
+    .expect(400) //Might require a different error code
+    .end(function(err, res) {
+        if(err) return deferred.reject(new Error(err));
+        deferred.resolve(); //Use response?
+    });
+    return deferred.promise;
+};
 var joinEventWithLink = function(event, user) {
-    
-}
+    var deferred = Q.defer();
+    agent
+    // join request using event.url and event.joinLink
+    // append JWT to request
+    .expect(200)
+    .end(function(err, res) {
+        if(err) return deferred.reject(new Error(err));
+        deferred.resolve(); //Use response?
+    });
+    return deferred.promise;
+};
 var failJoinEventWithLink = function(event, user) {
-    
-}
+    var deferred = Q.defer();
+    agent
+    // join request using event.url and event.joinLink
+    // append JWT to request
+    .expect(400)
+    .end(function(err, res) {
+        if(err) return deferred.reject(new Error(err));
+        deferred.resolve(); //Use response?
+    });
+    return deferred.promise;
+};
 
 describe("event moderation", function() {
     before(function(done) {
