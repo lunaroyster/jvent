@@ -59,7 +59,8 @@ var createEvent = function(event, user) {
     .expect(201)
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
-        //assign event (and invite) urls here
+        event.url = res.body.event;
+        //Handle link urls
         return deferred.resolve(res.body.event);
     });
     return deferred.promise; 
@@ -68,6 +69,7 @@ var createEvent = function(event, user) {
 var failJoinEventWithoutAuth = function(event) {
     var deferred = Q.defer();
     agent
+    .patch('/api/v0/event/'+event.url+'/join')
     // join request using event.url
     .expect(401)
     .end(function(err, res) {
@@ -80,7 +82,7 @@ var failJoinEventWithoutAuth = function(event) {
 var joinEventWithoutLink = function(event, user) {
     var deferred = Q.defer();
     agent
-    // join request using event.url
+    .patch('/api/v0/event/'+event.url+'/join')
     // append JWT to request
     .expect(200)
     .end(function(err, res) {
@@ -92,7 +94,7 @@ var joinEventWithoutLink = function(event, user) {
 var failJoinEventWithoutLink = function(event, user) {
     var deferred = Q.defer();
     agent
-    // join request using event.url 
+    .patch('/api/v0/event/'+event.url+'/join')
     // append JWT to request
     .expect(400) //Might require a different error code
     .end(function(err, res) {
@@ -104,7 +106,7 @@ var failJoinEventWithoutLink = function(event, user) {
 var joinEventWithLink = function(event, user) {
     var deferred = Q.defer();
     agent
-    // join request using event.url and event.joinLink
+    .patch('/api/v0/event/'+event.url+'/join?c='+event.joinLink)
     // append JWT to request
     .expect(200)
     .end(function(err, res) {
@@ -116,7 +118,7 @@ var joinEventWithLink = function(event, user) {
 var failJoinEventWithLink = function(event, user) {
     var deferred = Q.defer();
     agent
-    // join request using event.url and event.joinLink
+    .patch('/api/v0/event/'+event.url+'/join?c='+event.joinLink)
     // append JWT to request
     .expect(400)
     .end(function(err, res) {
