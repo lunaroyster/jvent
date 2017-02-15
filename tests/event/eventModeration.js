@@ -83,7 +83,7 @@ var joinEventWithoutLink = function(event, user) {
     var deferred = Q.defer();
     agent
     .patch('/api/v0/event/'+event.url+'/join')
-    // append JWT to request
+    .set('Authorization', 'JWT ' + user.JWT)
     .expect(200)
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
@@ -95,7 +95,7 @@ var failJoinEventWithoutLink = function(event, user) {
     var deferred = Q.defer();
     agent
     .patch('/api/v0/event/'+event.url+'/join')
-    // append JWT to request
+    .set('Authorization', 'JWT ' + user.JWT)
     .expect(400) //Might require a different error code
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
@@ -107,7 +107,7 @@ var joinEventWithLink = function(event, user) {
     var deferred = Q.defer();
     agent
     .patch('/api/v0/event/'+event.url+'/join?c='+event.joinLink)
-    // append JWT to request
+    .set('Authorization', 'JWT ' + user.JWT)
     .expect(200)
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
@@ -119,7 +119,7 @@ var failJoinEventWithLink = function(event, user) {
     var deferred = Q.defer();
     agent
     .patch('/api/v0/event/'+event.url+'/join?c='+event.joinLink)
-    // append JWT to request
+    .set('Authorization', 'JWT ' + user.JWT)
     .expect(400)
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
@@ -132,7 +132,7 @@ var inviteToEvent = function(event, inviter, invitee) {
     var deferred = Q.defer();
     agent
     // invite url using event url
-    // JWT from inviter
+    .set('Authorization', 'JWT ' + inviter.JWT)
     .expect(200) //Or 201?
     .end(function(err, res) {
         if(err) return deferred.reject(err);
@@ -145,7 +145,7 @@ var failInviteToEvent = function(event, inviter, invitee) {
     var deferred = Q.defer();
     agent
     // invite url using event url
-    // JWT from inviter
+    .set('Authorization', 'JWT ' + inviter.JWT)
     .expect(400) //Or 401?
     .end(function(err, res) {
         if(err) return deferred.reject(err);
