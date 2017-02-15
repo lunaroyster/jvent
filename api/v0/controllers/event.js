@@ -83,15 +83,27 @@ module.exports.getEvent = function(req, res) {
     res.status(200).json(responseObject);
 };
 
+module.exports.updateEvent = function(req, res) {
+    res.json(req);
+    res.send();
+};
+
+module.exports.deleteEvent = function(req, res) {
+    res.json(req);
+    res.send();
+};
+
+// /event/:eventID/join
+
 module.exports.joinEvent = function(req, res) {
     Q.fcall(function() {
         var ingress = req.event.ingress;
         if(ingress=="everyone") {
-            return userListCore.addUserToAttendeeList(req.user, req.event);
+            return;
         }
         else if(ingress=="link") {
             if(req.query.c==event.joinLink) {
-                return userListCore.addUserToAttendeeList(req.user, req.event);
+                return;
             }
             else {
                 throw new Error("Bad link");
@@ -101,6 +113,9 @@ module.exports.joinEvent = function(req, res) {
             //TODO: Query event's invited (or attendee) userList
             //If successful, Join()
         }
+    })
+    .then(function() {
+        return userListCore.addUserToAttendeeList(req.user, req.event);
     })
     .then(function() {
         //TODO: Add to user's event list?
@@ -113,16 +128,6 @@ module.exports.joinEvent = function(req, res) {
         res.status(401).json("Failed.");
     })
     .done();
-};
-
-module.exports.updateEvent = function(req, res) {
-    res.json(req);
-    res.send();
-};
-
-module.exports.deleteEvent = function(req, res) {
-    res.json(req);
-    res.send();
 };
 
 module.exports.appendEventIfVisible = function(req, res, next) {
