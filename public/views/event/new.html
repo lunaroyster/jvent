@@ -59,6 +59,21 @@
                         <label for="invite">Those invited</label>
                     </p>
                 </div>
+                <div class="col s12 m4">
+                    <span>Who can comment?</span>
+                    <p>
+                        <input type="radio" name="comment" ng-model="newEvent.comment" value="anyone" id="anyone"/>
+                        <label for="anyone">Anybody</label>
+                    </p>
+                    <p>
+                        <input type="radio" name="comment" ng-model="newEvent.comment" value="attendees" id="attendees"/>
+                        <label for="attendees">Just attendees</label>
+                    </p>
+                    <p>
+                        <input type="radio" name="comment" ng-model="newEvent.comment" value="nobody" id="nobody"/>
+                        <label for="nobody">Nobody. Commenting disabled.</label>
+                    </p>    
+                </div>
             </div>
             <div class="row">
                 <div class="input-field col s12 m4 push-m4">

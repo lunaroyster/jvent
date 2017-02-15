@@ -55,7 +55,7 @@ if (app.get('env') === 'development') {
     });
     // if(res.status==500) {
       fs.writeFile('logs/' + Date.now(), JSON.stringify({message:err.message, stacktrace: err}), {flag:'wx'}, function(err) {
-        console.log("Logged error");
+        // console.log("Logged error");
       });
     // }
   });
