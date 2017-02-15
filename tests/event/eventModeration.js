@@ -65,9 +65,22 @@ var createEvent = function(event, user) {
     return deferred.promise; 
 };
 
-var joinEventWithoutAuth = function(event) {
-    
+var failJoinEventWithoutAuth = function(event) {
+    //TODO: Write
 };
+
+var joinEventWithoutLink = function(event, user) {
+    
+}
+var failJoinEventWithoutLink = function(event, user) {
+    
+}
+var joinEventWithLink = function(event, user) {
+    
+}
+var failJoinEventWithLink = function(event, user) {
+    
+}
 
 describe("event moderation", function() {
     before(function(done) {
@@ -89,15 +102,60 @@ describe("event moderation", function() {
             done();
         });
     });
-    it('can not join any event without authentication', function(done) {
-        var eventJoinPromises = [];
-        for(var eventVisibilityType in events) {
-            for(var eventIngressType in events[eventVisibilityType]) {
-                var event = events[eventVisibilityType][eventIngressType];
-                eventJoinPromises += joinEventWithoutAuth(event, users.A);
+    describe("joining events", function() {
+        it('can not join any event without authentication', function() {
+            var eventJoinPromises = [];
+            for(var eventVisibilityType in events) {
+                for(var eventIngressType in events[eventVisibilityType]) {
+                    var event = events[eventVisibilityType][eventIngressType];
+                    eventJoinPromises += failJoinEventWithoutAuth(event, users.A);
+                }
             }
-        }
-        return Q.all(eventJoinPromises);
-    })
-    
+            return Q.all(eventJoinPromises);
+        });
+        describe("'everyone' events", function() {
+            it("joins public event", function() {
+                return joinEventWithoutLink(events.Public.Everyone, users.B);
+            });
+            it("joins unlisted event", function() {
+                return joinEventWithoutLink(events.Unlisted.Everyone, users.B);
+            });
+            it("fails to join private event", function() {
+                return failJoinEventWithoutLink(events.Private.Everyone, users.B);
+            });
+        });
+        describe("'link' events without link", function() {
+            it("fails to join public event", function() {
+                return failJoinEventWithoutLink(events.Public.Link, users.B);
+            });
+            it("fails to join unlisted event", function() {
+                return failJoinEventWithoutLink(events.Unlisted.Link, users.B);
+            });
+            it("fails to join private event", function() {
+                return failJoinEventWithoutLink(events.Private.Link, users.B);
+            });
+        });
+        describe("'link' events with link", function() {
+            it("joins public event", function() {
+                return joinEventWithLink(events.Public.Link, users.B);
+            });
+            it("joins unlisted event", function() {
+                return joinEventWithLink(events.Public.Link, users.B);
+            });
+            it("fails to join private event", function() {
+                return failJoinEventWithLink(events.Public.Link, users.B);
+            });
+        });
+        describe("'invite' events without being invited", function() {
+            it("fails to join public event", function() {
+                return failJoinEventWithoutLink(events.Public.Invite, users.B);
+            });
+            it("fails to join unlisted event", function() {
+                return failJoinEventWithoutLink(events.Unlisted.Invite, users.B);
+            });
+            it("fails to join private event", function() {
+                return failJoinEventWithoutLink(events.Private.Invite, users.B);
+            });
+        });
+    });
 });
