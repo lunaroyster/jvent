@@ -158,4 +158,32 @@ describe("event moderation", function() {
             });
         });
     });
+    describe("inviting users to events", function() {
+        it("invites user to public invite-only event", function() {
+            
+        });
+        it("invites user to unlisted invite-only event", function() {
+            
+        });
+        it("invites user to private invite-only event", function() {
+            //User is automatically added to viewerList
+        });
+        //Can't invite users to events without invite lists
+        it("fails to invite user to private 'everyone' event")
+        it("fails to invite user to private 'link' event")
+    });
+    describe("joining invite-only events", function() {
+        it("joins public invite-only event", function() {
+            return joinEventWithoutLink(events.Public.Invite, users.B);
+        });
+        it("joins unlisted invite-only event", function() {
+            return joinEventWithoutLink(events.Unlisted.Invite, users.B);
+        });
+        it("joins private invite-only event", function() {
+            return joinEventWithoutLink(events.Private.Invite, users.B);
+        });
+        //Not added to viewer list as there is no invite list
+        it("fails to join private 'everyone' event")
+        it("fails to join private 'link' event")
+    })
 });
