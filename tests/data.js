@@ -100,6 +100,20 @@ var events = {
         visibility: "unlisted",
         ingress: "everyone"
     },
+    privateEveryone: {
+        name: "PrivateEveryone",
+        byline: "PrivateEveryone",
+        description: "PrivateEveryone",
+        visibility: "private",
+        ingress: "everyone"
+    },
+    privateLink: {
+        name: "privateLink",
+        byline: "privateLink",
+        description: "privateLink",
+        visibility: "privateLink",
+        ingress: "privateLink"
+    },
     generic: {
         name: "Generic Event",
         byline: "Nothing interesting",
@@ -149,8 +163,8 @@ module.exports.eventTypes = {
         Invite: events.schoolHackathon	
     },
     Private: {		
-        // Everyone: ,		
-        // Link: //,		
+        Everyone: events.privateEveryone,		
+        Link: events.privateLink,		
         Invite: events.prom		
     }
 };
