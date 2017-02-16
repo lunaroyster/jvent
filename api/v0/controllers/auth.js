@@ -17,6 +17,8 @@ module.exports.AuthOnly = function(req, res, next) {
         next();
     }
     else {
-        next(Error("Bad auth"));
+        var err = Error("Bad Auth");
+        err.status = 401;
+        next(err);
     }
 };
