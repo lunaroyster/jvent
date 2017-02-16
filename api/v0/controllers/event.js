@@ -110,7 +110,7 @@ module.exports.joinEvent = function(req, res) {
             }
         }
         else if(ingress=="invite") {
-            //TODO: Query event's invited (or attendee) userList
+            //TODO: Query event's invite userList
             //If successful, Join()
         }
     })
@@ -125,7 +125,7 @@ module.exports.joinEvent = function(req, res) {
         res.status(200).json("Success!");
     })
     .fail(function(error) {
-        res.status(401).json("Failed.");
+        res.status(400).json("Failed.");
     })
     .done();
 };
@@ -149,7 +149,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
             }
         }
         else if(event.visibility=="private") {
-            //Queries and stuff
+            //Query the viewer userList to figure out if user can view the event/
         }
     })
     .catch(function(error) {
