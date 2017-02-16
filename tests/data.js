@@ -111,8 +111,8 @@ var events = {
         name: "privateLink",
         byline: "privateLink",
         description: "privateLink",
-        visibility: "privateLink",
-        ingress: "privateLink"
+        visibility: "private",
+        ingress: "link"
     },
     generic: {
         name: "Generic Event",

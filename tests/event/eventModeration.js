@@ -156,16 +156,17 @@ var failInviteToEvent = function(event, inviter, invitee) {
 
 describe("event moderation", function() {
     before(function(done) {
-        Q.all(function() {
-            signupUserAndSetToken(users.A);
-            signupUserAndSetToken(users.B);
-        })
+        this.timeout(5000);  
+        Q.all([
+            signupUserAndSetToken(users.A),
+            signupUserAndSetToken(users.B)
+        ])
         .then(function() {
             var eventPromises = [];
             for(var eventVisibilityType in events) {
                 for(var eventIngressType in events[eventVisibilityType]) {
                     var event = events[eventVisibilityType][eventIngressType];
-                    eventPromises += createEvent(event, users.A);
+                    eventPromises.push(createEvent(event, users.A));
                 }
             }
             return Q.all(eventPromises);
@@ -180,7 +181,7 @@ describe("event moderation", function() {
             for(var eventVisibilityType in events) {
                 for(var eventIngressType in events[eventVisibilityType]) {
                     var event = events[eventVisibilityType][eventIngressType];
-                    eventJoinPromises += failJoinEventWithoutAuth(event, users.A);
+                    eventJoinPromises.push(failJoinEventWithoutAuth(event, users.A));
                 }
             }
             return Q.all(eventJoinPromises);
