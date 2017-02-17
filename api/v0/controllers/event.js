@@ -135,22 +135,30 @@ module.exports.appendEventIfVisible = function(req, res, next) {
     .then(function(event) {
         if(event.visibility=="public") {
             req.event = event;
-            next();
             return;
         }
         else if(event.visibility=="unlisted") {
             if(req.user) {
                 req.event = event;
-                next();
                 return;
             }
             else {
-                throw new Error("Bad Auth");
+                var err = Error("Bad Auth");
+                err.status(404);
+                throw err;
             }
         }
         else if(event.visibility=="private") {
-            //Query the viewer userList to figure out if user can view the event/
+            return userListCore.isUserViewer(req.user, req.event)
+            .fail(function() {
+                var err = Error("Bad Auth");
+                err.status(404);
+                throw err;
+            });
         }
+    })
+    .then(function() {
+        next();
     })
     .catch(function(error) {
         next(error);
