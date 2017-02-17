@@ -111,7 +111,7 @@ module.exports.joinEvent = function(req, res) {
         }
         else if(ingress=="invite") {
             //TODO: Query event's invite userList
-            //If successful, Join()
+            return userListCore.isUserInvitee(req.user, req.event);
         }
     })
     .then(function() {

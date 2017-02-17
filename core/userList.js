@@ -49,6 +49,20 @@ module.exports.isUserAttendee = function(user, event) {
     });
 };
 
+module.exports.isUserViewer = function(user, event) {
+    return UserList.findOne({_id: event.userLists.viewer, users: user._id})
+    .then(function() {
+        return true;
+    });
+};
+
+module.exports.isUserInvitee = function(user, event) {
+    return UserList.findOne({_id: event.userLists.invite, users: user._id})
+    .then(function() {
+        return true;
+    });
+};
+
 module.exports.createViewerList = function(event) {
     var newViewerList = new UserList({
         listType: "viewer"
