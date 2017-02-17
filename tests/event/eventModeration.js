@@ -96,7 +96,7 @@ var failJoinEventWithoutLink = function(event, user) {
     agent
     .patch('/api/v0/event/'+event.url+'/join')
     .set('Authorization', 'JWT ' + user.JWT)
-    .expect(400) //Might require a different error code
+    .expect(404) //Might require a different error code
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
         deferred.resolve(); //Use response?

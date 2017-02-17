@@ -99,7 +99,7 @@ module.exports.joinEvent = function(req, res) {
     Q.fcall(function() {
         var ingress = req.event.ingress;
         if(ingress=="everyone") {
-            return;
+            return; 
         }
         else if(ingress=="link") {
             if(req.query.c==event.joinLink) {
@@ -161,7 +161,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         next();
     })
     .catch(function(error) {
-        console.log(error);
+        // console.log(error);
         next(error);
     });
       
