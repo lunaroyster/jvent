@@ -44,22 +44,28 @@ module.exports.addUserToAttendeeList = function(user, event) {
 
 module.exports.isUserAttendee = function(user, event) {
     return UserList.findOne({_id: event.userLists.attendee, users: user._id})
-    .then(function() {
-        return true;
+    .then(function(err, userlist) {
+        if(err) throw err;
+        if(!userlist) throw Error("No userlist");
+        return userlist;
     });
 };
 
 module.exports.isUserViewer = function(user, event) {
     return UserList.findOne({_id: event.userLists.viewer, users: user._id})
-    .then(function() {
-        return true;
+    .then(function(err, userlist) {
+        if(err) throw err;
+        if(!userlist) throw Error("No userlist");
+        return userlist;
     });
 };
 
 module.exports.isUserInvitee = function(user, event) {
     return UserList.findOne({_id: event.userLists.invite, users: user._id})
-    .then(function() {
-        return true;
+    .then(function(err, userlist) {
+        if(err) throw err;
+        if(!userlist) throw Error("No userlist");
+        return userlist;
     });
 };
 

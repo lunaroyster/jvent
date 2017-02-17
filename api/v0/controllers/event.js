@@ -144,15 +144,15 @@ module.exports.appendEventIfVisible = function(req, res, next) {
             }
             else {
                 var err = Error("Bad Auth");
-                err.status(404);
+                err.status = 404;
                 throw err;
             }
         }
         else if(event.visibility=="private") {
-            return userListCore.isUserViewer(req.user, req.event)
-            .fail(function() {
+            return userListCore.isUserViewer(req.user, event)
+            .catch(function(error) {
                 var err = Error("Bad Auth");
-                err.status(404);
+                err.status = 404;
                 throw err;
             });
         }
@@ -161,6 +161,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         next();
     })
     .catch(function(error) {
+        console.log(error);
         next(error);
     });
       
