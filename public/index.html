@@ -21,26 +21,28 @@
     <link rel="stylesheet" href="css/style.css" type="text/css" />
   
   </head>
-  <body ng-app="jvent" ng-controller="homeController">
-    <nav id="horizontal">
-      <ul>
-        <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Home" ng-click="homeClick()"><i class="material-icons">home</i></li>
-        <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Settings"><i class="material-icons">settings</i></li>
-        <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Find Events"><i class="material-icons">map</i></i></li>
-        <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Saved Events"><i class="material-icons">bookmark_border</i></li>
-        <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Start Event" ng-click="createEventClick()"><i class="material-icons">create</i></li>
-        <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="User Profile" ng-click="userProfileCreate()" ng-show="authService.isAuthed()"><i class="material-icons">account_circle</i></li>
-      </ul>
-    </nav>
-    <nav id="vertical">
-        
-    </nav>
-    <div id="mainbox">
-      <div style="height:5em"></div>
-      <div ng-view></div>
+  <body ng-app="jvent" >
+    <div ng-controller="homeController">
+      <nav id="horizontal">
+        <ul>
+          <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Home" ng-click="homeClick()"><i class="material-icons">home</i></li>
+          <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Settings"><i class="material-icons">settings</i></li>
+          <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Find Events"><i class="material-icons">map</i></i></li>
+          <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Saved Events"><i class="material-icons">bookmark_border</i></li>
+          <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Start Event" ng-click="createEventClick()"><i class="material-icons">create</i></li>
+          <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="User Profile" ng-click="userProfileCreate()" ng-if="authService.isAuthed()"><i class="material-icons">account_circle</i></li>
+        </ul>
+      </nav>
+      <nav id="vertical">
+          
+      </nav>
+      <div id="mainbox">
+        <div style="height:5em"></div>
+        <div ng-view></div>
+      </div>
+      <footer>
+          
+      </footer>
     </div>
-    <footer>
-        
-    </footer>
   </body>
 </html>

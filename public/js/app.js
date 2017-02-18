@@ -34,7 +34,7 @@ app.service('urlService', function() {
     };
 });
 
-app.factory('authService', function($http, $q, urlService) {
+app.factory('authService', function($http, $q, urlService, $rootScope) {
     var obj = {};
     obj.authed = false;
     obj.authStore = null;
@@ -88,6 +88,7 @@ app.factory('authService', function($http, $q, urlService) {
         if(obj.authStore){
             obj.authed = true;
             setAuthHeader(obj.authStore.token);
+            $rootScope.authed = true;
             //Update user data in root scope
             console.log("Loaded User");
         }
@@ -110,6 +111,7 @@ app.factory('authService', function($http, $q, urlService) {
             storeToken(token);
             setAuthHeader(token);
             //Update user data in root scope
+            $rootScope.authed = true;
             obj.authed = true;
             return true;
         })
@@ -120,6 +122,7 @@ app.factory('authService', function($http, $q, urlService) {
     obj.logout = function() {
         obj.authStore.removeItem("token");
         deleteAuthHeader();
+        $rootScope.authed = false;
         //Delete user data in root scope 
         obj.authed = false;
     };
@@ -253,7 +256,7 @@ app.config(['$routeProvider', function($routeProvider) {
     
 }]);
 
-app.controller('homeController', function($scope, $location, authService) {
+app.controller('homeController', function($scope, $location, authService, $rootScope) {
     $scope.homeClick = function() {
         $location.path('/');
     };
@@ -265,6 +268,7 @@ app.controller('homeController', function($scope, $location, authService) {
             $location.path('/login');
         }
     };
+    $scope.authService = authService;
     // setInterval(function() {console.log(authService)}, 1000);
 });
 
