@@ -43,6 +43,10 @@ var eventSchema = new Schema({
         type: String, //TODO: Implement better.
         index: true,
         unique: true
+    },
+    joinUrl: {
+        type: String, //TODO: Implement better.
+        index: true
     }
     // event images
     // moderators

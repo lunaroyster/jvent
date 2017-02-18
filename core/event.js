@@ -16,7 +16,9 @@ module.exports.createEvent = function(eventSettings) {
         url: urlCore.generateRandomUrl(6),
         timeOfCreation: Date.now()
     });
-    
+    if(newEvent.ingress=="invite") {
+        newEvent.joinUrl = urlCore.generateRandomUrl(11);
+    }
     newEvent.organizer.user = eventSettings.user._id;
     newEvent.organizer.name = eventSettings.user.username;
     return newEvent.save()
