@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Q = require('q');
 // var User = mongoose.model('User');
-var urlCore = require('../../../core/url');
+var urlCore = require('./url');
 var collectionCore = require('./collection');
 var userListCore = require('./userList');
 var Event = mongoose.model('Event');
@@ -16,7 +16,7 @@ module.exports.createEvent = function(eventSettings) {
         url: urlCore.generateRandomUrl(6),
         timeOfCreation: Date.now()
     });
-    if(newEvent.ingress=="invite") {
+    if(newEvent.ingress=="link") {
         newEvent.joinUrl = urlCore.generateRandomUrl(11);
     }
     newEvent.organizer.user = eventSettings.user._id;
