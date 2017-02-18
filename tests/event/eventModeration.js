@@ -59,8 +59,8 @@ var createEvent = function(event, user) {
     .expect(201)
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
-        event.url = res.body.event;
-        //Handle link urls
+        event.url = res.body.event.url;
+        event.joinUrl = res.body.event.joinUrl;
         return deferred.resolve(res.body.event);
     });
     return deferred.promise; 

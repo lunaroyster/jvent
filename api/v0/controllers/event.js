@@ -40,7 +40,10 @@ module.exports.createEvent = function(req, res) {
     .then(function(event) {
         var state = {
             status: "Created",
-            event: event.url
+            event: {
+                url: event.url,
+                joinUrl: event.joinUrl
+            }
         };
         res.status(201).json(state);
     })

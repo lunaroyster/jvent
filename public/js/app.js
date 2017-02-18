@@ -184,7 +184,7 @@ app.service('jventService', function($http, $q, urlService) {
             event: event
         };
         $http.post(url, data).then(function(response) {
-            var eventURL = response.data.event;
+            var eventURL = response.data.event.url;
             deferred.resolve(eventURL);
         },
         function(response) {
