@@ -16,7 +16,7 @@ module.exports.createEvent = function(eventSettings) {
         url: urlCore.generateRandomUrl(6),
         timeOfCreation: Date.now()
     });
-    if(newEvent.ingress=="link") {
+    if(eventSettings.ingress=="link") {
         newEvent.joinUrl = urlCore.generateRandomUrl(11);
     }
     newEvent.organizer.user = eventSettings.user._id;
@@ -36,9 +36,6 @@ module.exports.createEvent = function(eventSettings) {
         });
         // TODO: Remove unnecessary event save if possible.
     })
-    .fail(function(error) {
-        return error;
-    });
 };
 
 // TODO: query to select events based on time/location/rating/uploader etc

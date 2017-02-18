@@ -106,7 +106,7 @@ var failJoinEventWithoutLink = function(event, user) {
 var joinEventWithLink = function(event, user) {
     var deferred = Q.defer();
     agent
-    .patch('/api/v0/event/'+event.url+'/join?c='+event.joinLink)
+    .patch('/api/v0/event/'+event.url+'/join?c='+event.joinUrl)
     .set('Authorization', 'JWT ' + user.JWT)
     .expect(200)
     .end(function(err, res) {
@@ -118,7 +118,7 @@ var joinEventWithLink = function(event, user) {
 var failJoinEventWithLink = function(event, user) {
     var deferred = Q.defer();
     agent
-    .patch('/api/v0/event/'+event.url+'/join?c='+event.joinLink)
+    .patch('/api/v0/event/'+event.url+'/join?c='+event.joinUrl)
     .set('Authorization', 'JWT ' + user.JWT)
     .expect(400)
     .end(function(err, res) {

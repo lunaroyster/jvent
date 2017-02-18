@@ -100,7 +100,7 @@ module.exports.joinEvent = function(req, res) {
             return; 
         }
         else if(ingress=="link") {
-            if(req.query.c==event.joinLink) {
+            if(req.query.c==event.joinUrl) {
                 return;
             }
             else {
