@@ -83,14 +83,19 @@ nav ul {
 }
 .event .content {
     width: 100%;
-    height: 100%;
+    /*height: 100%;*/
+    position: relative;
     margin: 0.5em 0.5em 0.5em 0.5em;
 }
 .event h2 {
     display: flex;
     font-weight: 100;
 }
-
+.event .bottom {
+    bottom: 0;
+    position: absolute;
+    padding: 0.5em;
+}
 
 ::-webkit-scrollbar {
     background-color: rgb(35, 35, 35);
