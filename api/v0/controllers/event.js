@@ -1,7 +1,6 @@
 var Q = require('q');
 var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
-var urlCore = require('../../../core/url');
 var eventRequestSchema = require('../requests/event');
 
 // /event/
@@ -30,7 +29,6 @@ module.exports.createEvent = function(req, res) {
             description: req.body.event.description,
             visibility: req.body.event.visibility,
             ingress: req.body.event.ingress,
-            url: urlCore.generateRandomUrl(6),
             user: req.user
         };
         return eventCore.createEvent(eventSettings)
