@@ -96,6 +96,11 @@ nav ul {
     height: 100%;
     padding: 2em;
 }
+#eventpage #controls {
+    background: rgb(23, 23, 23);
+    height: 100%;
+    padding: 2em;
+}
 
 #eventsview, #newEventView, #eventpage, #signUpView {
     padding: 1em 1em 0em 1em;
