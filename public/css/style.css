@@ -87,6 +87,10 @@ nav ul {
     background: rgb(30, 30, 30);
 }
 
+#eventsview, #newEventView, #eventpage, #signUpView {
+    padding: 1em 1em 0em 1em;
+}
+
 .event {
     background-color: #262626;
     width: 312px;
