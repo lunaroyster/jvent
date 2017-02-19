@@ -76,6 +76,17 @@ nav ul {
     left: 0;
 }
 
+#eventpage #banner {
+    height: 50%;
+}
+
+#eventpage #content {
+    height: 100%;
+}
+#eventpage #info {
+    background: rgb(30, 30, 30);
+}
+
 .event {
     background-color: #262626;
     width: 312px;

@@ -2,12 +2,20 @@
     <div id="banner">
         <h2 ng-bind="event.name"></h2>
     </div>
-    <div id="controls" class="s12 m4">
-        <!--View-->
-        <!--Join-->
-    </div>
-    <div id="content" class="s12 m8">
-        <span ng-bind="event.byline"></span>
-        <span ng-bind="event.description"></span>
+    <div id="content" class="row">
+        <div id="controls" class="col s12 m4">
+            <div class="row">
+                <div class="col s12 m6">
+                    <!--Join-->
+                </div>
+                <div class="col s12 m6">
+                    <!--View-->
+                </div>
+            </div>
+        </div>
+        <div id="info" class="col s12 m8">
+            <span ng-bind="event.byline"></span>
+            <span ng-bind="event.description"></span>
+        </div>
     </div>
 </div>
