@@ -28,6 +28,12 @@ nav ul {
     padding: 0;
     margin: 0 auto 0 auto;
 }
+/*#horizontal>ul>li>.dropdown-menu {*/
+#userDropdown {
+    width: 36em;
+    padding: none;
+    background-color: #0a0b0c;
+}
 
 #horizontal {
     height: 4em;
