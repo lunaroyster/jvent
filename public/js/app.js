@@ -404,3 +404,5 @@ app.controller('404Ctrl', function($scope, $location) {
     };
     setTimeout($scope.redirect, 5000);
 })  
+
+$(".dropdown-button").dropdown();
