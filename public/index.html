@@ -26,11 +26,13 @@
     <div ng-controller="homeController">
       <nav id="horizontal">
         <ul id="userDropdown" class="dropdown-content">
-          <!-- TODO: Fix this abomination-->
+          <!-- TODO: Fix this abomination -->
           <li><a href="#!">Username</a></li>
           <!--<li class="divider"></li>-->
-          <li><a href="#!">Settings</a></li>
-          <li><a href="#!">Profile</a></li>
+          <li ng-if="authService.isAuthed()"><a href="#!">Settings</a></li>
+          <li ng-if="authService.isAuthed()"><a href="#!">Profile</a></li>
+          <li ng-if="!authService.isAuthed()"><a href="">Log in</a></li>
+          <li ng-if="authService.isAuthed()"><a href="">Log out</a></li>
         </ul>
         <ul>
           <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Home" ng-click="homeClick()"><i class="material-icons">home</i></li>
@@ -38,7 +40,7 @@
           <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Find Events"><i class="material-icons">map</i></i></li>
           <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Saved Events"><i class="material-icons">bookmark_border</i></li>
           <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Start Event" ng-click="createEventClick()"><i class="material-icons">create</i></li>
-          <li class="dropdown-button" data-position="bottom" data-activates= "userDropdown" ng-click="userProfileCreate()" ng-if="authService.isAuthed()"><i class="material-icons">account_circle</i></li>
+          <li class="dropdown-button" data-position="bottom" data-activates= "userDropdown" ng-click="userProfileCreate()"><i class="material-icons">account_circle</i></li>
         </ul>
       </nav>
       <nav id="vertical">
