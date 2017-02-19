@@ -144,6 +144,9 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
         });
         return(deferred.promise);
     };
+    obj.user = function() {
+        return "Username here";
+    };
     loadUser();
     return(obj);
 });
@@ -374,9 +377,12 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService) {
+app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
     $scope.newEvent = {};
     $scope.newEventEnabled = true;
+    $scope.newEvent.organizer = {
+        name: authService.user()
+    };
     //TODO: Filter visibility/ingress combinations
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
