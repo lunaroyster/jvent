@@ -1,4 +1,6 @@
 /* global angular Materialize*/
+"use strict";
+
 var app = angular.module("jvent", ['ngRoute']);
 
 app.service('urlService', function() {
@@ -160,7 +162,8 @@ app.service('jventService', function($http, $q, urlService) {
     this.getEvents = function() {
         var deferred = $q.defer();
         // $http.get('debugjson/events.json').then(function (data) {
-        $http.get(urlService.event()).then(function (data) {
+        $http.get(urlService.event())
+        .then(function (data) {
             var eventList = data.data.events;
             deferred.resolve(eventList);
             events = eventList;
@@ -169,7 +172,8 @@ app.service('jventService', function($http, $q, urlService) {
     };
     this.getEvent = function(eventURL) {
         var deferred = $q.defer();
-        $http.get('api/v0/event/' + eventURL).then(function (data) {
+        $http.get('api/v0/event/' + eventURL)
+        .then(function (data) {
             event = data.data.event;
             deferred.resolve(event);
         });
@@ -181,7 +185,8 @@ app.service('jventService', function($http, $q, urlService) {
         var data = {
             post: post,
         };
-        $http.post(url, data).then(function(response){
+        $http.post(url, data)
+        .then(function(response){
             var postID = response.data.post;
             deferred.resolve(postID);
         });
@@ -192,7 +197,8 @@ app.service('jventService', function($http, $q, urlService) {
         var data = {
             event: event
         };
-        $http.post(url, data).then(function(response) {
+        $http.post(url, data)
+        .then(function(response) {
             var eventURL = response.data.event.url;
             deferred.resolve(eventURL);
         },
@@ -204,7 +210,8 @@ app.service('jventService', function($http, $q, urlService) {
     this.joinEvent = function(eventURL) {
         var url = urlService.joinEvent(eventURL);
         var deferred = $q.defer();
-        $http.patch(url).then(function(response) {
+        $http.patch(url)
+        .then(function(response) {
             //Response
             deferred.resolve();
         },
