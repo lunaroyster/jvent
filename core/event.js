@@ -48,12 +48,20 @@ module.exports.getPublicEvents = function() {
 
 module.exports.getEventByID = function(eventID) {
     var eventQuery = Event.findOne({_id: eventID});
-    return eventQuery.exec();
+    return eventQuery.exec()
+    .then(function(event) {
+        if(!event) throw Error("Can't find event");
+        return event;
+    });
 };
 
 module.exports.getEventByURL = function(url) {
     var eventQuery = Event.findOne({url: url});
-    return eventQuery.exec();
+    return eventQuery.exec()
+    .then(function(event) {
+        if(!event) throw Error("Can't find event");
+        return event;
+    });
 };
 
 module.exports.getEventIfAttendee = function(eventID, user) {
