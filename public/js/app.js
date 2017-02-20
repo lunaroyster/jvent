@@ -17,6 +17,9 @@ app.service('urlService', function() {
     this.eventURL = function(eventURL) {
         return(this.event() + eventURL + '/');
     };
+    this.joinEvent = function(eventURL) {
+        return(this.eventURL(eventURL) + 'join/');
+    };
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
     };
@@ -195,6 +198,18 @@ app.service('jventService', function($http, $q, urlService) {
         },
         function(response) {
             deferred.reject(response.data);
+        });
+        return deferred.promise;
+    };
+    this.joinEvent = function(eventURL) {
+        var url = urlService.joinEvent(eventURL);
+        var deferred = $q.defer();
+        $http.patch(url).then(function(response) {
+            //Response
+            deferred.resolve();
+        },
+        function(response) {
+            deferred.reject();
         });
         return deferred.promise;
     };
