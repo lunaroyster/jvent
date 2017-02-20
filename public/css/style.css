@@ -101,7 +101,9 @@ nav ul {
     height: 100%;
     padding: 2em;
 }
-
+#eventpage #controls .fill {
+    width: 100%;
+}
 #eventsview, #newEventView, #eventpage, #signUpView {
     padding: 1em 1em 0em 1em;
 }
