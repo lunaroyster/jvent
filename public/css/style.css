@@ -58,12 +58,12 @@ nav ul {
 /*}*/
 
 #mainbox {
-    left: 5em;
-    top: 0em;
+    left: 4em;
+    top: 4em;
     right: 0em;
     bottom: 0em;
     position: fixed;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 #secondary {
@@ -76,15 +76,37 @@ nav ul {
     left: 0;
 }
 
-#eventpage #banner {
-    height: 50%;
+#eventpage {
+    height: 100%;    
 }
 
+/*#eventpage #banner {*/
+/*    height: 50%;*/
+/*}*/
+
 #eventpage #content {
-    height: 100%;
+    position: absolute;
+    right: 0;
+    width: 100%;
+    height: 35%;
+    bottom: 0;
+    margin-bottom: 0;
 }
 #eventpage #info {
     background: rgb(30, 30, 30);
+    height: 100%;
+    padding: 2em;
+}
+#eventpage #controls {
+    background: rgb(23, 23, 23);
+    height: 100%;
+    padding: 2em;
+}
+#eventpage #controls .fill {
+    width: 100%;
+}
+#eventsview, #newEventView, #eventpage, #signUpView {
+    padding: 1em 1em 0em 1em;
 }
 
 .event {
