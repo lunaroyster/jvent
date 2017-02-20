@@ -314,7 +314,7 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     });
     $scope.join = function() {
         //Make sure request can be made
-        jventService.joinEvent(event.url)
+        jventService.joinEvent($scope.event.url)
         .then(function() {
             //Redirect to content upon success
         }, function(err) {
