@@ -312,6 +312,18 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     eventPromise.then(function (event) {
         $scope.event = event;
     });
+    $scope.join = function() {
+        //Make sure request can be made
+        jventService.joinEvent(event.url)
+        .then(function() {
+            //Redirect to content upon success
+        }, function(err) {
+            //Display error, if any
+        });
+    };
+    $scope.view = function() {
+        //Redirect to content
+    };
 });
 
 app.controller('loginCtrl', function($scope, $location, authService) {
