@@ -1,6 +1,6 @@
 <div id="eventpage">
     <div id="banner">
-        <h2 ng-bind="event.name"></h2>
+        <h4 ng-bind="event.name"></h4>
     </div>
     <div id="content" class="row">
         <div id="controls" class="col s12 m4">
@@ -15,7 +15,9 @@
         </div>
         <div id="info" class="col s12 m8">
             <span ng-bind="event.byline"></span>
-            <span ng-bind="event.description"></span>
+            <p>
+                <span ng-bind="event.description"></span>
+            </p>
         </div>
     </div>
 </div>
