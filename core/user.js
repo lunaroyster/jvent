@@ -16,15 +16,27 @@ module.exports.createUser = function(userObj) {
 
 module.exports.getUserByID = function(userID) {
     var userQuery = User.findOne({_id: userID});
-    return userQuery.exec();
+    return userQuery.exec()
+    .then(function(user) {
+        if(!user) throw Error("Can't find user");
+        return user;
+    });
 };
 module.exports.getUserByEmail = function(email) {
     var userQuery = User.findOne({email: email});
-    return userQuery.exec();
+    return userQuery.exec()
+    .then(function(user) {
+        if(!user) throw Error("Can't find user");
+        return user;
+    });
 };
 module.exports.getUserByUsername = function(username) {
     var userQuery = User.findOne({username: username});
-    return userQuery.exec();    
+    return userQuery.exec()
+    .then(function(user) {
+        if(!user) throw Error("Can't find user");
+        return user;
+    });
 };
 
 module.exports.changePassword = function(user, password) {
