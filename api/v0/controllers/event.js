@@ -111,7 +111,6 @@ module.exports.joinEvent = function(req, res) {
             }
         }
         else if(ingress=="invite") {
-            //TODO: Query event's invite userList
             return userListCore.isUserInvitee(req.user, req.event);
         }
     })
@@ -119,14 +118,14 @@ module.exports.joinEvent = function(req, res) {
         return userListCore.addUserToAttendeeList(req.user, req.event);
     })
     .then(function() {
-        //TODO: Add to user's event list?
+        //TODO: Add to user's event list
         return;
     })
     .then(function() {
-        res.status(200).json("Success!");
+        res.status(200).send();
     })
     .fail(function(error) {
-        res.status(400).json("Failed.");
+        res.status(400).send();
     })
     .done();
 };
