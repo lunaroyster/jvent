@@ -51,12 +51,21 @@ module.exports.getPosts = function(event) {
     postQuery.exec();
 };
 
+//Shorten handler (common function)
 module.exports.getPostByID = function(event, postID) {
     var postQuery = Post.findOne({parentEvent: event._id, _id: postID});
-    return postQuery.exec();
+    return postQuery.exec()
+    .then(function(post) {
+        if(!post) throw Error("Can't find post");
+        return post;
+    });
 };
 
 module.exports.getPostByURL = function(event, postURL) {
     var postQuery = Post.findOne({parentEvent: event._id, url: postURL});
-    return postQuery.exec();
+    return postQuery.exec()
+    .then(function(post) {
+        if(!post) throw Error("Can't find post");
+        return post;
+    });
 };
