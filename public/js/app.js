@@ -287,6 +287,11 @@ app.controller('homeController', function($scope, $location, authService, $rootS
             $location.path('/login');
         }
     };
+    $scope.logoutClick = function() {
+        if(authService.authed) {
+            $location.path('/logout');
+        }
+    };
     $scope.authService = authService;
     // setInterval(function() {console.log(authService)}, 1000);
 });

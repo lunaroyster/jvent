@@ -32,7 +32,7 @@
           <li ng-if="authService.isAuthed()"><a href="#!">Settings</a></li>
           <li ng-if="authService.isAuthed()"><a href="#!">Profile</a></li>
           <li ng-if="!authService.isAuthed()"><a href="">Log in</a></li>
-          <li ng-if="authService.isAuthed()"><a href="">Log out</a></li>
+          <li ng-if="authService.isAuthed()" ng-click="logoutClick()"><a href="">Log out</a></li>
         </ul>
         <ul>
           <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Home" ng-click="homeClick()"><i class="material-icons">home</i></li>
