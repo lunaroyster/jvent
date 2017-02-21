@@ -306,13 +306,19 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     eventPromise.then(function (event) {
         $scope.event = event;
     });
+    $scope.joinPending = false;
     $scope.join = function() {
         //Make sure request can be made
+        $scope.joinPending = true;
         jventService.joinEvent($scope.event.url)
         .then(function() {
             //Redirect to content upon success
-        }, function(err) {
-            //Display error, if any
+        })
+        .catch(function(err) {
+            //err
+        })
+        .finally(function() {
+            $scope.joinPending = false;
         });
     };
     $scope.view = function() {
