@@ -101,15 +101,6 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     
     obj.isAuthed = function() {return(obj.authed)};
     obj.login = function(creds, options) {
-        // getTokenFromServer(creds, function(err, token) {
-        //     if (err) {return(callback(false))}
-        //     setAuthStore(options.remainSignedIn);
-        //     storeToken(token);
-        //     setAuthHeader(token);
-        //     //Update user data in root scope
-        //     obj.authed = true;
-        //     callback(true);
-        // });
         return getTokenFromServer(creds)
         .then(function(token) {
             setAuthStore(options.remainSignedIn);
@@ -417,7 +408,6 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
     $scope.newEvent.organizer = {
         name: authService.user()
     };
-    //TODO: Filter visibility/ingress combinations
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
             $scope.newEventEnabled = false;
