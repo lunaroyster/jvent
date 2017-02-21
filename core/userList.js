@@ -68,11 +68,13 @@ module.exports.addUserToAttendeeList = function(user, event) {
     return UserList.findOne({_id: event.userLists.attendee})
     .then(function(userlist) {
         //TODO: Hacky way
-        if(user._id==userlist.users.addToSet(user._id)) {
-            return userlist.save();
+        if(!userlist) throw Error("No list");
+        if(userlist.users.indexOf(user._id) != -1) {
+            throw Error("Already attending");
         }
         else {
-            throw Error("Already attending");
+            userlist.users.addToSet(user._id);
+            return userlist.save();
         }
     });
 };
