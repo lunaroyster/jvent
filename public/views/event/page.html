@@ -6,7 +6,7 @@
         <div id="controls" class="col s12 m4">
             <div class="row">
                 <div class="col s12 m6">
-                    <a class="waves-effect waves-light btn-large grey darken-4 fill" ng-click="join();" ng-if="event.ingress=='everyone'"><i class="material-icons right">add</i>Join</a>
+                    <a class="waves-effect waves-light btn-large grey darken-4 fill" ng-click="join();" ng-if="event.ingress=='everyone'" ng-disabled="joinPending"><i class="material-icons right">add</i>Join</a>
                 </div>
                 <div class="col s12 m6">
                     <a class="waves-effect waves-light btn-large grey darken-4 fill" ng-click="view()"><i class="material-icons right">chevron_right</i>View</a>

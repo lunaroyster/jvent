@@ -287,6 +287,11 @@ app.controller('homeController', function($scope, $location, authService, $rootS
             $location.path('/login');
         }
     };
+    $scope.logoutClick = function() {
+        if(authService.authed) {
+            $location.path('/logout');
+        }
+    };
     $scope.authService = authService;
     // setInterval(function() {console.log(authService)}, 1000);
 });
@@ -306,13 +311,19 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     eventPromise.then(function (event) {
         $scope.event = event;
     });
+    $scope.joinPending = false;
     $scope.join = function() {
         //Make sure request can be made
+        $scope.joinPending = true;
         jventService.joinEvent($scope.event.url)
         .then(function() {
             //Redirect to content upon success
-        }, function(err) {
-            //Display error, if any
+        })
+        .catch(function(err) {
+            //err
+        })
+        .finally(function() {
+            $scope.joinPending = false;
         });
     };
     $scope.view = function() {
@@ -324,17 +335,22 @@ app.controller('loginCtrl', function($scope, $location, authService) {
     $scope.email;
     $scope.password;
     $scope.remainSignedIn = false;
+    $scope.signInPending = false;
     $scope.signIn = function() {
         if($scope.email && $scope.password) {
             var creds = {
                 email: $scope.email,
                 password: $scope.password
             };
+            $scope.signInPending = true;
             authService.login(creds, {remainSignedIn:$scope.remainSignedIn})
             .then(function(success) {
                 if (success) {
                     $location.path('/');
                 }
+            })
+            .finally(function() {
+                $scope.signInPending = false;
             });
         }
     };
