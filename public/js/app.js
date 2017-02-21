@@ -172,7 +172,7 @@ app.service('jventService', function($http, $q, urlService) {
     };
     this.getEvent = function(eventURL) {
         var deferred = $q.defer();
-        $http.get('api/v0/event/' + eventURL)
+        $http.get(urlService.eventURL(eventURL))
         .then(function (data) {
             event = data.data.event;
             deferred.resolve(event);
@@ -444,5 +444,3 @@ app.controller('404Ctrl', function($scope, $location) {
     };
     setTimeout($scope.redirect, 5000);
 })  
-
-$(".dropdown-button").dropdown();
