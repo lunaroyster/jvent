@@ -3,6 +3,7 @@ var Q = require('q');
 var collectionCore = require('./collection');
 var UserList = mongoose.model('UserList');
 
+//Create
 module.exports.createDefaultUserLists = function(event) {
     var visibility = event.visibility;
     var ingress = event.ingress;
@@ -34,41 +35,6 @@ module.exports.createDefaultUserLists = function(event) {
     });
 };
 
-module.exports.addUserToAttendeeList = function(user, event) {
-    return UserList.findOne({_id: event.userLists.attendee})
-    .then(function(userlist) {
-        userlist.users.addToSet(user._id);
-        return userlist.save();
-    });
-};
-
-module.exports.isUserAttendee = function(user, event) {
-    return UserList.findOne({_id: event.userLists.attendee, users: user._id})
-    .then(function(err, userlist) {
-        if(err) throw err;
-        if(!userlist) throw Error("No userlist");
-        return userlist;
-    });
-};
-
-module.exports.isUserViewer = function(user, event) {
-    return UserList.findOne({_id: event.userLists.viewer, users: user._id})
-    .then(function(err, userlist) {
-        if(err) throw err;
-        if(!userlist) throw Error("No userlist");
-        return userlist;
-    });
-};
-
-module.exports.isUserInvitee = function(user, event) {
-    return UserList.findOne({_id: event.userLists.invite, users: user._id})
-    .then(function(err, userlist) {
-        if(err) throw err;
-        if(!userlist) throw Error("No userlist");
-        return userlist;
-    });
-};
-
 module.exports.createViewerList = function(event) {
     var newViewerList = new UserList({
         listType: "viewer"
@@ -95,4 +61,45 @@ module.exports.createAttendeeList = function(event) {
         listType: "attendee"
     });
     return newAttendeeList.save();
+};
+
+//Add
+module.exports.addUserToAttendeeList = function(user, event) {
+    return UserList.findOne({_id: event.userLists.attendee})
+    .then(function(userlist) {
+        //TODO: Hacky way
+        if(!userlist) throw Error("No list");
+        if(userlist.users.indexOf(user._id) != -1) {
+            throw Error("Already attending");
+        }
+        else {
+            userlist.users.addToSet(user._id);
+            return userlist.save();
+        }
+    });
+};
+
+//Verify
+module.exports.isUserAttendee = function(user, event) {
+    return UserList.findOne({_id: event.userLists.attendee, users: user._id})
+    .then(function(userlist) {
+        if(!userlist) throw Error("No userlist");
+        return userlist;
+    });
+};
+
+module.exports.isUserViewer = function(user, event) {
+    return UserList.findOne({_id: event.userLists.viewer, users: user._id})
+    .then(function(userlist) {
+        if(!userlist) throw Error("No userlist");
+        return userlist;
+    });
+};
+
+module.exports.isUserInvitee = function(user, event) {
+    return UserList.findOne({_id: event.userLists.invite, users: user._id})
+    .then(function(userlist) {
+        if(!userlist) throw Error("No userlist");
+        return userlist;
+    });
 };
