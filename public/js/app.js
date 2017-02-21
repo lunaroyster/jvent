@@ -287,10 +287,22 @@ app.controller('homeController', function($scope, $location, authService, $rootS
             $location.path('/login');
         }
     };
+    $scope.loginClick = function() {
+        $location.path('/login');
+    };
     $scope.logoutClick = function() {
         if(authService.authed) {
             $location.path('/logout');
         }
+    };
+    $scope.settingsClick = function() {
+        $location.path('/settings');
+    };
+    $scope.profileClick = function() {
+        $location.path('/profile');
+    };
+    $scope.signupClick = function() {
+        $location.path('/signup');
     };
     $scope.authService = authService;
     // setInterval(function() {console.log(authService)}, 1000);
