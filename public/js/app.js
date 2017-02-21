@@ -10,9 +10,6 @@ app.service('urlService', function() {
     this.api = function() {
         return(apiURL+apiVersion);
     };
-    this.user = function() {
-        return(this.api() + 'user/');
-    };
     this.event = function() {
         return(this.api() + 'event/');
     };
@@ -33,6 +30,12 @@ app.service('urlService', function() {
     };
     this.commentID = function(eventURL, postID, commentID) {
         return(this.comment(eventURL, postID) + commentID + '/');
+    };
+    this.user = function() {
+        return(this.api() + 'user/');
+    };
+    this.signUp = function() {
+        return(this.user() + 'signup/');
     };
     this.authenticate = function() {
         return(this.user() + 'authenticate/');
@@ -126,7 +129,7 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
         var deferred = $q.defer();
         var req = {
             method: 'POST',
-            url: 'api/v0/user/signup',
+            url: urlService.signup(),
             data: {
                 email: email,
                 username: username,
