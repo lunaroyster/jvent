@@ -75,8 +75,7 @@ module.exports.addUserToAttendeeList = function(user, event) {
 //Verify
 module.exports.isUserAttendee = function(user, event) {
     return UserList.findOne({_id: event.userLists.attendee, users: user._id})
-    .then(function(err, userlist) {
-        if(err) throw err;
+    .then(function(userlist) {
         if(!userlist) throw Error("No userlist");
         return userlist;
     });
@@ -84,8 +83,7 @@ module.exports.isUserAttendee = function(user, event) {
 
 module.exports.isUserViewer = function(user, event) {
     return UserList.findOne({_id: event.userLists.viewer, users: user._id})
-    .then(function(err, userlist) {
-        if(err) throw err;
+    .then(function(userlist) {
         if(!userlist) throw Error("No userlist");
         return userlist;
     });
@@ -93,8 +91,7 @@ module.exports.isUserViewer = function(user, event) {
 
 module.exports.isUserInvitee = function(user, event) {
     return UserList.findOne({_id: event.userLists.invite, users: user._id})
-    .then(function(err, userlist) {
-        if(err) throw err;
+    .then(function(userlist) {
         if(!userlist) throw Error("No userlist");
         return userlist;
     });
