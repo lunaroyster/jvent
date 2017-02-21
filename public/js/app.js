@@ -330,17 +330,22 @@ app.controller('loginCtrl', function($scope, $location, authService) {
     $scope.email;
     $scope.password;
     $scope.remainSignedIn = false;
+    $scope.signInPending = false;
     $scope.signIn = function() {
         if($scope.email && $scope.password) {
             var creds = {
                 email: $scope.email,
                 password: $scope.password
             };
+            $scope.signInPending = true;
             authService.login(creds, {remainSignedIn:$scope.remainSignedIn})
             .then(function(success) {
                 if (success) {
                     $location.path('/');
                 }
+            })
+            .finally(function() {
+                $scope.signInPending = false;
             });
         }
     };
