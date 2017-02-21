@@ -1,4 +1,6 @@
 /* global angular Materialize*/
+"use strict";
+
 var app = angular.module("jvent", ['ngRoute']);
 
 app.service('urlService', function() {
@@ -16,6 +18,9 @@ app.service('urlService', function() {
     };
     this.eventURL = function(eventURL) {
         return(this.event() + eventURL + '/');
+    };
+    this.joinEvent = function(eventURL) {
+        return(this.eventURL(eventURL) + 'join/');
     };
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
@@ -157,7 +162,8 @@ app.service('jventService', function($http, $q, urlService) {
     this.getEvents = function() {
         var deferred = $q.defer();
         // $http.get('debugjson/events.json').then(function (data) {
-        $http.get(urlService.event()).then(function (data) {
+        $http.get(urlService.event())
+        .then(function (data) {
             var eventList = data.data.events;
             deferred.resolve(eventList);
             events = eventList;
@@ -166,7 +172,8 @@ app.service('jventService', function($http, $q, urlService) {
     };
     this.getEvent = function(eventURL) {
         var deferred = $q.defer();
-        $http.get('api/v0/event/' + eventURL).then(function (data) {
+        $http.get(urlService.eventURL(eventURL))
+        .then(function (data) {
             event = data.data.event;
             deferred.resolve(event);
         });
@@ -178,7 +185,8 @@ app.service('jventService', function($http, $q, urlService) {
         var data = {
             post: post,
         };
-        $http.post(url, data).then(function(response){
+        $http.post(url, data)
+        .then(function(response){
             var postID = response.data.post;
             deferred.resolve(postID);
         });
@@ -189,12 +197,26 @@ app.service('jventService', function($http, $q, urlService) {
         var data = {
             event: event
         };
-        $http.post(url, data).then(function(response) {
+        $http.post(url, data)
+        .then(function(response) {
             var eventURL = response.data.event.url;
             deferred.resolve(eventURL);
         },
         function(response) {
             deferred.reject(response.data);
+        });
+        return deferred.promise;
+    };
+    this.joinEvent = function(eventURL) {
+        var url = urlService.joinEvent(eventURL);
+        var deferred = $q.defer();
+        $http.patch(url)
+        .then(function(response) {
+            //Response
+            deferred.resolve();
+        },
+        function(response) {
+            deferred.reject();
         });
         return deferred.promise;
     };
@@ -290,6 +312,18 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     eventPromise.then(function (event) {
         $scope.event = event;
     });
+    $scope.join = function() {
+        //Make sure request can be made
+        jventService.joinEvent($scope.event.url)
+        .then(function() {
+            //Redirect to content upon success
+        }, function(err) {
+            //Display error, if any
+        });
+    };
+    $scope.view = function() {
+        //Redirect to content
+    };
 });
 
 app.controller('loginCtrl', function($scope, $location, authService) {
@@ -410,5 +444,3 @@ app.controller('404Ctrl', function($scope, $location) {
     };
     setTimeout($scope.redirect, 5000);
 })  
-
-$(".dropdown-button").dropdown();
