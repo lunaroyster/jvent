@@ -44,7 +44,6 @@ module.exports.createPost = function(user, post, event) {
     });
 };
 
-// TODO: query to select posts based on time/location/rating/poster etc
 
 module.exports.getPosts = function(event) {
     //TODO: Queries

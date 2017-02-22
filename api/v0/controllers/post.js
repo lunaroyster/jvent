@@ -26,7 +26,7 @@ module.exports.createPost = function(req, res) {
     .then(function() {
         return userListCore.isUserAttendee(req.user, req.event)
         .then(function() {
-            return req.event; //TODO: return only if user has post privileges
+            return req.event; //TODO: return only if user has post privileges within the event
         });
     })
     .then(function(event) {

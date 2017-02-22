@@ -40,12 +40,12 @@ var eventSchema = new Schema({
         }
     },
     url: {
-        type: String, //TODO: Implement better.
+        type: String,
         index: true,
         unique: true
     },
     joinUrl: {
-        type: String, //TODO: Implement better.
+        type: String,
         index: true
     }
     // event images

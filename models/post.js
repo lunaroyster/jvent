@@ -31,7 +31,7 @@ var postSchema = new Schema({
         }
     },
     url: {
-        type: String, //TODO: Implement better.
+        type: String,
         index: true,
         unique: true
     }

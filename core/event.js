@@ -35,10 +35,8 @@ module.exports.createEvent = function(eventSettings) {
             return event.save();
         });
         // TODO: Remove unnecessary event save if possible.
-    })
+    });
 };
-
-// TODO: query to select events based on time/location/rating/uploader etc
 
 module.exports.getPublicEvents = function() {
     // TODO: query to select events based on time/location/rating/uploader etc
