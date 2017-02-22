@@ -5,18 +5,18 @@ var collectionCore = require('./collection');
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 
-module.exports.createPost = function(postSettings, event, superCollection) {
-    var newPost = new Post({
-        title: postSettings.title,
-        parentEvent: event._id,
-        superCollection: superCollection._id,
-        content: {
-            text: postSettings.contentText
-        },
-        timeOfCreation: Date.now()
-    });
-    return newPost.save();
-};
+// module.exports.createPost = function(postSettings, event, superCollection) {
+//     var newPost = new Post({
+//         title: postSettings.title,
+//         parentEvent: event._id,
+//         superCollection: superCollection._id,
+//         content: {
+//             text: postSettings.contentText
+//         },
+//         timeOfCreation: Date.now()
+//     });
+//     return newPost.save();
+// };
 
 module.exports.createPost = function(user, post, event) {
     return collectionCore.getSuperCollectionByID(event.superCollection)
@@ -30,6 +30,8 @@ module.exports.createPost = function(user, post, event) {
             },
             timeOfCreation: Date.now()
         });
+        newPost.submitter.user = user._id;
+        newPost.submitter.name = user.username;
         return newPost.save()
         .then(function(post) {
             sc.addPost(post);

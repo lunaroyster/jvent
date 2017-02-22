@@ -21,9 +21,19 @@ var postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'SuperCollection'
     },
-    poster: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
+    submitter: {
+        user: {
+            type: Schema.Types.ObjectId, 
+            ref: 'User'
+        },
+        name: {
+            type: String
+        }
+    },
+    url: {
+        type: String, //TODO: Implement better.
+        index: true,
+        unique: true
     }
     // resource: String, // Can be URL or something else
     // resourceType: String, // Stores the type of resource
