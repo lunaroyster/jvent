@@ -243,11 +243,21 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/event/page.html'
     })
     
+    .when('/event/:eventURL/posts', {
+        controller  : 'postListCtrl',
+        controllerAs: 'postsview',
+        templateUrl : './views/post/list.html'
+    })
+    
     .when('/event/:eventURL/post/new', {
         controller  : 'newPostCtrl',
         controllerAs: 'newPostView',
         templateUrl : './views/post/new.html'
     })
+    
+    // .when('/event/:eventURL/post/:postURL', {
+        
+    // })
     
     .when('/login', {
         controller  : 'loginCtrl',
@@ -308,6 +318,7 @@ app.controller('homeController', function($scope, $location, authService, $rootS
     // setInterval(function() {console.log(authService)}, 1000);
 });
 
+//Event
 app.controller('eventListCtrl', function($scope, $location, jventService) {
     var eventListPromise = jventService.getEvents();
     eventListPromise.then(function (eventList) {
@@ -315,6 +326,29 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     });
     $scope.eventClick = function(eventURL) {
         $location.path('/event/' + eventURL);
+    };
+});
+
+app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
+    $scope.newEvent = {};
+    $scope.newEventEnabled = true;
+    $scope.newEvent.organizer = {
+        name: authService.user()
+    };
+    $scope.createEvent = function() {
+        if($scope.newEventEnabled) {
+            $scope.newEventEnabled = false;
+            jventService.createEvent($scope.newEvent)
+            .then(function(eventURL) {
+                $location.path('/event/' + eventURL);
+            },
+            function(err) {
+                for (var i = 0; i < err.length; i++) {
+                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
+                }
+                $scope.newEventEnabled = true;
+            });
+        }
     };
 });
 
@@ -340,6 +374,69 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     };
     $scope.view = function() {
         //Redirect to content
+    };
+});
+
+//Post
+app.controller('postListCtrl', function($scope, $location, jventService) {
+    jventService.getPosts()
+    .then(function(postList) {
+        $scope.postArray = postList;
+    });
+});
+
+app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
+    $scope.title = "";
+    $scope.body = "";
+    $scope.link = "";
+    $scope.validTitle = function() {
+        var l = $scope.title.length;
+        if(l<=144 && l>0){
+            return(true);
+        }
+        else {
+            return(false);
+        }
+    };
+    $scope.post = function() {
+        var post = {
+            title: $scope.title,
+            content: {
+                text: $scope.body
+            },
+            link: $scope.link
+        };
+        var eventURL = $routeParams.eventURL;
+        console.log(eventURL);
+        if($scope.validTitle()){
+            jventService.createPost(post, eventURL);
+        }
+    };
+});
+
+//User
+app.controller('signUpCtrl', function($scope, $location, authService) {
+    if(authService.authed) {
+        $location.path('/');
+    }
+    $scope.email;
+    $scope.username;
+    $scope.password;
+    $scope.repassword;
+    $scope.validPassword = function () {
+        if(!$scope.password){return false}
+        if($scope.password == $scope.repassword){return(true)}
+        else {return(false)}
+    };
+    $scope.createAccount = function () {
+        if($scope.validPassword() && $scope.email && $scope.username) {
+            var registerPromise = authService.register($scope.email, $scope.username, $scope.password);
+            registerPromise.then(function(status) {
+                if(status.success) {
+                    $location.path('/login');
+                }
+            });
+        }
     };
 });
 
@@ -379,83 +476,7 @@ app.controller('logoutCtrl', function($scope, $location, authService) {
     }
 });
 
-app.controller('signUpCtrl', function($scope, $location, authService) {
-    if(authService.authed) {
-        $location.path('/');
-    }
-    $scope.email;
-    $scope.username;
-    $scope.password;
-    $scope.repassword;
-    $scope.validPassword = function () {
-        if(!$scope.password){return false}
-        if($scope.password == $scope.repassword){return(true)}
-        else {return(false)}
-    };
-    $scope.createAccount = function () {
-        if($scope.validPassword() && $scope.email && $scope.username) {
-            var registerPromise = authService.register($scope.email, $scope.username, $scope.password);
-            registerPromise.then(function(status) {
-                if(status.success) {
-                    $location.path('/login');
-                }
-            });
-        }
-    };
-});
-
-app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
-    $scope.title = "";
-    $scope.body = "";
-    $scope.link = "";
-    $scope.validTitle = function() {
-        var l = $scope.title.length;
-        if(l<=144 && l>0){
-            return(true);
-        }
-        else {
-            return(false);
-        }
-    };
-    $scope.post = function() {
-        var post = {
-            title: $scope.title,
-            content: {
-                text: $scope.body
-            },
-            link: $scope.link
-        };
-        var eventURL = $routeParams.eventURL;
-        console.log(eventURL);
-        if($scope.validTitle()){
-            jventService.createPost(post, eventURL);
-        }
-    };
-});
-
-app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
-    $scope.newEvent = {};
-    $scope.newEventEnabled = true;
-    $scope.newEvent.organizer = {
-        name: authService.user()
-    };
-    $scope.createEvent = function() {
-        if($scope.newEventEnabled) {
-            $scope.newEventEnabled = false;
-            jventService.createEvent($scope.newEvent)
-            .then(function(eventURL) {
-                $location.path('/event/' + eventURL);
-            },
-            function(err) {
-                for (var i = 0; i < err.length; i++) {
-                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
-                }
-                $scope.newEventEnabled = true;
-            });
-        }
-    };
-});
-
+//Error
 app.controller('404Ctrl', function($scope, $location) {
     $scope.wrongPath = $location.path();
     $scope.redirect = function() {
@@ -464,4 +485,4 @@ app.controller('404Ctrl', function($scope, $location) {
         }
     };
     setTimeout($scope.redirect, 5000);
-})  
+})
