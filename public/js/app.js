@@ -329,6 +329,29 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     };
 });
 
+app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
+    $scope.newEvent = {};
+    $scope.newEventEnabled = true;
+    $scope.newEvent.organizer = {
+        name: authService.user()
+    };
+    $scope.createEvent = function() {
+        if($scope.newEventEnabled) {
+            $scope.newEventEnabled = false;
+            jventService.createEvent($scope.newEvent)
+            .then(function(eventURL) {
+                $location.path('/event/' + eventURL);
+            },
+            function(err) {
+                for (var i = 0; i < err.length; i++) {
+                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
+                }
+                $scope.newEventEnabled = true;
+            });
+        }
+    };
+});
+
 app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     var eventPromise = jventService.getEvent($routeParams.eventURL);
     eventPromise.then(function (event) {
@@ -354,30 +377,14 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
-    $scope.newEvent = {};
-    $scope.newEventEnabled = true;
-    $scope.newEvent.organizer = {
-        name: authService.user()
-    };
-    $scope.createEvent = function() {
-        if($scope.newEventEnabled) {
-            $scope.newEventEnabled = false;
-            jventService.createEvent($scope.newEvent)
-            .then(function(eventURL) {
-                $location.path('/event/' + eventURL);
-            },
-            function(err) {
-                for (var i = 0; i < err.length; i++) {
-                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
-                }
-                $scope.newEventEnabled = true;
-            });
-        }
-    };
+//Post
+app.controller('postListCtrl', function($scope, $location, jventService) {
+    jventService.getPosts()
+    .then(function(postList) {
+        $scope.postArray = postList;
+    });
 });
 
-//Post
 app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
     $scope.title = "";
     $scope.body = "";
@@ -407,11 +414,32 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
     };
 });
 
-app.controller('postListCtrl', function($scope, $location, jventService) {
-    
+//User
+app.controller('signUpCtrl', function($scope, $location, authService) {
+    if(authService.authed) {
+        $location.path('/');
+    }
+    $scope.email;
+    $scope.username;
+    $scope.password;
+    $scope.repassword;
+    $scope.validPassword = function () {
+        if(!$scope.password){return false}
+        if($scope.password == $scope.repassword){return(true)}
+        else {return(false)}
+    };
+    $scope.createAccount = function () {
+        if($scope.validPassword() && $scope.email && $scope.username) {
+            var registerPromise = authService.register($scope.email, $scope.username, $scope.password);
+            registerPromise.then(function(status) {
+                if(status.success) {
+                    $location.path('/login');
+                }
+            });
+        }
+    };
 });
 
-//User
 app.controller('loginCtrl', function($scope, $location, authService) {
     $scope.email;
     $scope.password;
@@ -448,31 +476,6 @@ app.controller('logoutCtrl', function($scope, $location, authService) {
     }
 });
 
-app.controller('signUpCtrl', function($scope, $location, authService) {
-    if(authService.authed) {
-        $location.path('/');
-    }
-    $scope.email;
-    $scope.username;
-    $scope.password;
-    $scope.repassword;
-    $scope.validPassword = function () {
-        if(!$scope.password){return false}
-        if($scope.password == $scope.repassword){return(true)}
-        else {return(false)}
-    };
-    $scope.createAccount = function () {
-        if($scope.validPassword() && $scope.email && $scope.username) {
-            var registerPromise = authService.register($scope.email, $scope.username, $scope.password);
-            registerPromise.then(function(status) {
-                if(status.success) {
-                    $location.path('/login');
-                }
-            });
-        }
-    };
-});
-
 //Error
 app.controller('404Ctrl', function($scope, $location) {
     $scope.wrongPath = $location.path();
@@ -482,4 +485,4 @@ app.controller('404Ctrl', function($scope, $location) {
         }
     };
     setTimeout($scope.redirect, 5000);
-})  
+})
