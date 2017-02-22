@@ -308,6 +308,7 @@ app.controller('homeController', function($scope, $location, authService, $rootS
     // setInterval(function() {console.log(authService)}, 1000);
 });
 
+//Event
 app.controller('eventListCtrl', function($scope, $location, jventService) {
     var eventListPromise = jventService.getEvents();
     eventListPromise.then(function (eventList) {
@@ -343,6 +344,60 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
     };
 });
 
+app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
+    $scope.newEvent = {};
+    $scope.newEventEnabled = true;
+    $scope.newEvent.organizer = {
+        name: authService.user()
+    };
+    $scope.createEvent = function() {
+        if($scope.newEventEnabled) {
+            $scope.newEventEnabled = false;
+            jventService.createEvent($scope.newEvent)
+            .then(function(eventURL) {
+                $location.path('/event/' + eventURL);
+            },
+            function(err) {
+                for (var i = 0; i < err.length; i++) {
+                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
+                }
+                $scope.newEventEnabled = true;
+            });
+        }
+    };
+});
+
+//Post
+app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
+    $scope.title = "";
+    $scope.body = "";
+    $scope.link = "";
+    $scope.validTitle = function() {
+        var l = $scope.title.length;
+        if(l<=144 && l>0){
+            return(true);
+        }
+        else {
+            return(false);
+        }
+    };
+    $scope.post = function() {
+        var post = {
+            title: $scope.title,
+            content: {
+                text: $scope.body
+            },
+            link: $scope.link
+        };
+        var eventURL = $routeParams.eventURL;
+        console.log(eventURL);
+        if($scope.validTitle()){
+            jventService.createPost(post, eventURL);
+        }
+    };
+});
+
+//User
 app.controller('loginCtrl', function($scope, $location, authService) {
     $scope.email;
     $scope.password;
@@ -404,58 +459,7 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
     };
 });
 
-app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
-    $scope.title = "";
-    $scope.body = "";
-    $scope.link = "";
-    $scope.validTitle = function() {
-        var l = $scope.title.length;
-        if(l<=144 && l>0){
-            return(true);
-        }
-        else {
-            return(false);
-        }
-    };
-    $scope.post = function() {
-        var post = {
-            title: $scope.title,
-            content: {
-                text: $scope.body
-            },
-            link: $scope.link
-        };
-        var eventURL = $routeParams.eventURL;
-        console.log(eventURL);
-        if($scope.validTitle()){
-            jventService.createPost(post, eventURL);
-        }
-    };
-});
-
-app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
-    $scope.newEvent = {};
-    $scope.newEventEnabled = true;
-    $scope.newEvent.organizer = {
-        name: authService.user()
-    };
-    $scope.createEvent = function() {
-        if($scope.newEventEnabled) {
-            $scope.newEventEnabled = false;
-            jventService.createEvent($scope.newEvent)
-            .then(function(eventURL) {
-                $location.path('/event/' + eventURL);
-            },
-            function(err) {
-                for (var i = 0; i < err.length; i++) {
-                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
-                }
-                $scope.newEventEnabled = true;
-            });
-        }
-    };
-});
-
+//Error
 app.controller('404Ctrl', function($scope, $location) {
     $scope.wrongPath = $location.path();
     $scope.redirect = function() {
