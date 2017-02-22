@@ -155,65 +155,57 @@ app.service('jventService', function($http, $q, urlService) {
     var events = [];
     var event = {};
     this.getEvents = function() {
-        var deferred = $q.defer();
         // $http.get('debugjson/events.json').then(function (data) {
-        $http.get(urlService.event())
+        return $http.get(urlService.event())
         .then(function (data) {
             var eventList = data.data.events;
-            deferred.resolve(eventList);
             events = eventList;
+            return eventList;
         });
-        return deferred.promise;
     };
     this.getEvent = function(eventURL) {
-        var deferred = $q.defer();
-        $http.get(urlService.eventURL(eventURL))
+        return $http.get(urlService.eventURL(eventURL))
         .then(function (data) {
             event = data.data.event;
-            deferred.resolve(event);
+            return event;
         });
-        return deferred.promise;
     };
     this.createPost = function(post, eventURL) {
         var url = urlService.post(eventURL);
-        var deferred = $q.defer();
         var data = {
             post: post,
         };
-        $http.post(url, data)
+        return $http.post(url, data)
         .then(function(response){
             var postID = response.data.post;
-            deferred.resolve(postID);
+            return postID;
         });
     };
     this.createEvent = function(event) {
         var url = urlService.event();
-        var deferred = $q.defer();
         var data = {
             event: event
         };
-        $http.post(url, data)
+        return $http.post(url, data)
         .then(function(response) {
             var eventURL = response.data.event.url;
-            deferred.resolve(eventURL);
+            return eventURL;
         },
         function(response) {
-            deferred.reject(response.data);
+            throw Error("Failed"); //TODO: Be more descriptive?
+            // deferred.reject(response.data);
         });
-        return deferred.promise;
     };
     this.joinEvent = function(eventURL) {
         var url = urlService.joinEvent(eventURL);
-        var deferred = $q.defer();
-        $http.patch(url)
+        return $http.patch(url)
         .then(function(response) {
             //Response
-            deferred.resolve();
+            return;
         },
         function(response) {
-            deferred.reject();
+            throw Error(); //TODO: Describe error
         });
-        return deferred.promise;
     };
 });
 
