@@ -136,7 +136,8 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
                 password: password
             }
         };
-        $http(req).then(function(data) {
+        $http(req)
+        .then(function(data) {
             if(data.status == 201) {
                 deferred.resolve({success: true, err: null});
             }  
@@ -320,8 +321,8 @@ app.controller('homeController', function($scope, $location, authService, $rootS
 
 //Event
 app.controller('eventListCtrl', function($scope, $location, jventService) {
-    var eventListPromise = jventService.getEvents();
-    eventListPromise.then(function (eventList) {
+    jventService.getEvents()
+    .then(function(eventList) {
         $scope.eventArray = eventList;
     });
     $scope.eventClick = function(eventURL) {
@@ -353,8 +354,8 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
 });
 
 app.controller('eventCtrl', function($scope, $routeParams, jventService) {
-    var eventPromise = jventService.getEvent($routeParams.eventURL);
-    eventPromise.then(function (event) {
+    jventService.getEvent($routeParams.eventURL)
+    .then(function (event) {
         $scope.event = event;
     });
     $scope.joinPending = false;
@@ -430,8 +431,8 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
     };
     $scope.createAccount = function () {
         if($scope.validPassword() && $scope.email && $scope.username) {
-            var registerPromise = authService.register($scope.email, $scope.username, $scope.password);
-            registerPromise.then(function(status) {
+            authService.register($scope.email, $scope.username, $scope.password)
+            .then(function(status) {
                 if(status.success) {
                     $location.path('/login');
                 }
