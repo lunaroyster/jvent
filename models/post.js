@@ -29,6 +29,11 @@ var postSchema = new Schema({
         name: {
             type: String
         }
+    },
+    url: {
+        type: String, //TODO: Implement better.
+        index: true,
+        unique: true
     }
     // resource: String, // Can be URL or something else
     // resourceType: String, // Stores the type of resource
