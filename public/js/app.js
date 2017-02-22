@@ -243,11 +243,21 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/event/page.html'
     })
     
+    .when('/event/:eventURL/posts', {
+        controller  : 'postListCtrl',
+        controllerAs: 'postsview',
+        templateUrl : './views/post/list.html'
+    })
+    
     .when('/event/:eventURL/post/new', {
         controller  : 'newPostCtrl',
         controllerAs: 'newPostView',
         templateUrl : './views/post/new.html'
     })
+    
+    // .when('/event/:eventURL/post/:postURL', {
+        
+    // })
     
     .when('/login', {
         controller  : 'loginCtrl',
@@ -395,6 +405,10 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
             jventService.createPost(post, eventURL);
         }
     };
+});
+
+app.controller('postListCtrl', function($scope, $location, jventService) {
+    
 });
 
 //User
