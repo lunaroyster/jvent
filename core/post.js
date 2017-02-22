@@ -30,6 +30,8 @@ module.exports.createPost = function(user, post, event) {
             },
             timeOfCreation: Date.now()
         });
+        newPost.submitter.user = user._id;
+        newPost.submitter.name = user.username;
         return newPost.save()
         .then(function(post) {
             sc.addPost(post);
