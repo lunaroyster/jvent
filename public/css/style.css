@@ -28,7 +28,7 @@ nav ul {
     padding: 0;
     margin: 0 auto 0 auto;
 }
-/*#horizontal>ul>li>.dropdown-menu {*/
+
 #userDropdown {
     width: 36em;
     padding: none;
@@ -53,14 +53,6 @@ nav ul {
     transition-duration: 0.3s;
 }
 
-/*#horizontal:hover {*/
-/*    height: 12em;*/
-/*}*/
-
-/*#vertical:hover {*/
-/*    width: 12em;*/
-/*}*/
-
 #mainbox {
     left: 4em;
     top: 4em;
@@ -83,10 +75,6 @@ nav ul {
 #eventpage {
     height: 100%;    
 }
-
-/*#eventpage #banner {*/
-/*    height: 50%;*/
-/*}*/
 
 #eventpage #content {
     position: absolute;
