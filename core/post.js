@@ -49,7 +49,7 @@ module.exports.getPosts = function(event) {
     //TODO: Queries
     // Can use either supercollection or direct. Change this implementation if required.
     var postQuery = Post.find({parentEvent: event._id});
-    postQuery.exec();
+    return postQuery.exec();
 };
 
 //Shorten handler (common function)

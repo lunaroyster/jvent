@@ -63,7 +63,7 @@ module.exports.createPost = function(req, res) {
 module.exports.getPosts = function(req, res) {
     // get a promise
     // check req for querystring or parameters and format query
-    return postCore.getPosts(req.event._id) //TODO: Amend post core to directly use event objects.
+    return postCore.getPosts(req.event)
     .then(function(posts) {
         res.status(200);
         res.json(posts);
