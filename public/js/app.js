@@ -126,7 +126,6 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
         obj.authed = false;
     };
     obj.register = function(email, username, password) {
-        var deferred = $q.defer();
         var req = {
             method: 'POST',
             url: urlService.signup(),
@@ -136,13 +135,12 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
                 password: password
             }
         };
-        $http(req)
+        return $http(req)
         .then(function(data) {
             if(data.status == 201) {
-                deferred.resolve({success: true, err: null});
+                return {success: true, err: null};
             }  
         });
-        return(deferred.promise);
     };
     obj.user = function() {
         return "Username here";
