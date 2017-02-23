@@ -126,7 +126,6 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
         obj.authed = false;
     };
     obj.register = function(email, username, password) {
-        var deferred = $q.defer();
         var req = {
             method: 'POST',
             url: urlService.signup(),
@@ -136,12 +135,12 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
                 password: password
             }
         };
-        $http(req).then(function(data) {
+        return $http(req)
+        .then(function(data) {
             if(data.status == 201) {
-                deferred.resolve({success: true, err: null});
+                return {success: true, err: null};
             }  
         });
-        return(deferred.promise);
     };
     obj.user = function() {
         return "Username here";
@@ -154,65 +153,57 @@ app.service('jventService', function($http, $q, urlService) {
     var events = [];
     var event = {};
     this.getEvents = function() {
-        var deferred = $q.defer();
         // $http.get('debugjson/events.json').then(function (data) {
-        $http.get(urlService.event())
+        return $http.get(urlService.event())
         .then(function (data) {
             var eventList = data.data.events;
-            deferred.resolve(eventList);
             events = eventList;
+            return eventList;
         });
-        return deferred.promise;
     };
     this.getEvent = function(eventURL) {
-        var deferred = $q.defer();
-        $http.get(urlService.eventURL(eventURL))
+        return $http.get(urlService.eventURL(eventURL))
         .then(function (data) {
             event = data.data.event;
-            deferred.resolve(event);
+            return event;
         });
-        return deferred.promise;
     };
     this.createPost = function(post, eventURL) {
         var url = urlService.post(eventURL);
-        var deferred = $q.defer();
         var data = {
             post: post,
         };
-        $http.post(url, data)
+        return $http.post(url, data)
         .then(function(response){
             var postID = response.data.post;
-            deferred.resolve(postID);
+            return postID;
         });
     };
     this.createEvent = function(event) {
         var url = urlService.event();
-        var deferred = $q.defer();
         var data = {
             event: event
         };
-        $http.post(url, data)
+        return $http.post(url, data)
         .then(function(response) {
             var eventURL = response.data.event.url;
-            deferred.resolve(eventURL);
+            return eventURL;
         },
         function(response) {
-            deferred.reject(response.data);
+            throw Error("Failed"); //TODO: Be more descriptive?
+            // deferred.reject(response.data);
         });
-        return deferred.promise;
     };
     this.joinEvent = function(eventURL) {
         var url = urlService.joinEvent(eventURL);
-        var deferred = $q.defer();
-        $http.patch(url)
+        return $http.patch(url)
         .then(function(response) {
             //Response
-            deferred.resolve();
+            return;
         },
         function(response) {
-            deferred.reject();
+            throw Error(); //TODO: Describe error
         });
-        return deferred.promise;
     };
 });
 
@@ -320,8 +311,8 @@ app.controller('homeController', function($scope, $location, authService, $rootS
 
 //Event
 app.controller('eventListCtrl', function($scope, $location, jventService) {
-    var eventListPromise = jventService.getEvents();
-    eventListPromise.then(function (eventList) {
+    jventService.getEvents()
+    .then(function(eventList) {
         $scope.eventArray = eventList;
     });
     $scope.eventClick = function(eventURL) {
@@ -353,8 +344,8 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
 });
 
 app.controller('eventCtrl', function($scope, $routeParams, jventService) {
-    var eventPromise = jventService.getEvent($routeParams.eventURL);
-    eventPromise.then(function (event) {
+    jventService.getEvent($routeParams.eventURL)
+    .then(function (event) {
         $scope.event = event;
     });
     $scope.joinPending = false;
@@ -430,8 +421,8 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
     };
     $scope.createAccount = function () {
         if($scope.validPassword() && $scope.email && $scope.username) {
-            var registerPromise = authService.register($scope.email, $scope.username, $scope.password);
-            registerPromise.then(function(status) {
+            authService.register($scope.email, $scope.username, $scope.password)
+            .then(function(status) {
                 if(status.success) {
                     $location.path('/login');
                 }

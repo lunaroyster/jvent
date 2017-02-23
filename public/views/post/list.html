@@ -1,5 +1,7 @@
 <div id="postslist">
   <div class="post" ng-repeat="post in postArray">
-    
+    <span ng-bind="post.title"></span>
+    <span ng-bind="content.text"></span>
+    <span ng-bind="submitter.name"></span>
   </div>
 </div>
