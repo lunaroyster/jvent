@@ -14,29 +14,25 @@ module.exports.createUser = function(userObj) {
     return newUser.save();
 };
 
+var returnUserOrError = function(user) {
+    if(!user) throw Error("Can't find user");
+    return user;
+}
+
 module.exports.getUserByID = function(userID) {
     var userQuery = User.findOne({_id: userID});
     return userQuery.exec()
-    .then(function(user) {
-        if(!user) throw Error("Can't find user");
-        return user;
-    });
+    .then(returnUserOrError);
 };
 module.exports.getUserByEmail = function(email) {
     var userQuery = User.findOne({email: email});
     return userQuery.exec()
-    .then(function(user) {
-        if(!user) throw Error("Can't find user");
-        return user;
-    });
+    .then(returnUserOrError);
 };
 module.exports.getUserByUsername = function(username) {
     var userQuery = User.findOne({username: username});
     return userQuery.exec()
-    .then(function(user) {
-        if(!user) throw Error("Can't find user");
-        return user;
-    });
+    .then(returnUserOrError);
 };
 
 module.exports.changePassword = function(user, password) {
