@@ -44,22 +44,21 @@ module.exports.getPublicEvents = function() {
     return eventQuery.exec();
 };
 
+var returnEventOrError = function(event) {
+    if(!event) throw Error("Can't find event");
+    return event;
+};
+
 module.exports.getEventByID = function(eventID) {
     var eventQuery = Event.findOne({_id: eventID});
     return eventQuery.exec()
-    .then(function(event) {
-        if(!event) throw Error("Can't find event");
-        return event;
-    });
+    .then(returnEventOrError);
 };
 
 module.exports.getEventByURL = function(url) {
     var eventQuery = Event.findOne({url: url});
     return eventQuery.exec()
-    .then(function(event) {
-        if(!event) throw Error("Can't find event");
-        return event;
-    });
+    .then(returnEventOrError);
 };
 
 module.exports.getEventIfAttendee = function(eventID, user) {
