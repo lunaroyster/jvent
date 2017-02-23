@@ -101,14 +101,22 @@ nav ul {
     padding: 1em 1em 0em 1em;
 }
 
-#newPostView #titleBox{
+#newPostView #titleBox {
     border: none;
     background-color: #1c1c1c; /*Something better*/
     padding: 1.5em;
     font-size: 1.25em;
     height: initial;
-    outline: none;
     resize: none;
+}
+
+#newPostView #titleBox:focus {
+    outline: none;
+    /*Other visual changes*/
+}
+
+#newPostView #titleBox::-webkit-input-placeholder {
+    color: #aaa;
 }
 
 .event {
