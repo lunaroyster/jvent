@@ -45,28 +45,26 @@ module.exports.createPost = function(user, post, event) {
 };
 
 
-module.exports.getPosts = function(event) {
+module.exports.getEventPosts = function(event) {
     //TODO: Queries
     // Can use either supercollection or direct. Change this implementation if required.
     var postQuery = Post.find({parentEvent: event._id});
     return postQuery.exec();
 };
 
-//Shorten handler (common function)
+var returnPostOrError = function(post) {
+    if(!post) throw Error("Can't find post");
+    return post;
+};
+
 module.exports.getPostByID = function(event, postID) {
     var postQuery = Post.findOne({parentEvent: event._id, _id: postID});
     return postQuery.exec()
-    .then(function(post) {
-        if(!post) throw Error("Can't find post");
-        return post;
-    });
+    .then(returnPostOrError);
 };
 
 module.exports.getPostByURL = function(event, postURL) {
     var postQuery = Post.findOne({parentEvent: event._id, url: postURL});
     return postQuery.exec()
-    .then(function(post) {
-        if(!post) throw Error("Can't find post");
-        return post;
-    });
+    .then(returnPostOrError);
 };
