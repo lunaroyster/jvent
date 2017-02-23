@@ -28,6 +28,10 @@ var userSchema = new Schema({
         createEvent: {
             type: Boolean,
             default: true
+        },
+        createPost: {
+            type: Boolean,
+            default: true
         }
     }
 });
