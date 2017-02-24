@@ -262,6 +262,12 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/post/new.html'
     })
     
+    .when('/event/:eventURL/people', {
+        controller  : 'peopleCtrl',
+        controllerAs: 'peopleView',
+        templateUrl : './views/event/people.html'
+    })
+    
     // .when('/event/:eventURL/post/:postURL', {
         
     // })
@@ -380,6 +386,10 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     $scope.view = function() {
         $location.path($location.path()+'/posts')
     };
+});
+
+app.controller('peopleCtrl', function() {
+    
 });
 
 //Post
