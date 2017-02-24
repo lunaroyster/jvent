@@ -390,12 +390,8 @@ app.controller('postListCtrl', function($scope, $location, jventService) {
     });
 });
 
-app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
-    $scope.newPost = {
-        title: "",
-        body: "",
-        link: ""
-    };
+app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, postCreate) {
+    $scope.newPost = postCreate;
     $scope.validTitle = function() {
         var l = $scope.newPost.title.length;
         if(l<=144 && l>0){
