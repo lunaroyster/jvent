@@ -128,7 +128,7 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     obj.register = function(email, username, password) {
         var req = {
             method: 'POST',
-            url: urlService.signup(),
+            url: urlService.signUp(),
             data: {
                 email: email,
                 username: username,
