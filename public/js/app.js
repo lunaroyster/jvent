@@ -128,7 +128,7 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     obj.register = function(email, username, password) {
         var req = {
             method: 'POST',
-            url: urlService.signup(),
+            url: urlService.signUp(),
             data: {
                 email: email,
                 username: username,
@@ -147,6 +147,28 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     };
     loadUser();
     return(obj);
+});
+
+app.factory('postCreate', function() {
+   var post;
+   return(post);
+});
+
+app.factory('eventCreate', function(authService) {
+    var event = {};
+    event.organizer = {
+        name: authService.user()
+    };
+    event.publish = function() {
+        //Publish event using jvent service
+    };
+    return event;
+});
+
+app.factory('people', function() {
+    var people = {};
+    people.lists = [2,3];
+    return people;
 });
 
 app.service('jventService', function($http, $q, urlService) {
@@ -246,6 +268,12 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/post/new.html'
     })
     
+    .when('/event/:eventURL/people', {
+        controller  : 'peopleCtrl',
+        controllerAs: 'peopleView',
+        templateUrl : './views/event/people.html'
+    })
+    
     // .when('/event/:eventURL/post/:postURL', {
         
     // })
@@ -320,12 +348,9 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
-    $scope.newEvent = {};
+app.controller('newEventCtrl', function($scope, $location, jventService, authService, eventCreate) {
+    $scope.newEvent = eventCreate;
     $scope.newEventEnabled = true;
-    $scope.newEvent.organizer = {
-        name: authService.user()
-    };
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
             $scope.newEventEnabled = false;
@@ -341,9 +366,10 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
             });
         }
     };
+    //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, jventService) {
+app.controller('eventCtrl', function($scope, $routeParams, jventService, $location) {
     jventService.getEvent($routeParams.eventURL)
     .then(function (event) {
         $scope.event = event;
@@ -364,8 +390,13 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
         });
     };
     $scope.view = function() {
-        //Redirect to content
+        $location.path($location.path()+'/posts')
     };
+});
+
+app.controller('peopleCtrl', function($scope, people) {
+    $scope.people = people;
+    $scope.selectedList = {};
 });
 
 //Post
@@ -376,12 +407,10 @@ app.controller('postListCtrl', function($scope, $location, jventService) {
     });
 });
 
-app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
-    $scope.title = "";
-    $scope.body = "";
-    $scope.link = "";
+app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, postCreate) {
+    $scope.newPost = postCreate;
     $scope.validTitle = function() {
-        var l = $scope.title.length;
+        var l = $scope.newPost.title.length;
         if(l<=144 && l>0){
             return(true);
         }
