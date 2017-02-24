@@ -165,6 +165,12 @@ app.factory('eventCreate', function(authService) {
     return event;
 });
 
+app.factory('people', function() {
+    var people = {};
+    people.lists = [2,3];
+    return people;
+});
+
 app.service('jventService', function($http, $q, urlService) {
     var events = [];
     var event = {};
@@ -388,8 +394,8 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     };
 });
 
-app.controller('peopleCtrl', function() {
-    
+app.controller('peopleCtrl', function($scope, people) {
+    $scope.people = people;
 });
 
 //Post
