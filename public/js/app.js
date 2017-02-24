@@ -149,6 +149,11 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     return(obj);
 });
 
+app.factory('postCreate', function() {
+   var post;
+   return(post);
+});
+
 app.service('jventService', function($http, $q, urlService) {
     var events = [];
     var event = {};
