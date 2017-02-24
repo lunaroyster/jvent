@@ -357,7 +357,7 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, jventService) {
+app.controller('eventCtrl', function($scope, $routeParams, jventService, $location) {
     jventService.getEvent($routeParams.eventURL)
     .then(function (event) {
         $scope.event = event;
@@ -378,7 +378,7 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService) {
         });
     };
     $scope.view = function() {
-        //Redirect to content
+        $location.path($location.path()+'/posts')
     };
 });
 
