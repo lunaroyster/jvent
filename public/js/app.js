@@ -396,6 +396,7 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
 
 app.controller('peopleCtrl', function($scope, people) {
     $scope.people = people;
+    $scope.selectedList = {};
 });
 
 //Post
