@@ -3,7 +3,7 @@
         <div class="col s12 m10 push-m1">
             <ul class="tabs transparent">
                 <li class="tab" ng-repeat="list in people.lists">
-                    <a class="teal-text" href="#test">Test</a>
+                    <a class="teal-text" ng-click="selectedList=list"><span ng-bind="list.type"></span></a>
                 </li>
             </ul>
         </div>
@@ -11,7 +11,7 @@
     <div class="row">
         <div class="col s12 m10 push-m1">
             <ul class="collection with-header transparent" style="border: none">
-                <li class="collection-item transparent" ng-repeat="user in selectedList">
+                <li class="collection-item transparent" ng-repeat="user in selectedList.users">
                     <span ng-bind="user.name"></span>
                 </li>
             </ul>
