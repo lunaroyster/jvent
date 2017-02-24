@@ -156,10 +156,7 @@ app.factory('postCreate', function() {
 
 app.factory('eventCreate', function(authService) {
     var event = {};
-    event.name = "";
-    event.byline = "";
-    event.description = "";
-    event.organizer= {
+    event.organizer = {
         name: authService.user()
     };
     event.publish = function() {
@@ -357,6 +354,7 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
             });
         }
     };
+    //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
 app.controller('eventCtrl', function($scope, $routeParams, jventService) {
