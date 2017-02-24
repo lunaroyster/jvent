@@ -154,6 +154,20 @@ app.factory('postCreate', function() {
    return(post);
 });
 
+app.factory('eventCreate', function(authService) {
+    var event = {};
+    event.name = "";
+    event.byline = "";
+    event.description = "";
+    event.organizer= {
+        name: authService.user()
+    };
+    event.publish = function() {
+        //Publish event using jvent service
+    };
+    return event;
+});
+
 app.service('jventService', function($http, $q, urlService) {
     var events = [];
     var event = {};
@@ -325,12 +339,9 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService, authService) {
-    $scope.newEvent = {};
+app.controller('newEventCtrl', function($scope, $location, jventService, authService, eventCreate) {
+    $scope.newEvent = eventCreate;
     $scope.newEventEnabled = true;
-    $scope.newEvent.organizer = {
-        name: authService.user()
-    };
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
             $scope.newEventEnabled = false;
