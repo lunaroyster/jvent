@@ -377,11 +377,13 @@ app.controller('postListCtrl', function($scope, $location, jventService) {
 });
 
 app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService) {
-    $scope.title = "";
-    $scope.body = "";
-    $scope.link = "";
+    $scope.newPost = {
+        title: "",
+        body: "",
+        link: ""
+    };
     $scope.validTitle = function() {
-        var l = $scope.title.length;
+        var l = $scope.newPost.title.length;
         if(l<=144 && l>0){
             return(true);
         }
