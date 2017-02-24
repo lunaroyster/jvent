@@ -1,14 +1,20 @@
 <div id="newPostView">
-    <textarea name="title" ng-model="newPost.title" id="titleBox" rows=1 placeholder="Title goes here"/>
+    <div id="title">
+        <textarea name="title" ng-model="newPost.title" id="titleBox" rows=1 placeholder="Title goes here"/>
+    </div>
     <div class="row">
         <div class="col s12 m8">
-            <div class="input-field col s12">
-              <textarea id="postText" class="materialize-textarea"></textarea>
-              <label for="postText">Post Body</label>
+            <div id="text">
+                <div class="input-field col s12">
+                    <textarea id="postText" class="materialize-textarea"></textarea>
+                    <label for="postText">Post Body</label>
+                </div>
             </div>
-            <div class="input-field col s12">
-              <input id="link" type="text" class="validate">
-              <label for="link">Link</label>
+            <div id="link">
+                <div class="input-field col s12">
+                    <input id="link" type="text" class="validate">
+                    <label for="link">Link</label>
+                </div>
             </div>
             <!--Direct Media Upload-->
         </div>
