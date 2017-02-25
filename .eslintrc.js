@@ -20,6 +20,9 @@ module.exports = {
         "semi": [
             "error",
             "always"
+        ],
+        "no-undef": [
+            "off"
         ]
     }
 };

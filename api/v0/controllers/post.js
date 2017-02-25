@@ -1,5 +1,5 @@
 var postCore = require('../../../core/post');
-var eventCore = require('../../../core/event');
+// var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
 var collectionCore = require('../../../core/collection');
 var postRequestSchema = require('../requests/post');
@@ -50,12 +50,10 @@ module.exports.createPost = function(req, res) {
         try {
             err = error.array();
         } catch (e) {
-            console.log(e);
             if(e.name=="TypeError") {
                 err = [{param:error.name, msg: error.message}];
             }
         }
-        console.log(err);
         res.status(400).json(err);
     });
 };
