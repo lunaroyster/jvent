@@ -4,9 +4,9 @@ var app = data.app;
 
 describe("tests", function () {
     before(function() {
-       mongoose.connection.db.dropDatabase(function(err, result) {
-           if(err) throw err;
-       });
+        mongoose.connection.db.dropDatabase(function(err, result) {
+            if(err) throw err;
+        });
     });
     beforeEach(function () {
         

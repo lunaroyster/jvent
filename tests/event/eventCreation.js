@@ -128,39 +128,39 @@ describe("event setup", function() {
         describe("event types", function() {
             it("public x everyone", function() {
                 return successfulEventCreation(data.eventTypes.Public.Everyone)
-                .then(function(url) {links.Public.Everyone = url});
+                .then(function(url) {links.Public.Everyone = url;});
             });
             it("public x link", function() {
                 return successfulEventCreation(data.eventTypes.Public.Link)
-                .then(function(url) {links.Public.Link = url});
+                .then(function(url) {links.Public.Link = url;});
             });
             it("public x invite", function() {
                 return successfulEventCreation(data.eventTypes.Public.Invite)
-                .then(function(url) {links.Public.Invite = url});
+                .then(function(url) {links.Public.Invite = url;});
             });
             it("unlisted x everyone", function() {
                 return successfulEventCreation(data.eventTypes.Unlisted.Everyone)
-                .then(function(url) {links.Unlisted.Everyone = url});
+                .then(function(url) {links.Unlisted.Everyone = url;});
             });
             it("unlisted x link", function() {
                 return successfulEventCreation(data.eventTypes.Unlisted.Link)
-                .then(function(url) {links.Unlisted.Link = url});
+                .then(function(url) {links.Unlisted.Link = url;});
             });
             it("unlisted x invite", function() {
                 return successfulEventCreation(data.eventTypes.Unlisted.Invite)
-                .then(function(url) {links.Unlisted.Invite = url});
+                .then(function(url) {links.Unlisted.Invite = url;});
             });
             it("private x everyone", function() {
                 return successfulEventCreation(data.eventTypes.Private.Everyone)
-                .then(function(url) {links.Public.Everyone = url});
+                .then(function(url) {links.Public.Everyone = url;});
             });
             it("private x link", function() {
                 return successfulEventCreation(data.eventTypes.Private.Link)
-                .then(function(url) {links.Public.Link = url});
+                .then(function(url) {links.Public.Link = url;});
             });
             it("private x invite", function() {
                 return successfulEventCreation(data.eventTypes.Private.Invite)
-                .then(function(url) {links.Public.Invite = url});
+                .then(function(url) {links.Public.Invite = url;});
             });
         });
     });
@@ -246,4 +246,4 @@ describe("event setup", function() {
         it("fails to retrieve private event (with auth but no privileges)");
     });
     
-})
+});
