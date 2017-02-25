@@ -1,4 +1,4 @@
-{
+module.exports = {
     "env": {
         "browser": true,
         "node": true
@@ -10,11 +10,11 @@
             4
         ],
         "linebreak-style": [
-            "error",
+            "off",
             "unix"
         ],
         "quotes": [
-            "error",
+            "off",
             "double"
         ],
         "semi": [
@@ -22,4 +22,4 @@
             "always"
         ]
     }
-}
+};
