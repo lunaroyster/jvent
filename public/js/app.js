@@ -269,9 +269,9 @@ app.config(['$routeProvider', function($routeProvider) {
     })
     
     .when('/event/:eventURL/people', {
-        controller  : 'peopleCtrl',
-        controllerAs: 'peopleView',
-        templateUrl : './views/event/people.html'
+        controller  : 'userListCtrl',
+        controllerAs: 'userlistview',
+        templateUrl : './views/event/userlist.html'
     })
     
     // .when('/event/:eventURL/post/:postURL', {
@@ -394,7 +394,7 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     };
 });
 
-app.controller('peopleCtrl', function($scope, people) {
+app.controller('userListCtrl', function($scope, people) {
     $scope.people = people;
     $scope.selectedList = {};
 });
