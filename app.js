@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var passport = require('passport');
-var helmet = require('helmet')
+var helmet = require('helmet');
 require('./models/index');
 require('./core/passport');
 
@@ -36,9 +36,9 @@ app.use('/api', apiRoute);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
 });
 
 // error handlers
@@ -46,29 +46,29 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  var fs = require('fs');
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-    // if(res.status==500) {
-      fs.writeFile('logs/' + Date.now(), JSON.stringify({message:err.message, stacktrace: err.stack}), {flag:'wx'}, function(err) {
+    var fs = require('fs');
+    app.use(function(err, req, res, next) {
+        res.status(err.status || 500);
+        res.render('error', {
+            message: err.message,
+            error: err
+        });
+        // if(res.status==500) {
+        fs.writeFile('logs/' + Date.now(), JSON.stringify({message:err.message, stacktrace: err.stack}), {flag:'wx'}, function(err) {
         // console.log("Logged error");
-      });
-    // }
-  });
+        });
+        // }
+    });
 }
 
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
 });
 
 

@@ -9,8 +9,8 @@ var User = mongoose.model('User');
 passport.use(new LocalStrategy({usernameField: 'email'},
     function(email, password, done) {
         User.findOne({ email: email }, function (err, user) {
-            if (err) { return done(err); }
-            if (!user || !user.validPassword(password)) {return done(null, false, { message: 'Bad Auth.' })}
+            if (err) { return done(err);}
+            if (!user || !user.validPassword(password)) {return done(null, false, { message: 'Bad Auth.' });}
             return done(null, user);
         });
     }
@@ -24,9 +24,9 @@ var JWTopts = {
 
 passport.use(new JwtStrategy(JWTopts, function(jwt_payload, done) {
     User.findOne({_id: jwt_payload.sub}, function(err, user) {
-        if(err){return done(err, false)}
-        if(user){return done(null, user)}
-        else {return done(null, false)}
+        if(err){return done(err, false);}
+        if(user){return done(null, user);}
+        else {return done(null, false);}
     });
 }));
 
