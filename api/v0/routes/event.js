@@ -16,13 +16,14 @@ router.patch('/:eventURL', AuthOnly, eventController.appendEventIfVisible, event
 router.delete('/:eventURL', AuthOnly, eventController.appendEventIfVisible, eventController.deleteEvent);
 
 // /event/:eventURL/[function]
-//TODO: Route separately?
-router.get('/:eventURL/users');
-router.get('/:eventURL/users/attending');
-router.get('/:eventURL/users/viewing');
-router.get('/:eventURL/users/moderating');
-router.get('/:eventURL/users/invited');
+var usersRouter = express.Router();
 
+usersRouter.get('/attending');
+usersRouter.get('/viewing');
+usersRouter.get('/moderating');
+usersRouter.get('/invited');
+
+router.use('/:eventURL/users', usersRouter);
 router.patch('/:eventURL/join', AuthOnly, eventController.appendEventIfVisible, eventController.joinEvent);
 
 // /event/:eventURL/post
