@@ -3,6 +3,7 @@ module.exports = {
     post: require('./post'),
     collection: require('./collection'),
     superCollection: require('./supercollection'),
+    compilation: require('./compilation'),
     user: require('./user'),
     userList: require('./userlist')
 };
