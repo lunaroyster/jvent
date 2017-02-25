@@ -7,4 +7,8 @@ var compilationSchema = new Schema({
     }
 });
 
+compilationSchema.methods.eventCount = function() {
+    return this.events.length;
+};
+
 mongoose.model('Compilation', compilationSchema);
