@@ -226,7 +226,7 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     return(obj);
 });
 
-
+// OLD
 app.factory('postCreate', function() {
    var post;
    return(post);
@@ -307,6 +307,34 @@ app.service('jventService', function($http, $q, urlService) {
     };
 });
 
+//NEW
+app.factory('eventList', function() {
+    
+})
+
+app.factory('contextEvent', function() {
+    
+});
+
+app.factory('userList', function() {
+    
+});
+
+app.factory('postList', function() {
+    
+});
+
+app.factory('contextPost', function() {
+    
+});
+
+app.factory('newEvent', function() {
+    
+});
+
+app.factory('newPost', function() {
+    
+});
 
 // Controllers
 
