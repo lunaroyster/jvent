@@ -3,6 +3,83 @@
 
 var app = angular.module("jvent", ['ngRoute']);
 
+app.config(['$routeProvider', function($routeProvider) {
+    $routeProvider
+    
+    .when('/', {
+        controller  : 'eventListCtrl',
+        controllerAs: 'eventsview',
+        templateUrl : './views/event/list.html'
+    })
+    
+    .when('/events', {
+        controller  : 'eventListCtrl',
+        controllerAs: 'eventsview',
+        templateUrl : './views/event/list.html'
+    })
+    
+    .when('/event/new', {
+        controller  : 'newEventCtrl',
+        controllerAs: 'newEventView',
+        templateUrl : './views/event/new.html'
+    })
+    
+    .when('/event/:eventURL', {
+        controller  : 'eventCtrl',
+        controllerAs: 'eventview',
+        templateUrl : './views/event/page.html'
+    })
+    
+    .when('/event/:eventURL/posts', {
+        controller  : 'postListCtrl',
+        controllerAs: 'postsview',
+        templateUrl : './views/post/list.html'
+    })
+    
+    .when('/event/:eventURL/post/new', {
+        controller  : 'newPostCtrl',
+        controllerAs: 'newPostView',
+        templateUrl : './views/post/new.html'
+    })
+    
+    .when('/event/:eventURL/people', {
+        controller  : 'userListCtrl',
+        controllerAs: 'userlistview',
+        templateUrl : './views/event/userlist.html'
+    })
+    
+    // .when('/event/:eventURL/post/:postURL', {
+        
+    // })
+    
+    .when('/login', {
+        controller  : 'loginCtrl',
+        controllerAs: 'loginview',
+        templateUrl : './views/user/login.html'
+    })
+    
+    .when('/logout', {
+        controller  : 'logoutCtrl',
+        controllerAs: 'logoutscreen',
+        templateUrl : './views/user/logout.html'
+    })
+    
+    .when('/signup', {
+        controller  : 'signUpCtrl',
+        controllerAs: 'signUpView',
+        templateUrl : './views/user/signup.html'
+    })
+    
+    .otherwise({
+        controller  : '404Ctrl',
+        controllerAs: '404View',
+        templateUrl : './views/misc/404.html'
+    });
+    
+}]);
+
+// Providers
+
 app.service('urlService', function() {
     var apiURL = 'api/';
     var apiVersion = 'v0/';
@@ -149,22 +226,7 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     return(obj);
 });
 
-app.factory('postCreate', function() {
-   var post;
-   return(post);
-});
-
-app.factory('eventCreate', function(authService) {
-    var event = {};
-    event.organizer = {
-        name: authService.user()
-    };
-    event.publish = function() {
-        //Publish event using jvent service
-    };
-    return event;
-});
-
+// OLD
 app.factory('people', function() {
     var people = {};
     people.lists = [2,3];
@@ -229,80 +291,105 @@ app.service('jventService', function($http, $q, urlService) {
     };
 });
 
-app.config(['$routeProvider', function($routeProvider) {
-    $routeProvider
+//NEW
+app.factory('eventListService', function(jventService, $q) {
+    var eventListService = {};
+    var lastQuery = {};
+    var lastTime;
+    var deltaTime = function() {
+        return lastTime - Date.now();
+    };
+    eventListService.query = {};
+    eventListService.eventList = [];
+    eventListService.cacheTime;
+    eventListService.getEventList = function() {
+        return $q(function(resolve, reject) {
+            // if query changes || if time changes significantly || (query server for event list checksum...)
+            //TODO: Fix conditions
+            if(lastQuery!=eventListService.query || deltaTime() > eventListService.cacheTime) { // OR check if the query result has changed
+                return jventService.getEvents()
+                .then(function(eventList) {
+                    eventListService.eventList = eventList;
+                    return resolve(eventList);
+                });
+            }
+            else {
+                return resolve(eventListService.eventList);
+            }
+        });
+    };
+    return eventListService;
+});
+
+app.factory('userListService', function() {
+    var userListService;
+    return userListService;
+});
+
+app.factory('postListService', function() {
     
-    .when('/', {
-        controller  : 'eventListCtrl',
-        controllerAs: 'eventsview',
-        templateUrl : './views/event/list.html'
-    })
-    
-    .when('/events', {
-        controller  : 'eventListCtrl',
-        controllerAs: 'eventsview',
-        templateUrl : './views/event/list.html'
-    })
-    
-    .when('/event/new', {
-        controller  : 'newEventCtrl',
-        controllerAs: 'newEventView',
-        templateUrl : './views/event/new.html'
-    })
-    
-    .when('/event/:eventURL', {
-        controller  : 'eventCtrl',
-        controllerAs: 'eventview',
-        templateUrl : './views/event/page.html'
-    })
-    
-    .when('/event/:eventURL/posts', {
-        controller  : 'postListCtrl',
-        controllerAs: 'postsview',
-        templateUrl : './views/post/list.html'
-    })
-    
-    .when('/event/:eventURL/post/new', {
-        controller  : 'newPostCtrl',
-        controllerAs: 'newPostView',
-        templateUrl : './views/post/new.html'
-    })
-    
-    .when('/event/:eventURL/people', {
-        controller  : 'userListCtrl',
-        controllerAs: 'userlistview',
-        templateUrl : './views/event/userlist.html'
-    })
-    
-    // .when('/event/:eventURL/post/:postURL', {
-        
-    // })
-    
-    .when('/login', {
-        controller  : 'loginCtrl',
-        controllerAs: 'loginview',
-        templateUrl : './views/user/login.html'
-    })
-    
-    .when('/logout', {
-        controller  : 'logoutCtrl',
-        controllerAs: 'logoutscreen',
-        templateUrl : './views/user/logout.html'
-    })
-    
-    .when('/signup', {
-        controller  : 'signUpCtrl',
-        controllerAs: 'signUpView',
-        templateUrl : './views/user/signup.html'
-    })
-    
-    .otherwise({
-        controller  : '404Ctrl',
-        controllerAs: '404View',
-        templateUrl : './views/misc/404.html'
-    });
-    
-}]);
+});
+
+app.factory('contextEvent', function(jventService, $q) {
+    var contextEvent = {};
+    contextEvent.event = {};
+    contextEvent.cacheTime;
+    var lastTime;
+    var deltaTime = function() {
+        return lastTime - Date.now();
+    };
+    //join
+    //heart
+    contextEvent.loadEvent = function(eventURL) {
+        jventService.getEvent(eventURL)
+        .then(function(event) {
+            contextEvent.event = event;
+        });
+    };
+    contextEvent.getEvent = function(eventURL) {
+        return $q(function(resolve, reject) {
+            if(eventURL!=contextEvent.event.eventURL||deltaTime()>contextEvent.cacheTime) {
+                return jventService.getEvent(eventURL)
+                .then(function(event) {
+                    contextEvent.event = event;
+                    return resolve(event);
+                });
+            }
+            else {
+                return resolve(contextEvent.event);
+            }
+        });
+    };
+    return event;
+});
+
+app.factory('contextPost', function() {
+    var post;
+    return post;
+});
+
+app.factory('newEventService', function(authService) {
+    var event = {};
+    event.organizer = {
+        name: authService.user()
+    };
+    event.publish = function() {
+        //Publish event using jvent service
+        //Reset
+    };
+    return(event);    
+});
+
+app.factory('newPostService', function(authService) {
+   var post;
+   post.publish = function() {
+        //Publish post using jvent service
+        //Reset
+   };
+   return(post);
+});
+
+// Controllers
 
 app.controller('homeController', function($scope, $location, authService, $rootScope) {
     $scope.homeClick = function() {
@@ -338,8 +425,8 @@ app.controller('homeController', function($scope, $location, authService, $rootS
 });
 
 //Event
-app.controller('eventListCtrl', function($scope, $location, jventService) {
-    jventService.getEvents()
+app.controller('eventListCtrl', function($scope, $location, eventListService) {
+    eventListService.getEventList()
     .then(function(eventList) {
         $scope.eventArray = eventList;
     });
@@ -348,8 +435,8 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService, authService, eventCreate) {
-    $scope.newEvent = eventCreate;
+app.controller('newEventCtrl', function($scope, $location, jventService, authService, newEventService) {
+    $scope.newEvent = newEventService;
     $scope.newEventEnabled = true;
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
@@ -407,8 +494,8 @@ app.controller('postListCtrl', function($scope, $location, jventService) {
     });
 });
 
-app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, postCreate) {
-    $scope.newPost = postCreate;
+app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, newPostService) {
+    $scope.newPost = newPostService;
     $scope.validTitle = function() {
         var l = $scope.newPost.title.length;
         if(l<=144 && l>0){
