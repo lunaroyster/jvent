@@ -292,14 +292,17 @@ app.service('jventService', function($http, $q, urlService) {
 });
 
 //NEW
-app.factory('eventListService', function() {
-    //Query
+app.factory('eventListService', function(jventService) {
+    //Store Query
+    /*
+    GetEvents()
+        if query changes || if time changes significantly || (query server for event list checksum...)
+            get events from server
+            set eventList
+        return eventList
+    */
+    
     //Event list
-});
-
-app.factory('contextEvent', function() {
-    var event;
-    return event;
 });
 
 app.factory('userListService', function() {
@@ -308,6 +311,11 @@ app.factory('userListService', function() {
 
 app.factory('postListService', function() {
     
+});
+
+app.factory('contextEvent', function() {
+    var event;
+    return event;
 });
 
 app.factory('contextPost', function() {
