@@ -292,39 +292,47 @@ app.service('jventService', function($http, $q, urlService) {
 });
 
 //NEW
-app.factory('eventList', function() {
-    
-})
+app.factory('eventListService', function() {
+    //Query
+    //Event list
+});
 
 app.factory('contextEvent', function() {
+    var event;
+    return event;
+});
+
+app.factory('userListService', function() {
     
 });
 
-app.factory('userList', function() {
-    
-});
-
-app.factory('postList', function() {
+app.factory('postListService', function() {
     
 });
 
 app.factory('contextPost', function() {
-    
+    var post;
+    return post;
 });
 
-app.factory('newEvent', function(authService) {
+app.factory('newEventService', function(authService) {
     var event = {};
     event.organizer = {
         name: authService.user()
     };
     event.publish = function() {
         //Publish event using jvent service
+        //Reset
     };
-    return event;    
+    return(event);    
 });
 
-app.factory('newPost', function(authService) {
+app.factory('newPostService', function(authService) {
    var post;
+   post.publish = function() {
+        //Publish post using jvent service
+        //Reset
+   };
    return(post);
 });
 
@@ -374,8 +382,8 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService, authService, newEvent) {
-    $scope.newEvent = newEvent;
+app.controller('newEventCtrl', function($scope, $location, jventService, authService, newEventService) {
+    $scope.newEvent = newEventService;
     $scope.newEventEnabled = true;
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
@@ -433,8 +441,8 @@ app.controller('postListCtrl', function($scope, $location, jventService) {
     });
 });
 
-app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, newPost) {
-    $scope.newPost = newPost;
+app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, newPostService) {
+    $scope.newPost = newPostService;
     $scope.validTitle = function() {
         var l = $scope.newPost.title.length;
         if(l<=144 && l>0){
