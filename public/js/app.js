@@ -293,7 +293,7 @@ app.service('jventService', function($http, $q, urlService) {
 
 //NEW
 app.factory('eventListService', function(jventService, $q) {
-    var eventListService;
+    var eventListService = {};
     var lastQuery = {};
     var lastTime;
     var deltaTime = function() {
@@ -303,17 +303,17 @@ app.factory('eventListService', function(jventService, $q) {
     eventListService.eventList = [];
     eventListService.cacheTime;
     eventListService.getEventList = function() {
-        return $q(function() {
+        return $q(function(resolve, reject) {
             // if query changes || if time changes significantly || (query server for event list checksum...)
             if(lastQuery!=eventListService.query || deltaTime() > eventListService.cacheTime) { // OR check if the query result has changed
-                jventService.getEvents()
+                return jventService.getEvents()
                 .then(function(eventList) {
                     eventListService.eventList = eventList;
-                    return eventList;
+                    return resolve(eventList);
                 });
             }
             else {
-                return eventListService.eventList;
+                return resolve(eventListService.eventList);
             }
         });
     };
@@ -395,8 +395,8 @@ app.controller('homeController', function($scope, $location, authService, $rootS
 });
 
 //Event
-app.controller('eventListCtrl', function($scope, $location, jventService) {
-    jventService.getEvents()
+app.controller('eventListCtrl', function($scope, $location, eventListService) {
+    eventListService.getEventList()
     .then(function(eventList) {
         $scope.eventArray = eventList;
     });
