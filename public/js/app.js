@@ -227,22 +227,6 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
 });
 
 // OLD
-app.factory('postCreate', function() {
-   var post;
-   return(post);
-});
-
-app.factory('eventCreate', function(authService) {
-    var event = {};
-    event.organizer = {
-        name: authService.user()
-    };
-    event.publish = function() {
-        //Publish event using jvent service
-    };
-    return event;
-});
-
 app.factory('people', function() {
     var people = {};
     people.lists = [2,3];
@@ -328,12 +312,20 @@ app.factory('contextPost', function() {
     
 });
 
-app.factory('newEvent', function() {
-    
+app.factory('newEvent', function(authService) {
+    var event = {};
+    event.organizer = {
+        name: authService.user()
+    };
+    event.publish = function() {
+        //Publish event using jvent service
+    };
+    return event;    
 });
 
-app.factory('newPost', function() {
-    
+app.factory('newPost', function(authService) {
+   var post;
+   return(post);
 });
 
 // Controllers
@@ -382,8 +374,8 @@ app.controller('eventListCtrl', function($scope, $location, jventService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService, authService, eventCreate) {
-    $scope.newEvent = eventCreate;
+app.controller('newEventCtrl', function($scope, $location, jventService, authService, newEvent) {
+    $scope.newEvent = newEvent;
     $scope.newEventEnabled = true;
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
@@ -441,8 +433,8 @@ app.controller('postListCtrl', function($scope, $location, jventService) {
     });
 });
 
-app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, postCreate) {
-    $scope.newPost = postCreate;
+app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, newPost) {
+    $scope.newPost = newPost;
     $scope.validTitle = function() {
         var l = $scope.newPost.title.length;
         if(l<=144 && l>0){
