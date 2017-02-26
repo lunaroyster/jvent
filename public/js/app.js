@@ -3,6 +3,83 @@
 
 var app = angular.module("jvent", ['ngRoute']);
 
+app.config(['$routeProvider', function($routeProvider) {
+    $routeProvider
+    
+    .when('/', {
+        controller  : 'eventListCtrl',
+        controllerAs: 'eventsview',
+        templateUrl : './views/event/list.html'
+    })
+    
+    .when('/events', {
+        controller  : 'eventListCtrl',
+        controllerAs: 'eventsview',
+        templateUrl : './views/event/list.html'
+    })
+    
+    .when('/event/new', {
+        controller  : 'newEventCtrl',
+        controllerAs: 'newEventView',
+        templateUrl : './views/event/new.html'
+    })
+    
+    .when('/event/:eventURL', {
+        controller  : 'eventCtrl',
+        controllerAs: 'eventview',
+        templateUrl : './views/event/page.html'
+    })
+    
+    .when('/event/:eventURL/posts', {
+        controller  : 'postListCtrl',
+        controllerAs: 'postsview',
+        templateUrl : './views/post/list.html'
+    })
+    
+    .when('/event/:eventURL/post/new', {
+        controller  : 'newPostCtrl',
+        controllerAs: 'newPostView',
+        templateUrl : './views/post/new.html'
+    })
+    
+    .when('/event/:eventURL/people', {
+        controller  : 'userListCtrl',
+        controllerAs: 'userlistview',
+        templateUrl : './views/event/userlist.html'
+    })
+    
+    // .when('/event/:eventURL/post/:postURL', {
+        
+    // })
+    
+    .when('/login', {
+        controller  : 'loginCtrl',
+        controllerAs: 'loginview',
+        templateUrl : './views/user/login.html'
+    })
+    
+    .when('/logout', {
+        controller  : 'logoutCtrl',
+        controllerAs: 'logoutscreen',
+        templateUrl : './views/user/logout.html'
+    })
+    
+    .when('/signup', {
+        controller  : 'signUpCtrl',
+        controllerAs: 'signUpView',
+        templateUrl : './views/user/signup.html'
+    })
+    
+    .otherwise({
+        controller  : '404Ctrl',
+        controllerAs: '404View',
+        templateUrl : './views/misc/404.html'
+    });
+    
+}]);
+
+// Providers
+
 app.service('urlService', function() {
     var apiURL = 'api/';
     var apiVersion = 'v0/';
@@ -149,6 +226,7 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     return(obj);
 });
 
+
 app.factory('postCreate', function() {
    var post;
    return(post);
@@ -229,80 +307,8 @@ app.service('jventService', function($http, $q, urlService) {
     };
 });
 
-app.config(['$routeProvider', function($routeProvider) {
-    $routeProvider
-    
-    .when('/', {
-        controller  : 'eventListCtrl',
-        controllerAs: 'eventsview',
-        templateUrl : './views/event/list.html'
-    })
-    
-    .when('/events', {
-        controller  : 'eventListCtrl',
-        controllerAs: 'eventsview',
-        templateUrl : './views/event/list.html'
-    })
-    
-    .when('/event/new', {
-        controller  : 'newEventCtrl',
-        controllerAs: 'newEventView',
-        templateUrl : './views/event/new.html'
-    })
-    
-    .when('/event/:eventURL', {
-        controller  : 'eventCtrl',
-        controllerAs: 'eventview',
-        templateUrl : './views/event/page.html'
-    })
-    
-    .when('/event/:eventURL/posts', {
-        controller  : 'postListCtrl',
-        controllerAs: 'postsview',
-        templateUrl : './views/post/list.html'
-    })
-    
-    .when('/event/:eventURL/post/new', {
-        controller  : 'newPostCtrl',
-        controllerAs: 'newPostView',
-        templateUrl : './views/post/new.html'
-    })
-    
-    .when('/event/:eventURL/people', {
-        controller  : 'userListCtrl',
-        controllerAs: 'userlistview',
-        templateUrl : './views/event/userlist.html'
-    })
-    
-    // .when('/event/:eventURL/post/:postURL', {
-        
-    // })
-    
-    .when('/login', {
-        controller  : 'loginCtrl',
-        controllerAs: 'loginview',
-        templateUrl : './views/user/login.html'
-    })
-    
-    .when('/logout', {
-        controller  : 'logoutCtrl',
-        controllerAs: 'logoutscreen',
-        templateUrl : './views/user/logout.html'
-    })
-    
-    .when('/signup', {
-        controller  : 'signUpCtrl',
-        controllerAs: 'signUpView',
-        templateUrl : './views/user/signup.html'
-    })
-    
-    .otherwise({
-        controller  : '404Ctrl',
-        controllerAs: '404View',
-        templateUrl : './views/misc/404.html'
-    });
-    
-}]);
+
+// Controllers
 
 app.controller('homeController', function($scope, $location, authService, $rootScope) {
     $scope.homeClick = function() {
