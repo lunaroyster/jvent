@@ -305,6 +305,7 @@ app.factory('eventListService', function(jventService, $q) {
     eventListService.getEventList = function() {
         return $q(function(resolve, reject) {
             // if query changes || if time changes significantly || (query server for event list checksum...)
+            //TODO: Fix conditions
             if(lastQuery!=eventListService.query || deltaTime() > eventListService.cacheTime) { // OR check if the query result has changed
                 return jventService.getEvents()
                 .then(function(eventList) {
@@ -332,14 +333,33 @@ app.factory('postListService', function() {
 app.factory('contextEvent', function(jventService, $q) {
     var contextEvent = {};
     contextEvent.event = {};
+    contextEvent.cacheTime;
+    var lastTime;
+    var deltaTime = function() {
+        return lastTime - Date.now();
+    };
     //join
     //heart
     contextEvent.loadEvent = function(eventURL) {
-        
+        jventService.getEvent(eventURL)
+        .then(function(event) {
+            contextEvent.event = event;
+        });
     };
-    contextEvent.getEvent = function() {
-        //Change in eventURL
-    }
+    contextEvent.getEvent = function(eventURL) {
+        return $q(function(resolve, reject) {
+            if(eventURL!=contextEvent.event.eventURL||deltaTime()>contextEvent.cacheTime) {
+                return jventService.getEvent(eventURL)
+                .then(function(event) {
+                    contextEvent.event = event;
+                    return resolve(event);
+                });
+            }
+            else {
+                return resolve(contextEvent.event);
+            }
+        });
+    };
     return event;
 });
 
