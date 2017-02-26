@@ -306,8 +306,11 @@ app.factory('eventListService', function(jventService, $q) {
         return $q(function() {
             // if query changes || if time changes significantly || (query server for event list checksum...)
             if(lastQuery!=eventListService.query || deltaTime() > eventListService.cacheTime) { // OR check if the query result has changed
-            //     get events from server
-            //     set eventList
+                jventService.getEvents()
+                .then(function(eventList) {
+                    eventListService.eventList = eventList;
+                    return eventList;
+                });
             }
             else {
                 return eventListService.eventList;
