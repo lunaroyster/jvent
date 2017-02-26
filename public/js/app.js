@@ -321,15 +321,25 @@ app.factory('eventListService', function(jventService, $q) {
 });
 
 app.factory('userListService', function() {
-    
+    var userListService;
+    return userListService;
 });
 
 app.factory('postListService', function() {
     
 });
 
-app.factory('contextEvent', function() {
-    var event;
+app.factory('contextEvent', function(jventService, $q) {
+    var contextEvent = {};
+    contextEvent.event = {};
+    //join
+    //heart
+    contextEvent.loadEvent = function(eventURL) {
+        
+    };
+    contextEvent.getEvent = function() {
+        //Change in eventURL
+    }
     return event;
 });
 
