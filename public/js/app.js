@@ -292,17 +292,29 @@ app.service('jventService', function($http, $q, urlService) {
 });
 
 //NEW
-app.factory('eventListService', function(jventService) {
-    //Store Query
-    /*
-    GetEvents()
-        if query changes || if time changes significantly || (query server for event list checksum...)
-            get events from server
-            set eventList
-        return eventList
-    */
-    
-    //Event list
+app.factory('eventListService', function(jventService, $q) {
+    var eventListService;
+    var lastQuery = {};
+    var lastTime;
+    var deltaTime = function() {
+        return lastTime - Date.now();
+    };
+    eventListService.query = {};
+    eventListService.eventList = [];
+    eventListService.cacheTime;
+    eventListService.getEventList = function() {
+        return $q(function() {
+            // if query changes || if time changes significantly || (query server for event list checksum...)
+            if(lastQuery!=eventListService.query || deltaTime() > eventListService.cacheTime) { // OR check if the query result has changed
+            //     get events from server
+            //     set eventList
+            }
+            else {
+                return eventListService.eventList;
+            }
+        });
+    };
+    return eventListService;
 });
 
 app.factory('userListService', function() {
