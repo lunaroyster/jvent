@@ -459,13 +459,12 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
 });
 
 app.controller('eventCtrl', function($scope, $routeParams, jventService, $location, contextEvent) {
-    // jventService.getEvent($routeParams.eventURL)
-    // .then(function (event) {
-    //     $scope.event = event;
-    // });
     contextEvent.getEvent($routeParams.eventURL)
     .then(function(event) {
         $scope.event = event;
+    })
+    .catch(function(error) {
+        Materialize.toast(error.name + ' ' + error.message, 4000);
     });
     $scope.joinPending = false;
     $scope.join = function() {
