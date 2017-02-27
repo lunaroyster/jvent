@@ -44,7 +44,7 @@ module.exports.changePassword = function(user, password) {
         return user.setPassword(Password);
     })
     .then(function() {
-        //TODO: Perform JWT invalidation stuff
+        //TODO: Perform JWT invalidation stuff || setPassword sets passwordChangeDate. Change anything if required here.
         return;
     })
     .then(function() {
