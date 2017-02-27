@@ -355,6 +355,9 @@ app.factory('contextEvent', function(jventService, $q) {
                 .then(function(event) {
                     contextEvent.event = event;
                     return resolve(event);
+                })
+                .catch(function(error) {
+                    reject(error);
                 });
             }
             else {
@@ -464,7 +467,7 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
         $scope.event = event;
     })
     .catch(function(error) {
-        Materialize.toast(error.name + ' ' + error.message, 4000);
+        Materialize.toast(error.status + ' ' + error.statusText, 4000);
     });
     $scope.joinPending = false;
     $scope.join = function() {
