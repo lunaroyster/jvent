@@ -326,8 +326,29 @@ app.factory('userListService', function() {
     return userListService;
 });
 
-app.factory('postListService', function() {
-    
+app.factory('postListService', function(jventService, $q) {
+    var postListService = {};
+    var lastQuery = {};
+    var lastTime;
+    var deltaTime = function() {
+        return lastTime - Date.now();
+    };
+    postListService.query = {};
+    postListService.postList = [];
+    postListService.cacheTime;
+    postListService.eventURL;
+    postListService.getPostList = function(eventURL) {
+        //TODO: complete
+        return $q(function(resolve, reject) {
+            if(lastQuery!=postListService.query || deltaTime() > postListService.cacheTime) {
+                
+            }
+            else {
+                resolve(postListService.postList);
+            }
+        });
+    };
+    return postListService;
 });
 
 app.factory('contextEvent', function(jventService, $q) {
