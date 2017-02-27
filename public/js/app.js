@@ -394,16 +394,19 @@ app.factory('contextPost', function() {
     return post;
 });
 
-app.factory('newEventService', function(authService) {
-    var event = {};
-    event.organizer = {
+app.factory('newEventService', function(authService, jventService) {
+    var newEventService = {};
+    newEventService.event = {};
+    newEventService.event.organizer = {
         name: authService.user()
+    }; //Is this even required?
+    newEventService.publish = function() {
+        return jventService.createEvent(newEventService.event)
+        .then(function(eventURL) {
+            return(eventURL);
+        });
     };
-    event.publish = function() {
-        //Publish event using jvent service
-        //Reset
-    };
-    return(event);    
+    return(newEventService);    
 });
 
 app.factory('newPostService', function(authService) {
@@ -461,13 +464,13 @@ app.controller('eventListCtrl', function($scope, $location, eventListService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService, authService, newEventService) {
-    $scope.newEvent = newEventService;
+app.controller('newEventCtrl', function($scope, $location, authService, newEventService) {
+    $scope.newEvent = newEventService.event;
     $scope.newEventEnabled = true;
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
             $scope.newEventEnabled = false;
-            jventService.createEvent($scope.newEvent)
+            newEventService.publish()
             .then(function(eventURL) {
                 $location.path('/event/' + eventURL);
             },
@@ -475,6 +478,8 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
                 for (var i = 0; i < err.length; i++) {
                     Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
                 }
+            })
+            .finally(function() {
                 $scope.newEventEnabled = true;
             });
         }
