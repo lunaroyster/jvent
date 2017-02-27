@@ -274,8 +274,7 @@ app.service('jventService', function($http, $q, urlService) {
             return eventURL;
         },
         function(response) {
-            throw Error("Failed"); //TODO: Be more descriptive?
-            // deferred.reject(response.data);
+            throw response.data; //HACK: Does this even make sense?
         });
     };
     this.joinEvent = function(eventURL) {
