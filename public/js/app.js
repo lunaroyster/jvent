@@ -338,7 +338,9 @@ app.factory('contextEvent', function(jventService, $q) {
     var deltaTime = function() {
         return lastTime - Date.now();
     };
-    //join
+    contextEvent.join = function() {
+        return jventService.joinEvent(contextEvent.event.url);
+    };
     //heart
     contextEvent.loadEvent = function(eventURL) {
         jventService.getEvent(eventURL)
@@ -469,7 +471,7 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     $scope.join = function() {
         //Make sure request can be made
         $scope.joinPending = true;
-        jventService.joinEvent($scope.event.url)
+        contextEvent.join()
         .then(function() {
             //Redirect to content upon success
         })
