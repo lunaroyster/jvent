@@ -3,6 +3,10 @@ var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
 var eventRequestSchema = require('../requests/event');
 
+// Errors
+var badAuthError = Error("Bad Auth");
+badAuthError.status = 404;
+
 // /event/
 
 module.exports.createEvent = function(req, res) {
@@ -143,17 +147,13 @@ module.exports.appendEventIfVisible = function(req, res, next) {
                 return;
             }
             else {
-                var err = Error("Bad Auth");
-                err.status = 404;
-                throw err;
+                throw badAuthError;
             }
         }
         else if(event.visibility=="private") {
             return userListCore.isUserViewer(req.user, event)
             .catch(function(error) {
-                var err = Error("Bad Auth");
-                err.status = 404;
-                throw err;
+                throw badAuthError;
             });
         }
     })

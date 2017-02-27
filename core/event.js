@@ -45,7 +45,11 @@ module.exports.getPublicEvents = function() {
 };
 
 var returnEventOrError = function(event) {
-    if(!event) throw Error("Can't find event");
+    if(!event) {
+        var err = Error("Can't find event");
+        err.status = 404;
+        throw err;
+    }
     return event;
 };
 
