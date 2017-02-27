@@ -360,7 +360,7 @@ app.factory('contextEvent', function(jventService, $q) {
             }
         });
     };
-    return event;
+    return contextEvent;
 });
 
 app.factory('contextPost', function() {
@@ -456,9 +456,13 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, jventService, $location) {
-    jventService.getEvent($routeParams.eventURL)
-    .then(function (event) {
+app.controller('eventCtrl', function($scope, $routeParams, jventService, $location, contextEvent) {
+    // jventService.getEvent($routeParams.eventURL)
+    // .then(function (event) {
+    //     $scope.event = event;
+    // });
+    contextEvent.getEvent($routeParams.eventURL)
+    .then(function(event) {
         $scope.event = event;
     });
     $scope.joinPending = false;
