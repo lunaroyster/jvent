@@ -53,7 +53,11 @@ module.exports.getEventPosts = function(event) {
 };
 
 var returnPostOrError = function(post) {
-    if(!post) throw Error("Can't find post");
+    if(!post) {
+        var err = Error("Can't find post");
+        err.status = 404;
+        throw err;
+    }
     return post;
 };
 
