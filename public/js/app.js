@@ -274,8 +274,7 @@ app.service('jventService', function($http, $q, urlService) {
             return eventURL;
         },
         function(response) {
-            throw Error("Failed"); //TODO: Be more descriptive?
-            // deferred.reject(response.data);
+            throw response.data; //HACK: Does this even make sense?
         });
     };
     this.joinEvent = function(eventURL) {
@@ -326,8 +325,29 @@ app.factory('userListService', function() {
     return userListService;
 });
 
-app.factory('postListService', function() {
-    
+app.factory('postListService', function(jventService, $q) {
+    var postListService = {};
+    var lastQuery = {};
+    var lastTime;
+    var deltaTime = function() {
+        return lastTime - Date.now();
+    };
+    postListService.query = {};
+    postListService.postList = [];
+    postListService.cacheTime;
+    postListService.eventURL;
+    postListService.getPostList = function(eventURL) {
+        //TODO: complete
+        return $q(function(resolve, reject) {
+            if(lastQuery!=postListService.query || deltaTime() > postListService.cacheTime) {
+                
+            }
+            else {
+                resolve(postListService.postList);
+            }
+        });
+    };
+    return postListService;
 });
 
 app.factory('contextEvent', function(jventService, $q) {
@@ -338,7 +358,9 @@ app.factory('contextEvent', function(jventService, $q) {
     var deltaTime = function() {
         return lastTime - Date.now();
     };
-    //join
+    contextEvent.join = function() {
+        return jventService.joinEvent(contextEvent.event.url);
+    };
     //heart
     contextEvent.loadEvent = function(eventURL) {
         jventService.getEvent(eventURL)
@@ -353,6 +375,9 @@ app.factory('contextEvent', function(jventService, $q) {
                 .then(function(event) {
                     contextEvent.event = event;
                     return resolve(event);
+                })
+                .catch(function(error) {
+                    reject(error);
                 });
             }
             else {
@@ -360,7 +385,7 @@ app.factory('contextEvent', function(jventService, $q) {
             }
         });
     };
-    return event;
+    return contextEvent;
 });
 
 app.factory('contextPost', function() {
@@ -368,16 +393,19 @@ app.factory('contextPost', function() {
     return post;
 });
 
-app.factory('newEventService', function(authService) {
-    var event = {};
-    event.organizer = {
+app.factory('newEventService', function(authService, jventService) {
+    var newEventService = {};
+    newEventService.event = {};
+    newEventService.event.organizer = {
         name: authService.user()
+    }; //Is this even required?
+    newEventService.publish = function() {
+        return jventService.createEvent(newEventService.event)
+        .then(function(eventURL) {
+            return(eventURL);
+        });
     };
-    event.publish = function() {
-        //Publish event using jvent service
-        //Reset
-    };
-    return(event);    
+    return(newEventService);    
 });
 
 app.factory('newPostService', function(authService) {
@@ -435,13 +463,13 @@ app.controller('eventListCtrl', function($scope, $location, eventListService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, jventService, authService, newEventService) {
-    $scope.newEvent = newEventService;
+app.controller('newEventCtrl', function($scope, $location, authService, newEventService) {
+    $scope.newEvent = newEventService.event;
     $scope.newEventEnabled = true;
     $scope.createEvent = function() {
         if($scope.newEventEnabled) {
             $scope.newEventEnabled = false;
-            jventService.createEvent($scope.newEvent)
+            newEventService.publish()
             .then(function(eventURL) {
                 $location.path('/event/' + eventURL);
             },
@@ -449,6 +477,8 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
                 for (var i = 0; i < err.length; i++) {
                     Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
                 }
+            })
+            .finally(function() {
                 $scope.newEventEnabled = true;
             });
         }
@@ -456,16 +486,19 @@ app.controller('newEventCtrl', function($scope, $location, jventService, authSer
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, jventService, $location) {
-    jventService.getEvent($routeParams.eventURL)
-    .then(function (event) {
+app.controller('eventCtrl', function($scope, $routeParams, jventService, $location, contextEvent) {
+    contextEvent.getEvent($routeParams.eventURL)
+    .then(function(event) {
         $scope.event = event;
+    })
+    .catch(function(error) {
+        Materialize.toast(error.status + ' ' + error.statusText, 4000);
     });
     $scope.joinPending = false;
     $scope.join = function() {
         //Make sure request can be made
         $scope.joinPending = true;
-        jventService.joinEvent($scope.event.url)
+        contextEvent.join()
         .then(function() {
             //Redirect to content upon success
         })
