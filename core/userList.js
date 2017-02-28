@@ -35,6 +35,7 @@ module.exports.createDefaultUserLists = function(event) {
     });
 };
 
+//TODO: Reference back to owner
 module.exports.createViewerList = function(event) {
     var newViewerList = new UserList({
         listType: "viewer"
@@ -65,15 +66,15 @@ module.exports.createAttendeeList = function(event) {
 
 //Add
 module.exports.addUserToAttendeeList = function(user, event) {
-    return UserList.findOne({_id: event.userLists.attendee})
+    return UserList.findOne({_id: event.userLists.attendee.list})
     .then(function(userlist) {
         //TODO: Hacky way
         if(!userlist) throw Error("No list");
-        if(userlist.users.indexOf(user._id) != -1) {
+        if(userlist.list.indexOf(user._id) != -1) {
             throw Error("Already attending");
         }
         else {
-            userlist.users.addToSet(user._id);
+            userlist.list.addToSet(user._id);
             return userlist.save();
         }
     });
@@ -81,25 +82,25 @@ module.exports.addUserToAttendeeList = function(user, event) {
 
 //Verify
 module.exports.isUserAttendee = function(user, event) {
-    return UserList.findOne({_id: event.userLists.attendee, users: user._id})
+    return UserList.findOne({_id: event.userLists.attendee.list, list: user._id})
     .then(function(userlist) {
-        if(!userlist) throw Error("No userlist");
+        if(!userlist) throw Error("No userlist"); //TODO: Wrong error
         return userlist;
     });
 };
 
 module.exports.isUserViewer = function(user, event) {
-    return UserList.findOne({_id: event.userLists.viewer, users: user._id})
+    return UserList.findOne({_id: event.userLists.viewer.list, list: user._id})
     .then(function(userlist) {
-        if(!userlist) throw Error("No userlist");
+        if(!userlist) throw Error("No userlist"); //TODO: Wrong error
         return userlist;
     });
 };
 
 module.exports.isUserInvitee = function(user, event) {
-    return UserList.findOne({_id: event.userLists.invite, users: user._id})
+    return UserList.findOne({_id: event.userLists.invite.list, list: user._id})
     .then(function(userlist) {
-        if(!userlist) throw Error("No userlist");
+        if(!userlist) throw Error("No userlist"); //TODO: Wrong error
         return userlist;
     });
 };
