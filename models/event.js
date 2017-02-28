@@ -24,12 +24,6 @@ var eventSchema = new Schema({
         ref: 'SuperCollection'
     },
     userLists: {
-        moderator: { type: Schema.Types.ObjectId },
-        attendee: { type: Schema.Types.ObjectId },
-        invite: { type: Schema.Types.ObjectId },
-        viewer: { type: Schema.Types.ObjectId }
-    },
-    XuserLists: {
         moderator: {
             enabled: { type: Boolean },
             list: { type: Schema.Types.ObjectId }
@@ -71,9 +65,10 @@ var eventSchema = new Schema({
 });
 
 eventSchema.methods.assignUserLists = function(userLists) {
-    if (userLists.attendee) { this.userLists.attendee = userLists.attendee; }
-    if (userLists.moderator) { this.userLists.moderator = userLists.moderator; }
-    if (userLists.viewer) { this.userLists.viewer = userLists.viewer; }
+    if (userLists.attendee) { this.userLists.attendee.list = userLists.attendee; }
+    if (userLists.moderator) { this.userLists.moderator.list = userLists.moderator; }
+    if (userLists.viewer) { this.userLists.viewer.list = userLists.viewer; }
+    if (userLists.invite) { this.userLists.invite.list = userLists.invite; }
 };
 
 mongoose.model('Event', eventSchema);
