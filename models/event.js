@@ -24,12 +24,6 @@ var eventSchema = new Schema({
         ref: 'SuperCollection'
     },
     userLists: {
-        moderator: { type: Schema.Types.ObjectId },
-        attendee: { type: Schema.Types.ObjectId },
-        invite: { type: Schema.Types.ObjectId },
-        viewer: { type: Schema.Types.ObjectId }
-    },
-    XuserLists: {
         moderator: {
             enabled: { type: Boolean },
             list: { type: Schema.Types.ObjectId }
