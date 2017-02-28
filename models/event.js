@@ -68,6 +68,7 @@ eventSchema.methods.assignUserLists = function(userLists) {
     if (userLists.attendee) { this.userLists.attendee.list = userLists.attendee; }
     if (userLists.moderator) { this.userLists.moderator.list = userLists.moderator; }
     if (userLists.viewer) { this.userLists.viewer.list = userLists.viewer; }
+    if (userLists.invite) { this.userLists.invite.list = userLists.invite; }
 };
 
 mongoose.model('Event', eventSchema);
