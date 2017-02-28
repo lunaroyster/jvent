@@ -227,11 +227,6 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
 });
 
 // OLD
-app.factory('people', function() {
-    var people = {};
-    people.lists = [2,3];
-    return people;
-});
 
 app.service('jventService', function($http, $q, urlService) {
     var events = [];
@@ -321,7 +316,7 @@ app.factory('eventListService', function(jventService, $q) {
 });
 
 app.factory('userListService', function() {
-    var userListService;
+    var userListService = {};
     return userListService;
 });
 
@@ -405,6 +400,7 @@ app.factory('newEventService', function(authService, jventService) {
             return(eventURL);
         });
     };
+    //TODO: Event Validation stuff goes here
     return(newEventService);    
 });
 
@@ -514,8 +510,8 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     };
 });
 
-app.controller('userListCtrl', function($scope, people) {
-    $scope.people = people;
+app.controller('userListCtrl', function($scope, userListService) {
+    // $scope.people = userListService;
     $scope.selectedList = {};
 });
 
