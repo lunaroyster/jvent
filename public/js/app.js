@@ -227,11 +227,6 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
 });
 
 // OLD
-app.factory('people', function() {
-    var people = {};
-    people.lists = [2,3];
-    return people;
-});
 
 app.service('jventService', function($http, $q, urlService) {
     var events = [];
@@ -295,19 +290,22 @@ app.factory('eventListService', function(jventService, $q) {
     var eventListService = {};
     var lastQuery = {};
     var lastTime;
-    var deltaTime = function() {
-        return lastTime - Date.now();
+    var fresh = function() {
+        return (Date.now() - lastTime) < eventListService.cacheTime;
+    };
+    var queryChange = function() {
+        //TODO: compare eventListService.query and lastQuery
+        return false;
     };
     eventListService.query = {};
     eventListService.eventList = [];
-    eventListService.cacheTime;
+    eventListService.cacheTime = 60000;
     eventListService.getEventList = function() {
         return $q(function(resolve, reject) {
-            // if query changes || if time changes significantly || (query server for event list checksum...)
-            //TODO: Fix conditions
-            if(lastQuery!=eventListService.query || deltaTime() > eventListService.cacheTime) { // OR check if the query result has changed
+            if(queryChange() || !fresh()) {
                 return jventService.getEvents()
                 .then(function(eventList) {
+                    lastTime = Date.now();
                     eventListService.eventList = eventList;
                     return resolve(eventList);
                 });
@@ -320,8 +318,32 @@ app.factory('eventListService', function(jventService, $q) {
     return eventListService;
 });
 
-app.factory('userListService', function() {
-    var userListService;
+app.factory('userListService', function(jventService, $q) {
+    var userListService = {};
+    var lastQuery = {};
+    var lastTime;
+    var deltaTime = function() {
+        return lastTime - Date.now();
+    };
+    userListService.query = {};
+    userListService.userList = [];
+    userListService.cacheTime;
+    userListService.getUserList = function() {
+        return $q(function(resolve, reject) {
+            // if query changes || if time changes significantly || (query server for event list checksum...)
+            //TODO: Fix conditions
+            if(lastQuery!=userListService.query || deltaTime() > userListService.cacheTime) { // OR check if the query result has changed
+                return jventService.getUserList()
+                .then(function(userList) {
+                    userListService.userList = userList;
+                    return resolve(userList);
+                });
+            }
+            else {
+                return resolve(userListService.userList);
+            }
+        });
+    };
     return userListService;
 });
 
@@ -355,9 +377,10 @@ app.factory('contextEvent', function(jventService, $q) {
     contextEvent.event = {};
     contextEvent.cacheTime;
     var lastTime;
-    var deltaTime = function() {
-        return lastTime - Date.now();
+    var fresh = function() {
+        return (Date.now() - lastTime) < contextEvent.cacheTime;
     };
+    contextEvent.cacheTime = 60000;
     contextEvent.join = function() {
         return jventService.joinEvent(contextEvent.event.url);
     };
@@ -370,9 +393,10 @@ app.factory('contextEvent', function(jventService, $q) {
     };
     contextEvent.getEvent = function(eventURL) {
         return $q(function(resolve, reject) {
-            if(eventURL!=contextEvent.event.eventURL||deltaTime()>contextEvent.cacheTime) {
+            if(eventURL!=contextEvent.event.url||!fresh()) {
                 return jventService.getEvent(eventURL)
                 .then(function(event) {
+                    lastTime = Date.now();
                     contextEvent.event = event;
                     return resolve(event);
                 })
@@ -402,9 +426,11 @@ app.factory('newEventService', function(authService, jventService) {
     newEventService.publish = function() {
         return jventService.createEvent(newEventService.event)
         .then(function(eventURL) {
+            newEventService.event = {};
             return(eventURL);
         });
     };
+    //TODO: Event Validation stuff goes here
     return(newEventService);    
 });
 
@@ -514,8 +540,8 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     };
 });
 
-app.controller('userListCtrl', function($scope, people) {
-    $scope.people = people;
+app.controller('userListCtrl', function($scope, userListService) {
+    // $scope.people = userListService;
     $scope.selectedList = {};
 });
 
