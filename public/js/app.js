@@ -315,8 +315,32 @@ app.factory('eventListService', function(jventService, $q) {
     return eventListService;
 });
 
-app.factory('userListService', function() {
+app.factory('userListService', function(jventService, $q) {
     var userListService = {};
+    var lastQuery = {};
+    var lastTime;
+    var deltaTime = function() {
+        return lastTime - Date.now();
+    };
+    userListService.query = {};
+    userListService.userList = [];
+    userListService.cacheTime;
+    userListService.getUserList = function() {
+        return $q(function(resolve, reject) {
+            // if query changes || if time changes significantly || (query server for event list checksum...)
+            //TODO: Fix conditions
+            if(lastQuery!=userListService.query || deltaTime() > userListService.cacheTime) { // OR check if the query result has changed
+                return jventService.getUserList()
+                .then(function(userList) {
+                    userListService.userList = userList;
+                    return resolve(userList);
+                });
+            }
+            else {
+                return resolve(userListService.userList);
+            }
+        });
+    };
     return userListService;
 });
 
