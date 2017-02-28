@@ -377,9 +377,10 @@ app.factory('contextEvent', function(jventService, $q) {
     contextEvent.event = {};
     contextEvent.cacheTime;
     var lastTime;
-    var deltaTime = function() {
-        return lastTime - Date.now();
+    var fresh = function() {
+        return (Date.now() - lastTime) < contextEvent.cacheTime;
     };
+    contextEvent.cacheTime = 60000;
     contextEvent.join = function() {
         return jventService.joinEvent(contextEvent.event.url);
     };
@@ -392,9 +393,10 @@ app.factory('contextEvent', function(jventService, $q) {
     };
     contextEvent.getEvent = function(eventURL) {
         return $q(function(resolve, reject) {
-            if(eventURL!=contextEvent.event.eventURL||deltaTime()>contextEvent.cacheTime) {
+            if(eventURL!=contextEvent.event.url||!fresh()) {
                 return jventService.getEvent(eventURL)
                 .then(function(event) {
+                    lastTime = Date.now();
                     contextEvent.event = event;
                     return resolve(event);
                 })
