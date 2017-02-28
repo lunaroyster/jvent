@@ -29,6 +29,24 @@ var eventSchema = new Schema({
         invite: { type: Schema.Types.ObjectId },
         viewer: { type: Schema.Types.ObjectId }
     },
+    XuserLists: {
+        moderator: {
+            enabled: { type: Boolean },
+            list: { type: Schema.Types.ObjectId }
+        },
+        attendee: {
+            enabled: { type: Boolean },
+            list: { type: Schema.Types.ObjectId }
+        },
+        invite: {
+            enabled: { type: Boolean },
+            list: { type: Schema.Types.ObjectId }
+        },
+        viewer: {
+            enabled: { type: Boolean },
+            list: { type: Schema.Types.ObjectId }
+        }
+    },
     timeOfCreation: Date,
     organizer: {
         user: {
