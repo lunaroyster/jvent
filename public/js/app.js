@@ -290,19 +290,22 @@ app.factory('eventListService', function(jventService, $q) {
     var eventListService = {};
     var lastQuery = {};
     var lastTime;
-    var deltaTime = function() {
-        return lastTime - Date.now();
+    var fresh = function() {
+        return (Date.now() - lastTime) < eventListService.cacheTime;
+    };
+    var queryChange = function() {
+        //TODO: compare eventListService.query and lastQuery
+        return false;
     };
     eventListService.query = {};
     eventListService.eventList = [];
-    eventListService.cacheTime;
+    eventListService.cacheTime = 60000;
     eventListService.getEventList = function() {
         return $q(function(resolve, reject) {
-            // if query changes || if time changes significantly || (query server for event list checksum...)
-            //TODO: Fix conditions
-            if(lastQuery!=eventListService.query || deltaTime() > eventListService.cacheTime) { // OR check if the query result has changed
+            if(queryChange() || !fresh()) {
                 return jventService.getEvents()
                 .then(function(eventList) {
+                    lastTime = Date.now();
                     eventListService.eventList = eventList;
                     return resolve(eventList);
                 });
@@ -421,6 +424,7 @@ app.factory('newEventService', function(authService, jventService) {
     newEventService.publish = function() {
         return jventService.createEvent(newEventService.event)
         .then(function(eventURL) {
+            newEventService.event = {};
             return(eventURL);
         });
     };
