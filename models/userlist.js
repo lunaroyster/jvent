@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var userListSchema = new Schema({
-    users: {
+    list: {
         type: [Schema.Types.ObjectId]
     },
     listType: String
