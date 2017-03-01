@@ -323,7 +323,7 @@ app.factory('userListService', function(jventService, $q) {
         return lastTime - Date.now();
     };
     userListService.query = {};
-    userListService.userList = [];
+    userListService.userListCollection = [];
     userListService.cacheTime;
     userListService.getUserList = function() {
         return $q(function(resolve, reject) {
@@ -541,6 +541,7 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
 
 app.controller('userListCtrl', function($scope, userListService) {
     // $scope.people = userListService;
+    $scope.userListCollection = userListService.userListCollection;
     $scope.selectedList = {};
 });
 
