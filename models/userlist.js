@@ -8,4 +8,8 @@ var userListSchema = new Schema({
     listType: String
 });
 
+userListSchema.methods.userCount = function() {
+    return this.list.length;
+};
+
 mongoose.model('UserList', userListSchema);
