@@ -319,17 +319,19 @@ app.factory('userListService', function(jventService, $q) {
     var userListService = {};
     var lastQuery = {};
     var lastTime;
-    var deltaTime = function() {
-        return lastTime - Date.now();
+    var fresh = function() {
+        return (Date.now() - lastTime) < userListService.cacheTime;
+    };
+    var queryChange = function() {
+        //TODO: compare eventListService.query and lastQuery
+        return false;
     };
     userListService.query = {};
     userListService.userListCollection = [];
-    userListService.cacheTime;
+    userListService.cacheTime = 60000;
     userListService.getUserList = function() {
         return $q(function(resolve, reject) {
-            // if query changes || if time changes significantly || (query server for event list checksum...)
-            //TODO: Fix conditions
-            if(lastQuery!=userListService.query || deltaTime() > userListService.cacheTime) { // OR check if the query result has changed
+            if(queryChange() || !fresh()) { // OR check if the query result has changed
                 return jventService.getUserList()
                 .then(function(userList) {
                     userListService.userList = userList;
