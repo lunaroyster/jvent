@@ -79,7 +79,6 @@ app.config(['$routeProvider', function($routeProvider) {
 }]);
 
 // Providers
-
 app.service('urlService', function() {
     var apiURL = 'api/';
     var apiVersion = 'v0/';
@@ -226,8 +225,6 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     return(obj);
 });
 
-// OLD
-
 app.service('jventService', function($http, $q, urlService) {
     var events = [];
     var event = {};
@@ -285,7 +282,7 @@ app.service('jventService', function($http, $q, urlService) {
     };
 });
 
-//NEW
+// List Providers
 app.factory('eventListService', function(jventService, $q) {
     var eventListService = {};
     var lastQuery = {};
@@ -372,6 +369,7 @@ app.factory('postListService', function(jventService, $q) {
     return postListService;
 });
 
+// Context Providers
 app.factory('contextEvent', function(jventService, $q) {
     var contextEvent = {};
     contextEvent.event = {};
@@ -417,6 +415,7 @@ app.factory('contextPost', function() {
     return post;
 });
 
+// New Providers
 app.factory('newEventService', function(authService, jventService) {
     var newEventService = {};
     newEventService.event = {};
