@@ -79,7 +79,6 @@ app.config(['$routeProvider', function($routeProvider) {
 }]);
 
 // Providers
-
 app.service('urlService', function() {
     var apiURL = 'api/';
     var apiVersion = 'v0/';
@@ -226,8 +225,6 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     return(obj);
 });
 
-// OLD
-
 app.service('jventService', function($http, $q, urlService) {
     var events = [];
     var event = {};
@@ -285,7 +282,7 @@ app.service('jventService', function($http, $q, urlService) {
     };
 });
 
-//NEW
+// List Providers
 app.factory('eventListService', function(jventService, $q) {
     var eventListService = {};
     var lastQuery = {};
@@ -322,17 +319,19 @@ app.factory('userListService', function(jventService, $q) {
     var userListService = {};
     var lastQuery = {};
     var lastTime;
-    var deltaTime = function() {
-        return lastTime - Date.now();
+    var fresh = function() {
+        return (Date.now() - lastTime) < userListService.cacheTime;
+    };
+    var queryChange = function() {
+        //TODO: compare eventListService.query and lastQuery
+        return false;
     };
     userListService.query = {};
-    userListService.userList = [];
-    userListService.cacheTime;
+    userListService.userListCollection = [];
+    userListService.cacheTime = 60000;
     userListService.getUserList = function() {
         return $q(function(resolve, reject) {
-            // if query changes || if time changes significantly || (query server for event list checksum...)
-            //TODO: Fix conditions
-            if(lastQuery!=userListService.query || deltaTime() > userListService.cacheTime) { // OR check if the query result has changed
+            if(queryChange() || !fresh()) { // OR check if the query result has changed
                 return jventService.getUserList()
                 .then(function(userList) {
                     userListService.userList = userList;
@@ -372,6 +371,7 @@ app.factory('postListService', function(jventService, $q) {
     return postListService;
 });
 
+// Context Providers
 app.factory('contextEvent', function(jventService, $q) {
     var contextEvent = {};
     contextEvent.event = {};
@@ -417,6 +417,7 @@ app.factory('contextPost', function() {
     return post;
 });
 
+// New Providers
 app.factory('newEventService', function(authService, jventService) {
     var newEventService = {};
     newEventService.event = {};
@@ -542,6 +543,7 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
 
 app.controller('userListCtrl', function($scope, userListService) {
     // $scope.people = userListService;
+    $scope.userListCollection = userListService.userListCollection;
     $scope.selectedList = {};
 });
 
