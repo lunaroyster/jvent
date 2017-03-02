@@ -1,6 +1,5 @@
 var Q = require('q');
 var eventCore = require('../../../core/event');
-var userListCore = require('../../../core/userList');
 var eventMembershipCore = require('../../../core/eventMembership');
 var eventRequestSchema = require('../requests/event');
 
@@ -36,7 +35,7 @@ module.exports.createEvent = function(req, res) {
             ingress: req.body.event.ingress,
             user: req.user
         };
-        return eventCore.createEvent(eventSettings);
+        return eventCore.createEvent(eventSettings, req.user);
     })         //Create event (using authenticated user)
     .then(function(event) {
         return event;
@@ -147,7 +146,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
             }
         }
         else if(event.visibility=="private") {
-            return userListCore.isUserViewer(req.user, event)
+            return eventMembershipCore.isUserViewer(req.user, event)
             .catch(function(error) {
                 throw badAuthError;
             });

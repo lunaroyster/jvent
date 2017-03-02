@@ -4,9 +4,11 @@ var Q = require('q');
 var urlCore = require('./url');
 var collectionCore = require('./collection');
 var userListCore = require('./userList');
+var eventMembershipCore = require('./eventMembership');
+
 var Event = mongoose.model('Event');
 
-module.exports.createEvent = function(eventSettings) {
+module.exports.createEvent = function(eventSettings, user) {
     var newEvent = new Event({
         name: eventSettings.name,
         byline: eventSettings.byline,
@@ -19,8 +21,8 @@ module.exports.createEvent = function(eventSettings) {
     if(eventSettings.ingress=="link") {
         newEvent.joinUrl = urlCore.generateRandomUrl(11);
     }
-    newEvent.organizer.user = eventSettings.user._id;
-    newEvent.organizer.name = eventSettings.user.username;
+    newEvent.organizer.user = user._id;
+    newEvent.organizer.name = user.username;
     return newEvent.save()
     .then(function(event) {
         var promises = [];
