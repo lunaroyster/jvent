@@ -2,18 +2,35 @@ var mongoose = require('mongoose');
 var Q = require('q');
 var EventMembership = mongoose.model('eventMembership');
 
+var addAsRole = function(user, event, role) {
+    EventMembership.findOne({user: user._id, event: event._id, role: role})
+    .then(function(eventMembership) {
+        if(!eventMembership) {
+            var newEventMembership = new eventMembership({
+                user: user._id,
+                event: event._id,
+                role: role
+            });
+            return newEventMembership.save()
+        }
+        else {
+            //TODO: Complete error with status and stuff.
+            throw new Error("")
+        }
+    });
+};
 module.exports.addAttendee = function(user, event) {
-
+    return addAsRole(user, event, "attendee");
 }
 module.exports.addViewer = function(user, event) {
-
+    return addAsRole(user, event, "viewer");
 }
 //For symmetry
 module.exports.addInvitee = function(user, event) {
-
+    return addAsRole(user, event, "invitee");
 }
 module.exports.addModerator = function(user, event) {
-
+    return addAsRole(user, event, "moderator");
 }
 
 var isUserRole = function(user, event, role) {
