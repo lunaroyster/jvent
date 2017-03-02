@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Q = require('q');
-var UserList = mongoose.model('eventMembership');
+var EventMembership = mongoose.model('eventMembership');
 
 module.exports.addAttendee = function(user, event) {
 
@@ -16,18 +16,22 @@ module.exports.addModerator = function(user, event) {
 
 }
 
-module.exports.isUserAttendee = function(user, event) {
+var isUserRole = function(user, event, role) {
+    return EventMembership.findOne({user: user._id, event: event._id, role: role})
+};
 
+module.exports.isUserAttendee = function(user, event) {
+    return isUserRole(user, event, "attendee");
 };
 
 module.exports.isUserViewer = function(user, event) {
-
+    return isUserRole(user, event, "viewer");
 };
 
 module.exports.isUserInvitee = function(user, event) {
-
+    return isUserRole(user, event, "invitee");
 };
 
 module.exports.isUserModerator = function(user, event) {
-
+    return isUserRole(user, event, "moderator");
 };
