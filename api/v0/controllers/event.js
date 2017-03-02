@@ -18,7 +18,7 @@ module.exports.createEvent = function(req, res) {
             result.throw();
         }
         return;
-    })
+    })   //Validate request
     .then(function() {
         if(req.user.privileges.createEvent) {
             return;
@@ -26,7 +26,7 @@ module.exports.createEvent = function(req, res) {
         else {
             throw new Error("Bad privileges");
         }
-    })
+    })         //Check user privileges
     .then(function() {
         var eventSettings = {
             name: req.body.event.name,
@@ -36,12 +36,11 @@ module.exports.createEvent = function(req, res) {
             ingress: req.body.event.ingress,
             user: req.user
         };
-        return eventCore.createEvent(eventSettings)
-        .then(function(event) {
-            //Add event to User's collection
-            return event;
-        });
-    })
+        return eventCore.createEvent(eventSettings);
+    })         //Create event (using authenticated user)
+    .then(function(event) {
+        return event;
+    })    
     .then(function(event) {
         var state = {
             status: "Created",
@@ -51,7 +50,7 @@ module.exports.createEvent = function(req, res) {
             }
         };
         res.status(201).json(state);
-    })
+    })    //Send event creation success
     .catch(function(error) {
         var err;
         try {
