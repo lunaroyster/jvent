@@ -5,5 +5,6 @@ module.exports = {
     superCollection: require('./supercollection'),
     compilation: require('./compilation'),
     user: require('./user'),
+    eventMembership: require('./eventmembership'),
     userList: require('./userlist')
 };

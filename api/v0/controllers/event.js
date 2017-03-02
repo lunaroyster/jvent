@@ -1,6 +1,6 @@
 var Q = require('q');
 var eventCore = require('../../../core/event');
-var userListCore = require('../../../core/userList');
+var eventMembershipCore = require('../../../core/eventMembership');
 var eventRequestSchema = require('../requests/event');
 
 // Errors
@@ -17,7 +17,7 @@ module.exports.createEvent = function(req, res) {
             result.throw();
         }
         return;
-    })
+    })   //Validate request
     .then(function() {
         if(req.user.privileges.createEvent) {
             return;
@@ -25,7 +25,7 @@ module.exports.createEvent = function(req, res) {
         else {
             throw new Error("Bad privileges");
         }
-    })
+    })         //Check user privileges
     .then(function() {
         var eventSettings = {
             name: req.body.event.name,
@@ -35,12 +35,11 @@ module.exports.createEvent = function(req, res) {
             ingress: req.body.event.ingress,
             user: req.user
         };
-        return eventCore.createEvent(eventSettings)
-        .then(function(event) {
-            //Add event to User's collection
-            return event;
-        });
-    })
+        return eventCore.createEvent(eventSettings, req.user);
+    })         //Create event (using authenticated user)
+    .then(function(event) {
+        return event;
+    })    
     .then(function(event) {
         var state = {
             status: "Created",
@@ -50,7 +49,7 @@ module.exports.createEvent = function(req, res) {
             }
         };
         res.status(201).json(state);
-    })
+    })    //Send event creation success
     .catch(function(error) {
         var err;
         try {
@@ -115,15 +114,11 @@ module.exports.joinEvent = function(req, res) {
             }
         }
         else if(ingress=="invite") {
-            return userListCore.isUserInvitee(req.user, req.event);
+            return eventMembershipCore.isUserInvitee(req.user, req.event);
         }
     })
     .then(function() {
-        return userListCore.addUserToAttendeeList(req.user, req.event);
-    })
-    .then(function() {
-        //TODO: Add to user's event list
-        return;
+        return eventMembershipCore.addAttendee(req.user, req.event);
     })
     .then(function() {
         res.status(200).send();
@@ -151,7 +146,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
             }
         }
         else if(event.visibility=="private") {
-            return userListCore.isUserViewer(req.user, event)
+            return eventMembershipCore.isUserViewer(req.user, event)
             .catch(function(error) {
                 throw badAuthError;
             });

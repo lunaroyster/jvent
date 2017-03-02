@@ -5,4 +5,5 @@ require('./collection');
 require('./supercollection');
 require('./compilation');
 require('./user');
+require('./eventmembership');
 require('./userlist');
