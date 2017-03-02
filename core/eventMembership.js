@@ -60,3 +60,35 @@ module.exports.isUserInvitee = function(user, event) {
 module.exports.isUserModerator = function(user, event) {
     return isUserRole(user, event, "moderator");
 };
+
+var getEventMemberships = function(event, role) {
+    return EventMembership.find({role: role, event: event._id})
+}
+
+var getUserMemberships = function(user, role) {
+    return EventMembership.find({role: role, user: user._id})
+}
+
+var compileMemberships = function(memberships) {
+
+}
+
+module.exports.getEventAttendees = function(event) {
+    return getEventMemberships(event, "attendee")
+    .then(compileMemberships);
+};
+
+module.exports.getEventViewers = function(event) {
+    return getEventMemberships(event, "viewer")
+    .then(compileMemberships);
+};
+
+module.exports.getEventInvitees = function(event) {
+    return getEventMemberships(event, "invitee")
+    .then(compileMemberships);
+};
+
+module.exports.getEventModerators = function(event) {
+    return getEventMemberships(event, "moderator")
+    .then(compileMemberships);
+};
