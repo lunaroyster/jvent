@@ -35,6 +35,14 @@ module.exports.addModerator = function(user, event) {
 
 var isUserRole = function(user, event, role) {
     return EventMembership.findOne({user: user._id, event: event._id, role: role})
+    .then(function(eventMembership) {
+        if(!eventMembership) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    });
 };
 
 module.exports.isUserAttendee = function(user, event) {
