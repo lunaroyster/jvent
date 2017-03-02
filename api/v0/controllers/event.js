@@ -1,6 +1,7 @@
 var Q = require('q');
 var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
+var eventMembershipCore = require('../../../core/eventMembership');
 var eventRequestSchema = require('../requests/event');
 
 // Errors
@@ -115,15 +116,11 @@ module.exports.joinEvent = function(req, res) {
             }
         }
         else if(ingress=="invite") {
-            return userListCore.isUserInvitee(req.user, req.event);
+            return eventMembershipCore.isUserInvitee(req.user, req.event);
         }
     })
     .then(function() {
-        return userListCore.addUserToAttendeeList(req.user, req.event);
-    })
-    .then(function() {
-        //TODO: Add to user's event list
-        return;
+        return eventMembershipCore.addAttendee(req.user, req.event);
     })
     .then(function() {
         res.status(200).send();
