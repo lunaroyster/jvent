@@ -25,13 +25,14 @@ module.exports.createEvent = function(eventSettings, user) {
     newEvent.organizer.name = user.username;
     return newEvent.save()
     .then(function(event) {
+        //TODO: Remove promise array and simplify as needed
         var promises = [];
         promises.push(collectionCore.createSuperCollection(event));
-        promises.push(userListCore.createDefaultUserLists(event));
+        // promises.push(userListCore.createDefaultUserLists(event));
         return Q.all(promises)
         .then(function(results) {
             event.superCollection = results[0];
-            event.assignUserLists(results[1]);
+            // event.assignUserLists(results[1]);
         })
         .then(function() {
             return event.save();
@@ -67,6 +68,6 @@ module.exports.getEventByURL = function(url) {
     .then(returnEventOrError);
 };
 
-module.exports.getEventIfAttendee = function(eventID, user) {
-
+module.exports.getEventIfAttendee = function(user, eventID) {
+    
 };

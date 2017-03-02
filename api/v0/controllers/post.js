@@ -42,10 +42,10 @@ module.exports.createPost = function(req, res) {
                 return post;
             });
         });
-    })
+    })    //Create post and add to collections
     .then(function(post) {
         res.status(201).json(post);
-    })
+    })     //Send post creation success
     .catch(function(error) {
         var err;
         try {
