@@ -2,6 +2,7 @@ var postCore = require('../../../core/post');
 // var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
 var collectionCore = require('../../../core/collection');
+var eventMembershipCore = require('../../../core/eventMembership');
 var postRequestSchema = require('../requests/post');
 
 // /post/
@@ -14,7 +15,7 @@ module.exports.createPost = function(req, res) {
             result.throw();
         }
         return;
-    })
+    })   //Request Validation
     .then(function() {
         if(req.user.privileges.createPost) {
             return;
@@ -22,13 +23,13 @@ module.exports.createPost = function(req, res) {
         else {
             throw new Error("Bad privileges");
         }
-    })
+    })         //Check user privileges
     .then(function() {
-        return userListCore.isUserAttendee(req.user, req.event)
+        return eventMembershipCore.isUserAttendee(req.user, req.event)
         .then(function() {
             return req.event; //TODO: return only if user has post privileges within the event
         });
-    })
+    })         //Check if user is attendee
     .then(function(event) {
         var postSettings = {
             title: req.body.post.title,
