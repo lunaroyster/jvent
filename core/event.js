@@ -21,13 +21,16 @@ module.exports.createEvent = function(eventSettings, user) {
     if(eventSettings.ingress=="link") {
         newEvent.joinUrl = urlCore.generateRandomUrl(11);
     }
-    newEvent.organizer.user = user._id;
-    newEvent.organizer.name = user.username;
+    newEvent.organizer = {
+        user: user._id,
+        name: user.username
+    };
     return newEvent.save()
     .then(function(event) {
         //TODO: Remove promise array and simplify as needed
         var promises = [];
         promises.push(collectionCore.createSuperCollection(event));
+        promises.push(eventMembershipCore.addModerator(user, event));
         // promises.push(userListCore.createDefaultUserLists(event));
         return Q.all(promises)
         .then(function(results) {

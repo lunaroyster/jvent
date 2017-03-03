@@ -39,7 +39,7 @@ module.exports.createEvent = function(req, res) {
     })         //Create event (using authenticated user)
     .then(function(event) {
         return event;
-    })    
+    })
     .then(function(event) {
         var state = {
             status: "Created",
@@ -97,13 +97,58 @@ module.exports.deleteEvent = function(req, res) {
     res.send();
 };
 
+// /event/:eventID/users
+module.exports.getEventAttendees = function(req, res) {
+    return eventMembershipCore.getEventAttendees(req.event)
+    .then(function(eventAttendeeList) {
+        res.status(200).json(eventAttendeeList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+
+module.exports.getEventViewers = function(req, res) {
+    return eventMembershipCore.getEventViewers(req.event)
+    .then(function(eventViewerList) {
+        res.status(200).json(eventViewerList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+
+module.exports.getEventInvitees = function(req, res) {
+    return eventMembershipCore.getEventInvitees(req.event)
+    .then(function(eventInviteeList) {
+        res.status(200).json(eventInviteeList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+
+module.exports.getEventModerators = function(req, res) {
+    return eventMembershipCore.getEventModerators(req.event)
+    .then(function(eventModeratorList) {
+        res.status(200).json(eventModeratorList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+
 // /event/:eventID/join
 
 module.exports.joinEvent = function(req, res) {
     Q.fcall(function() {
         var ingress = req.event.ingress;
         if(ingress=="everyone") {
-            return; 
+            return;
         }
         else if(ingress=="link") {
             if(req.query.c==event.joinUrl) {
@@ -159,5 +204,15 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         // console.log(error);
         next(error);
     });
-      
+
+};
+
+module.exports.moderatorOnly = function(req, res, next) {
+    eventMembershipCore.isUserModerator(req.user, req.event)
+    .then(function(result) {
+        if(!result) {
+            return next(badAuthError);
+        }
+        return next();
+    });
 };

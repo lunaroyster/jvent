@@ -26,8 +26,8 @@ module.exports.addAttendee = function(user, event) {
 module.exports.addViewer = function(user, event) {
     return addAsRole(user, event, "viewer");
 }
-//For symmetry
 module.exports.addInvitee = function(user, event) {
+    //module.exports.invite breaks symmetry
     return addAsRole(user, event, "invitee");
 }
 module.exports.addModerator = function(user, event) {
@@ -45,51 +45,53 @@ var isUserRole = function(user, event, role) {
         }
     });
 };
-
 module.exports.isUserAttendee = function(user, event) {
     return isUserRole(user, event, "attendee");
 };
-
 module.exports.isUserViewer = function(user, event) {
     return isUserRole(user, event, "viewer");
 };
-
 module.exports.isUserInvitee = function(user, event) {
     return isUserRole(user, event, "invitee");
 };
-
 module.exports.isUserModerator = function(user, event) {
     return isUserRole(user, event, "moderator");
 };
 
 var getEventMemberships = function(event, role) {
-    return EventMembership.find({role: role, event: event._id})
-}
+    return EventMembership
+    .find({role: role, event: event._id})
+    .populate('user', 'username')
+    .select('user -_id');
+};
+module.exports.getEventAttendees = function(event) {
+    return getEventMemberships(event, "attendee");
+};
+module.exports.getEventViewers = function(event) {
+    return getEventMemberships(event, "viewer");
+};
+module.exports.getEventInvitees = function(event) {
+    return getEventMemberships(event, "invitee");
+};
+module.exports.getEventModerators = function(event) {
+    return getEventMemberships(event, "moderator");
+};
 
 var getUserMemberships = function(user, role) {
-    return EventMembership.find({role: role, user: user._id})
-}
-
-var compileMemberships = function(memberships) {
-
-}
-
-module.exports.getEventAttendees = function(event) {
-    return getEventMemberships(event, "attendee")
-    .then(compileMemberships);
+    return EventMembership
+    .find({role: role, user: user._id})
+    .populate('event', 'name')
+    .select('event -_id');
 };
-
-module.exports.getEventViewers = function(event) {
-    return getEventMemberships(event, "viewer")
-    .then(compileMemberships);
+module.exports.getAttendingEvents = function(user) {
+    return getUserMemberships(user, "attendee");
 };
-
-module.exports.getEventInvitees = function(event) {
-    return getEventMemberships(event, "invitee")
-    .then(compileMemberships);
+module.exports.getViewingEvents = function(user) {
+    return getUserMemberships(user, "viewer");
 };
-
-module.exports.getEventModerators = function(event) {
-    return getEventMemberships(event, "moderator")
-    .then(compileMemberships);
+module.exports.getInvitedEvents = function(user) {
+    return getUserMemberships(user, "invite");
+};
+module.exports.getModeratingEvents = function(user) {
+    return getUserMemberships(user, "moderator");
 };
