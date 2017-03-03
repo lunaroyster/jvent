@@ -18,12 +18,12 @@ router.delete('/:eventURL', AuthOnly, eventController.appendEventIfVisible, even
 // /event/:eventURL/[function]
 var usersRouter = express.Router();
 
-usersRouter.get('/attending', AuthOnly, eventController.getEventAttendees);
-usersRouter.get('/viewing');
-usersRouter.get('/moderating');
-usersRouter.get('/invited');
+usersRouter.get('/attending', eventController.getEventAttendees);
+usersRouter.get('/viewing', eventController.getEventViewers);
+usersRouter.get('/invited', eventController.getEventInvitees);
+usersRouter.get('/moderating', eventController.getEventModerators);
 
-router.use('/:eventURL/users', eventController.appendEventIfVisible, usersRouter);
+router.use('/:eventURL/users', AuthOnly, eventController.appendEventIfVisible, usersRouter);
 router.patch('/:eventURL/join', AuthOnly, eventController.appendEventIfVisible, eventController.joinEvent);
 
 // /event/:eventURL/post
