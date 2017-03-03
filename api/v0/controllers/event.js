@@ -99,16 +99,7 @@ module.exports.deleteEvent = function(req, res) {
 
 // /event/:eventID/users
 module.exports.getEventAttendees = function(req, res) {
-    eventMembershipCore.isUserModerator(req.user, req.event)
-    .then(function(result) {
-        if(!result) {
-            throw badAuthError;
-        }
-        return;
-    })
-    .then(function() {
-        return eventMembershipCore.getEventAttendees(req.event);
-    })
+    return eventMembershipCore.getEventAttendees(req.event)
     .then(function(eventAttendeeList) {
         res.status(200).json(eventAttendeeList);
     })
@@ -119,16 +110,7 @@ module.exports.getEventAttendees = function(req, res) {
 };
 
 module.exports.getEventViewers = function(req, res) {
-    eventMembershipCore.isUserModerator(req.user, req.event)
-    .then(function(result) {
-        if(!result) {
-            throw badAuthError;
-        }
-        return;
-    })
-    .then(function() {
-        return eventMembershipCore.getEventViewers(req.event);
-    })
+    return eventMembershipCore.getEventViewers(req.event)
     .then(function(eventViewerList) {
         res.status(200).json(eventViewerList);
     })
@@ -139,16 +121,7 @@ module.exports.getEventViewers = function(req, res) {
 };
 
 module.exports.getEventInvitees = function(req, res) {
-    eventMembershipCore.isUserModerator(req.user, req.event)
-    .then(function(result) {
-        if(!result) {
-            throw badAuthError;
-        }
-        return;
-    })
-    .then(function() {
-        return eventMembershipCore.getEventInvitees(req.event);
-    })
+    return eventMembershipCore.getEventInvitees(req.event)
     .then(function(eventInviteeList) {
         res.status(200).json(eventInviteeList);
     })
@@ -159,16 +132,7 @@ module.exports.getEventInvitees = function(req, res) {
 };
 
 module.exports.getEventModerators = function(req, res) {
-    eventMembershipCore.isUserModerator(req.user, req.event)
-    .then(function(result) {
-        if(!result) {
-            throw badAuthError;
-        }
-        return;
-    })
-    .then(function() {
-        return eventMembershipCore.getEventModerators(req.event);
-    })
+    return eventMembershipCore.getEventModerators(req.event)
     .then(function(eventModeratorList) {
         res.status(200).json(eventModeratorList);
     })
