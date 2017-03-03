@@ -101,7 +101,7 @@ module.exports.deleteEvent = function(req, res) {
 module.exports.getEventAttendees = function(req, res) {
     eventMembershipCore.getEventAttendees(req.event)
     .then(function(eventAttendeeList) {
-        req.status(200).json(eventAttendeeList);
+        res.status(200).json(eventAttendeeList);
     });
 };
 // /event/:eventID/join

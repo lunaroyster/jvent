@@ -74,13 +74,8 @@ var getUserMemberships = function(user, role) {
     .select('event');
 };
 
-var compileMemberships = function(memberships) {
-
-}
-
 module.exports.getEventAttendees = function(event) {
     return getEventMemberships(event, "attendee")
-    .then(compileMemberships);
 };
 
 module.exports.getEventViewers = function(event) {

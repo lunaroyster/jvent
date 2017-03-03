@@ -23,7 +23,7 @@ usersRouter.get('/viewing');
 usersRouter.get('/moderating');
 usersRouter.get('/invited');
 
-router.use('/:eventURL/users', usersRouter);
+router.use('/:eventURL/users', eventController.appendEventIfVisible, usersRouter);
 router.patch('/:eventURL/join', AuthOnly, eventController.appendEventIfVisible, eventController.joinEvent);
 
 // /event/:eventURL/post
