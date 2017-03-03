@@ -2,8 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var eventMembershipSchema = new Schema({
-    user: { type: Schema.Types.ObjectId },
-    event: { type: Schema.Types.ObjectId },
+    user: { 
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    event: { 
+        type: Schema.Types.ObjectId,
+        ref: 'Event'
+    },
     role: String
 });
 
