@@ -242,3 +242,13 @@ module.exports.appendEventIfVisible = function(req, res, next) {
     });
 
 };
+
+module.exports.moderatorOnly = function(req, res, next) {
+    eventMembershipCore.isUserModerator(req.user, req.event)
+    .then(function(result) {
+        if(!result) {
+            return next(badAuthError);
+        }
+        return next();
+    });
+};
