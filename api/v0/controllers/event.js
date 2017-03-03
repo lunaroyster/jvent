@@ -99,9 +99,22 @@ module.exports.deleteEvent = function(req, res) {
 
 // /event/:eventID/users
 module.exports.getEventAttendees = function(req, res) {
-    eventMembershipCore.getEventAttendees(req.event)
+    eventMembershipCore.isUserModerator(req.user, req.event)
+    .then(function(result) {
+        if(!result) {
+            throw badAuthError;
+        }
+        return;
+    })
+    .then(function() {
+        return eventMembershipCore.getEventAttendees(req.event);
+    })
     .then(function(eventAttendeeList) {
         res.status(200).json(eventAttendeeList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
     });
 };
 // /event/:eventID/join
