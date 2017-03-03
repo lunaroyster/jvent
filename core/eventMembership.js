@@ -63,12 +63,16 @@ module.exports.isUserModerator = function(user, event) {
 };
 
 var getEventMemberships = function(event, role) {
-    return EventMembership.find({role: role, event: event._id})
-}
+    return EventMembership
+    .find({role: role, event: event._id})
+    .select('user');
+};
 
 var getUserMemberships = function(user, role) {
-    return EventMembership.find({role: role, user: user._id})
-}
+    return EventMembership
+    .find({role: role, user: user._id})
+    .select('event');
+};
 
 var compileMemberships = function(memberships) {
 
