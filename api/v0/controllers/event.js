@@ -117,6 +117,67 @@ module.exports.getEventAttendees = function(req, res) {
         res.status(error.status).json(error.message);
     });
 };
+
+module.exports.getEventViewers = function(req, res) {
+    eventMembershipCore.isUserModerator(req.user, req.event)
+    .then(function(result) {
+        if(!result) {
+            throw badAuthError;
+        }
+        return;
+    })
+    .then(function() {
+        return eventMembershipCore.getEventViewers(req.event);
+    })
+    .then(function(eventViewerList) {
+        res.status(200).json(eventViewerList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+
+module.exports.getEventInvitees = function(req, res) {
+    eventMembershipCore.isUserModerator(req.user, req.event)
+    .then(function(result) {
+        if(!result) {
+            throw badAuthError;
+        }
+        return;
+    })
+    .then(function() {
+        return eventMembershipCore.getEventInvitees(req.event);
+    })
+    .then(function(eventInviteeList) {
+        res.status(200).json(eventInviteeList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+
+module.exports.getEventModerators = function(req, res) {
+    eventMembershipCore.isUserModerator(req.user, req.event)
+    .then(function(result) {
+        if(!result) {
+            throw badAuthError;
+        }
+        return;
+    })
+    .then(function() {
+        return eventMembershipCore.getEventModerators(req.event);
+    })
+    .then(function(eventModeratorList) {
+        res.status(200).json(eventModeratorList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+
 // /event/:eventID/join
 
 module.exports.joinEvent = function(req, res) {
