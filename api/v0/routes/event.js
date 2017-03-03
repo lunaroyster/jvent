@@ -18,7 +18,7 @@ router.delete('/:eventURL', AuthOnly, eventController.appendEventIfVisible, even
 // /event/:eventURL/[function]
 var usersRouter = express.Router();
 
-usersRouter.get('/attending');
+usersRouter.get('/attending', AuthOnly, eventController.getEventAttendees);
 usersRouter.get('/viewing');
 usersRouter.get('/moderating');
 usersRouter.get('/invited');

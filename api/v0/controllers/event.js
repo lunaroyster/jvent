@@ -39,7 +39,7 @@ module.exports.createEvent = function(req, res) {
     })         //Create event (using authenticated user)
     .then(function(event) {
         return event;
-    })    
+    })
     .then(function(event) {
         var state = {
             status: "Created",
@@ -97,13 +97,20 @@ module.exports.deleteEvent = function(req, res) {
     res.send();
 };
 
+// /event/:eventID/users
+module.exports.getEventAttendees = function(req, res) {
+    eventMembershipCore.getEventAttendees(req.event)
+    .then(function(eventAttendeeList) {
+        req.status(200).json(eventAttendeeList);
+    });
+};
 // /event/:eventID/join
 
 module.exports.joinEvent = function(req, res) {
     Q.fcall(function() {
         var ingress = req.event.ingress;
         if(ingress=="everyone") {
-            return; 
+            return;
         }
         else if(ingress=="link") {
             if(req.query.c==event.joinUrl) {
@@ -159,5 +166,5 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         // console.log(error);
         next(error);
     });
-      
+
 };
