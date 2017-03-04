@@ -81,6 +81,9 @@ module.exports.getEvents = function(req, res) {
 
 // /event/:eventID
 
+var getEventAsModerator = function(req, res) {};
+var getEventAsRegular = function(req, res) {};
+
 module.exports.getEvent = function(req, res) {
     var responseObject = {};
     responseObject.event = req.event;

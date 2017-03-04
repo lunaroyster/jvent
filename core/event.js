@@ -63,13 +63,13 @@ var returnEventOrError = function(event) {
 
 module.exports.getEventByID = function(eventID) {
     return Event.findOne({_id: eventID})
-    .select('-_id name byline description url organizer.name ingress timeOfCreation')
+    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation')
     .then(returnEventOrError);
 };
 
 module.exports.getEventByURL = function(url) {
     return Event.findOne({url: url})
-    .select('-_id name byline description url organizer.name ingress timeOfCreation')
+    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation')
     .then(returnEventOrError);
 };
 
