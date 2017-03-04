@@ -81,13 +81,39 @@ module.exports.getEvents = function(req, res) {
 
 // /event/:eventID
 
-var getEventAsModerator = function(req, res) {};
-var getEventAsRegular = function(req, res) {};
+var getEventAsModerator = function(req, res) {
+    eventCore.getEventByURLAsModerator(req.params.eventURL)
+    .then(function(event) {
+        return eventMembershipCore.isUserModerator(req.user, event)
+        .then(function(result) {
+            console.log(result)
+            if(!result) throw Error();
+            return event;
+        });
+    })
+    .then(function(event) {
+        res.status(200).json({event: event});
+    })
+    .catch(function(error) {
+        res.status(400).json(error);
+    });
+};
+var getEventAsRegular = function(req, res) {
+    
+};
 
 module.exports.getEvent = function(req, res) {
-    var responseObject = {};
-    responseObject.event = req.event;
-    res.status(200).json(responseObject);
+    // var responseObject = {};
+    // responseObject.event = req.event;
+    // res.status(200).json(responseObject);
+    if(req.header('moderator') == 1) {
+        if(req.user) {
+            getEventAsModerator(req, res);
+        }
+    }
+    else {
+        getEventAsRegular(req, res);
+    }
 };
 
 module.exports.updateEvent = function(req, res) {

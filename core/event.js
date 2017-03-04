@@ -75,7 +75,7 @@ module.exports.getEventByURL = function(url) {
 
 module.exports.getEventByURLAsModerator = function(url) {
     return Event.findOne({url: url})
-    .select('-_id name byline description url organizer.name ingress timeOfCreation roles')
+    .select('name byline description url organizer.name ingress visibility timeOfCreation roles')
     .then(returnEventOrError);
 };
 
