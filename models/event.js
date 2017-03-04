@@ -72,4 +72,15 @@ eventSchema.methods.assignUserLists = function(userLists) {
     if (userLists.invite) { this.userLists.invite.list = userLists.invite; }
 };
 
+eventSchema.methods.assignRoles = function() {
+    var roles = ["attendee", "moderator"];
+    if(this.ingress=="invite") {
+        roles.push("invitee");
+    }
+    if(this.visibility=="private") {
+        roles.push("viewer");
+    }
+    this.roles = roles;
+};
+
 mongoose.model('Event', eventSchema);
