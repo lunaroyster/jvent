@@ -101,14 +101,17 @@ var getEventAsModerator = function(req, res) {
 var getEventAsRegular = function(req, res) {
     eventCore.getEventByURL(req.params.eventURL)
     .then(function(event) {
-        
+        return returnEventIfVisible(req.user, event);
     })
+    .then(function(event) {
+        res.status(200).json({event: event});
+    })
+    .catch(function(error) {
+        res.status(400).json(error);
+    });
 };
 
 module.exports.getEvent = function(req, res) {
-    // var responseObject = {};
-    // responseObject.event = req.event;
-    // res.status(200).json(responseObject);
     if(req.header('moderator') == 1) {
         if(req.user) {
             getEventAsModerator(req, res);
@@ -242,7 +245,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
 
 };
 
-module.exports.returnEventIfVisible = function(user, event) {
+var returnEventIfVisible = function(user, event) {
     Q.fcall(function() {
         if(event.visibility=="public") {
             return event;
