@@ -60,16 +60,22 @@ var returnEventOrError = function(event) {
 };
 
 module.exports.getEventByID = function(eventID) {
-    var eventQuery = Event.findOne({_id: eventID});
-    return eventQuery.exec()
+    return Event.findOne({_id: eventID})
+    .select('-_id name byline description url organizer.name ingress timeOfCreation')
     .then(returnEventOrError);
 };
 
 module.exports.getEventByURL = function(url) {
-    var eventQuery = Event.findOne({url: url});
-    return eventQuery.exec()
+    return Event.findOne({url: url})
+    .select('-_id name byline description url organizer.name ingress timeOfCreation')
     .then(returnEventOrError);
 };
+
+module.exports.getEventByURLAsModerator = function(url) {
+    return Event.findOne({url: url})
+    // .select('')
+    .then(returnEventOrError);
+}
 
 module.exports.getEventIfAttendee = function(user, eventID) {
     
