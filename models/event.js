@@ -41,6 +41,7 @@ var eventSchema = new Schema({
             list: { type: Schema.Types.ObjectId }
         }
     },
+    roles: [String],
     timeOfCreation: Date,
     organizer: {
         user: {
