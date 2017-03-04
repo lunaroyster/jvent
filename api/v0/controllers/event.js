@@ -242,6 +242,32 @@ module.exports.appendEventIfVisible = function(req, res, next) {
 
 };
 
+module.exports.returnEventIfVisible = function(user, event) {
+    Q.fcall(function() {
+        if(event.visibility=="public") {
+            return event;
+        }
+        else if(event.visibility=="unlisted") {
+            if(user) {
+                return event;
+            }
+            else {
+                throw badAuthError;
+            }
+        }
+        else if(event.visibility=="private") {
+            return eventMembershipCore.isUserViewer(user, event)
+            .then(function(result) {
+                if(!result) throw badAuthError;
+                return event;
+            })
+            .catch(function(error) {
+                throw badAuthError;
+            });
+        }
+    });
+};
+
 module.exports.moderatorOnly = function(req, res, next) {
     eventMembershipCore.isUserModerator(req.user, req.event)
     .then(function(result) {
