@@ -99,7 +99,10 @@ var getEventAsModerator = function(req, res) {
     });
 };
 var getEventAsRegular = function(req, res) {
-    
+    eventCore.getEventByURL(req.params.eventURL)
+    .then(function(event) {
+        
+    })
 };
 
 module.exports.getEvent = function(req, res) {
@@ -207,13 +210,11 @@ module.exports.appendEventIfVisible = function(req, res, next) {
     eventCore.getEventByURL(req.params.eventURL)
     .then(function(event) {
         if(event.visibility=="public") {
-            req.event = event;
-            return;
+            return event;
         }
         else if(event.visibility=="unlisted") {
             if(req.user) {
-                req.event = event;
-                return;
+                return event;
             }
             else {
                 throw badAuthError;
@@ -221,12 +222,17 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         }
         else if(event.visibility=="private") {
             return eventMembershipCore.isUserViewer(req.user, event)
+            .then(function(result) {
+                if(!result) throw badAuthError;
+                return event;
+            })
             .catch(function(error) {
                 throw badAuthError;
             });
         }
     })
-    .then(function() {
+    .then(function(event) {
+        req.event = event;
         next();
     })
     .catch(function(error) {

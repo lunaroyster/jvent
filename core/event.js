@@ -82,3 +82,4 @@ module.exports.getEventByURLAsModerator = function(url) {
 module.exports.getEventIfAttendee = function(user, eventID) {
     
 };
+
