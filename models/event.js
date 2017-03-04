@@ -83,4 +83,7 @@ eventSchema.methods.assignRoles = function() {
     this.roles = roles;
 };
 
+eventSchema.pre('save', function(next) {
+   this.assignRoles(); 
+});
 mongoose.model('Event', eventSchema);
