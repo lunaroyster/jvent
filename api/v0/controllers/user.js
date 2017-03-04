@@ -1,5 +1,6 @@
 var Q = require('q');
 var userCore = require('../../../core/user');
+var eventMembershipCore = require('../../../core/eventMembership');
 
 module.exports.authenticate = function(req, res) {
     userCore.generateToken(req.user)
@@ -52,6 +53,47 @@ module.exports.changePassword = function(req, res) {
     .fail(function(error) {
         res.status(400);
         res.json(error);
+    });
+};
+
+module.exports.getAttendedEvents = function(req, res) {
+    return eventMembershipCore.getAttendedEvents(req.user)
+    .then(function(attendedEventsList) {
+        res.status(200).json(attendedEventsList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+module.exports.getVisibleEvents = function(req, res) {
+    return eventMembershipCore.getVisibleEvents(req.user)
+    .then(function(visibleEventsList) {
+        res.status(200).json(visibleEventsList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+module.exports.getInvitedEvents = function(req, res) {
+    return eventMembershipCore.getInvitedEvents(req.user)
+    .then(function(invitedEventsList) {
+        res.status(200).json(invitedEventsList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
+    });
+};
+module.exports.getModeratedEvents = function(req, res) {
+    return eventMembershipCore.getModeratedEvents(req.user)
+    .then(function(moderatedEventsList) {
+        res.status(200).json(moderatedEventsList);
+    })
+    .catch(function(error) {
+        console.log(error);
+        res.status(error.status).json(error.message);
     });
 };
 

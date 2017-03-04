@@ -41,6 +41,7 @@ var eventSchema = new Schema({
             list: { type: Schema.Types.ObjectId }
         }
     },
+    roles: [String],
     timeOfCreation: Date,
     organizer: {
         user: {
@@ -70,5 +71,21 @@ eventSchema.methods.assignUserLists = function(userLists) {
     if (userLists.viewer) { this.userLists.viewer.list = userLists.viewer; }
     if (userLists.invite) { this.userLists.invite.list = userLists.invite; }
 };
+
+eventSchema.methods.assignRoles = function() {
+    var roles = ["attendee", "moderator"];
+    if(this.ingress=="invite") {
+        roles.push("invitee");
+    }
+    if(this.visibility=="private") {
+        roles.push("viewer");
+    }
+    this.roles = roles;
+};
+
+eventSchema.pre('save', function(next) {
+   this.assignRoles();
+   next();
+});
 
 mongoose.model('Event', eventSchema);
