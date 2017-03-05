@@ -99,5 +99,11 @@ module.exports.getModeratedEvents = function(req, res) {
 
 // Wait, what's this for?
 module.exports.returnAuthenticatedUser = function(req, res) {
-    res.json(req.user);
+    var u = req.user;
+    var user = {
+        _id: u._id,
+        email: u.email,
+        username: u.username
+    };
+    res.status(200).json(user);
 };
