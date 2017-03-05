@@ -86,39 +86,55 @@ app.service('urlService', function() {
     this.api = function() {
         return(apiURL+apiVersion);
     };
+    
     this.event = function() {
         return(this.api() + 'event/');
     };
     this.eventURL = function(eventURL) {
         return(this.event() + eventURL + '/');
     };
-    this.joinEvent = function(eventURL) {
+    this.eventJoin = function(eventURL) {
         return(this.eventURL(eventURL) + 'join/');
     };
+    this.eventUsers = function(eventURL) {
+        return(this.eventURL(eventURL) + 'users/');
+    };
+    this.eventUsersRole = function(eventURL, role) {
+        return(this.eventUsers(eventURL) + role + '/');
+    };
+    
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
     };
     this.postID = function(eventURL, postID) {
         return(this.post(eventURL) + postID + '/');
     };
+    
     this.comment = function(eventURL, postID) {
         return(this.postID(eventURL, postID) + 'comment/');
     };
     this.commentID = function(eventURL, postID, commentID) {
         return(this.comment(eventURL, postID) + commentID + '/');
     };
+    
     this.user = function() {
         return(this.api() + 'user/');
     };
-    this.signUp = function() {
+    this.userEvents = function() {
+        return(this.user() + 'events/');
+    };
+    this.userEventsRole = function(role) {
+        return(this.userEvents() + role + '/');
+    };
+    this.userSignUp = function() {
         return(this.user() + 'signup/');
     };
-    this.authenticate = function() {
+    this.userAuthenticate = function() {
         return(this.user() + 'authenticate/');
     };
 });
 
-app.factory('authService', function($http, $q, urlService, $rootScope) {
+app.factory('userService', function($http, $q, urlService, $rootScope) {
     var obj = {};
     obj.authed = false;
     obj.authStore = null;
@@ -157,7 +173,7 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     var getTokenFromServer = function(creds) {
         var req = {
             method: 'POST',
-            url: urlService.authenticate(),
+            url: urlService.userAuthenticate(),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             data: 'email='+creds.email+'&password='+creds.password,
         };
@@ -204,7 +220,7 @@ app.factory('authService', function($http, $q, urlService, $rootScope) {
     obj.register = function(email, username, password) {
         var req = {
             method: 'POST',
-            url: urlService.signUp(),
+            url: urlService.userSignUp(),
             data: {
                 email: email,
                 username: username,
@@ -270,7 +286,7 @@ app.service('jventService', function($http, $q, urlService) {
         });
     };
     this.joinEvent = function(eventURL) {
-        var url = urlService.joinEvent(eventURL);
+        var url = urlService.eventJoin(eventURL);
         return $http.patch(url)
         .then(function(response) {
             //Response
@@ -418,11 +434,11 @@ app.factory('contextPost', function() {
 });
 
 // New Providers
-app.factory('newEventService', function(authService, jventService) {
+app.factory('newEventService', function(userService, jventService) {
     var newEventService = {};
     newEventService.event = {};
     newEventService.event.organizer = {
-        name: authService.user()
+        name: userService.user()
     }; //Is this even required?
     newEventService.publish = function() {
         return jventService.createEvent(newEventService.event)
@@ -435,7 +451,7 @@ app.factory('newEventService', function(authService, jventService) {
     return(newEventService);    
 });
 
-app.factory('newPostService', function(authService) {
+app.factory('newPostService', function(userService) {
    var post;
    post.publish = function() {
         //Publish post using jvent service
@@ -446,12 +462,12 @@ app.factory('newPostService', function(authService) {
 
 // Controllers
 
-app.controller('homeController', function($scope, $location, authService, $rootScope) {
+app.controller('homeController', function($scope, $location, userService, $rootScope) {
     $scope.homeClick = function() {
         $location.path('/');
     };
     $scope.createEventClick = function() {
-        if(authService.authed) {
+        if(userService.authed) {
             $location.path('/event/new');
         }
         else {
@@ -462,7 +478,7 @@ app.controller('homeController', function($scope, $location, authService, $rootS
         $location.path('/login');
     };
     $scope.logoutClick = function() {
-        if(authService.authed) {
+        if(userService.authed) {
             $location.path('/logout');
         }
     };
@@ -475,8 +491,8 @@ app.controller('homeController', function($scope, $location, authService, $rootS
     $scope.signupClick = function() {
         $location.path('/signup');
     };
-    $scope.authService = authService;
-    // setInterval(function() {console.log(authService)}, 1000);
+    $scope.userService = userService;
+    // setInterval(function() {console.log(userService)}, 1000);
 });
 
 //Event
@@ -490,7 +506,7 @@ app.controller('eventListCtrl', function($scope, $location, eventListService) {
     };
 });
 
-app.controller('newEventCtrl', function($scope, $location, authService, newEventService) {
+app.controller('newEventCtrl', function($scope, $location, userService, newEventService) {
     $scope.newEvent = newEventService.event;
     $scope.newEventEnabled = true;
     $scope.createEvent = function() {
@@ -583,8 +599,8 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 });
 
 //User
-app.controller('signUpCtrl', function($scope, $location, authService) {
-    if(authService.authed) {
+app.controller('signUpCtrl', function($scope, $location, userService) {
+    if(userService.authed) {
         $location.path('/');
     }
     $scope.email;
@@ -598,7 +614,7 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
     };
     $scope.createAccount = function () {
         if($scope.validPassword() && $scope.email && $scope.username) {
-            authService.register($scope.email, $scope.username, $scope.password)
+            userService.register($scope.email, $scope.username, $scope.password)
             .then(function(status) {
                 if(status.success) {
                     $location.path('/login');
@@ -608,7 +624,7 @@ app.controller('signUpCtrl', function($scope, $location, authService) {
     };
 });
 
-app.controller('loginCtrl', function($scope, $location, authService) {
+app.controller('loginCtrl', function($scope, $location, userService) {
     $scope.email;
     $scope.password;
     $scope.remainSignedIn = false;
@@ -620,7 +636,7 @@ app.controller('loginCtrl', function($scope, $location, authService) {
                 password: $scope.password
             };
             $scope.signInPending = true;
-            authService.login(creds, {remainSignedIn:$scope.remainSignedIn})
+            userService.login(creds, {remainSignedIn:$scope.remainSignedIn})
             .then(function(success) {
                 if (success) {
                     $location.path('/');
@@ -634,12 +650,12 @@ app.controller('loginCtrl', function($scope, $location, authService) {
     $scope.signUp = function() {
         $location.path('/signup');
     };
-    console.log(authService);
+    console.log(userService);
 });
 
-app.controller('logoutCtrl', function($scope, $location, authService) {
-    if(authService.isAuthed) {
-        authService.logout();
+app.controller('logoutCtrl', function($scope, $location, userService) {
+    if(userService.isAuthed) {
+        userService.logout();
         $location.path('/login');
     }
 });
