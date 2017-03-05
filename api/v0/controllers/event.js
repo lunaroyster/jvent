@@ -246,7 +246,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
 };
 
 var returnEventIfVisible = function(user, event) {
-    Q.fcall(function() {
+    return Q.fcall(function() {
         if(event.visibility=="public") {
             return event;
         }

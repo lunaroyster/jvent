@@ -12,27 +12,27 @@ var addAsRole = function(user, event, role) {
                 event: event._id,
                 role: role
             });
-            return newEventMembership.save()
+            return newEventMembership.save();
         }
         else {
             //TODO: Complete error with status and stuff.
-            throw new Error("")
+            throw new Error("");
         }
     });
 };
 module.exports.addAttendee = function(user, event) {
     return addAsRole(user, event, "attendee");
-}
+};
 module.exports.addViewer = function(user, event) {
     return addAsRole(user, event, "viewer");
-}
+};
 module.exports.addInvitee = function(user, event) {
     //module.exports.invite breaks symmetry
     return addAsRole(user, event, "invitee");
-}
+};
 module.exports.addModerator = function(user, event) {
     return addAsRole(user, event, "moderator");
-}
+};
 
 var isUserRole = function(user, event, role) {
     return EventMembership.findOne({user: user._id, event: event._id, role: role})
