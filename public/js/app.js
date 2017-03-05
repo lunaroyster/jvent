@@ -331,7 +331,13 @@ app.factory('eventListService', function(jventService, $q) {
     return eventListService;
 });
 
-app.factory('userListService', function(jventService, $q) {
+app.factory('eventMembershipService', function(userService, jventService) {
+    var eventMembershipService = {};
+    
+    return eventMembershipService;
+});
+
+app.factory('userListService', function(jventService, contextEvent, $q) {
     var userListService = {};
     var lastQuery = {};
     var lastTime;
