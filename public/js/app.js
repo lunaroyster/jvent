@@ -86,34 +86,44 @@ app.service('urlService', function() {
     this.api = function() {
         return(apiURL+apiVersion);
     };
+    
     this.event = function() {
         return(this.api() + 'event/');
     };
     this.eventURL = function(eventURL) {
         return(this.event() + eventURL + '/');
     };
-    this.joinEvent = function(eventURL) {
+    this.eventJoin = function(eventURL) {
         return(this.eventURL(eventURL) + 'join/');
     };
+    
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
     };
     this.postID = function(eventURL, postID) {
         return(this.post(eventURL) + postID + '/');
     };
+    
     this.comment = function(eventURL, postID) {
         return(this.postID(eventURL, postID) + 'comment/');
     };
     this.commentID = function(eventURL, postID, commentID) {
         return(this.comment(eventURL, postID) + commentID + '/');
     };
+    
     this.user = function() {
         return(this.api() + 'user/');
     };
-    this.signUp = function() {
+    this.userEvents = function() {
+        return(this.user() + 'events/');
+    };
+    this.userEventsRole = function(role) {
+        return(this.userEvents() + role + '/');
+    };
+    this.userSignUp = function() {
         return(this.user() + 'signup/');
     };
-    this.authenticate = function() {
+    this.userAuthenticate = function() {
         return(this.user() + 'authenticate/');
     };
 });
@@ -157,7 +167,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
     var getTokenFromServer = function(creds) {
         var req = {
             method: 'POST',
-            url: urlService.authenticate(),
+            url: urlService.userAuthenticate(),
             headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             data: 'email='+creds.email+'&password='+creds.password,
         };
@@ -204,7 +214,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
     obj.register = function(email, username, password) {
         var req = {
             method: 'POST',
-            url: urlService.signUp(),
+            url: urlService.userSignUp(),
             data: {
                 email: email,
                 username: username,
@@ -270,7 +280,7 @@ app.service('jventService', function($http, $q, urlService) {
         });
     };
     this.joinEvent = function(eventURL) {
-        var url = urlService.joinEvent(eventURL);
+        var url = urlService.eventJoin(eventURL);
         return $http.patch(url)
         .then(function(response) {
             //Response
