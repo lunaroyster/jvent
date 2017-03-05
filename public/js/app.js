@@ -96,6 +96,12 @@ app.service('urlService', function() {
     this.eventJoin = function(eventURL) {
         return(this.eventURL(eventURL) + 'join/');
     };
+    this.eventUsers = function(eventURL) {
+        return(this.eventURL(eventURL) + 'users/');
+    };
+    this.eventUsersRole = function(eventURL, role) {
+        return(this.eventUsers(eventURL) + role + '/');
+    };
     
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
