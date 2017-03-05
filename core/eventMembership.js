@@ -83,15 +83,15 @@ var getUserMemberships = function(user, role) {
     .populate('event', 'name')
     .select('event -_id');
 };
-module.exports.getAttendingEvents = function(user) {
+module.exports.getAttendedEvents = function(user) {
     return getUserMemberships(user, "attendee");
 };
-module.exports.getViewingEvents = function(user) {
+module.exports.getVisibleEvents = function(user) {
     return getUserMemberships(user, "viewer");
 };
 module.exports.getInvitedEvents = function(user) {
     return getUserMemberships(user, "invite");
 };
-module.exports.getModeratingEvents = function(user) {
+module.exports.getModeratedEvents = function(user) {
     return getUserMemberships(user, "moderator");
 };

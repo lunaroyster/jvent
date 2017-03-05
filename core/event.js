@@ -46,7 +46,9 @@ module.exports.createEvent = function(eventSettings, user) {
 
 module.exports.getPublicEvents = function() {
     // TODO: query to select events based on time/location/rating/uploader etc
-    var eventQuery = Event.find({visibility: "public"}).select('-_id name description byline url organizer.name ingress');
+    var eventQuery = Event
+    .find({visibility: "public"})
+    .select('-_id name description byline url organizer.name ingress');
     return eventQuery.exec();
 };
 
@@ -60,17 +62,24 @@ var returnEventOrError = function(event) {
 };
 
 module.exports.getEventByID = function(eventID) {
-    var eventQuery = Event.findOne({_id: eventID});
-    return eventQuery.exec()
+    return Event.findOne({_id: eventID})
+    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation')
     .then(returnEventOrError);
 };
 
 module.exports.getEventByURL = function(url) {
-    var eventQuery = Event.findOne({url: url});
-    return eventQuery.exec()
+    return Event.findOne({url: url})
+    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation')
+    .then(returnEventOrError);
+};
+
+module.exports.getEventByURLAsModerator = function(url) {
+    return Event.findOne({url: url})
+    .select('name byline description url organizer.name ingress visibility timeOfCreation roles')
     .then(returnEventOrError);
 };
 
 module.exports.getEventIfAttendee = function(user, eventID) {
     
 };
+

@@ -81,10 +81,45 @@ module.exports.getEvents = function(req, res) {
 
 // /event/:eventID
 
+var getEventAsModerator = function(req, res) {
+    eventCore.getEventByURLAsModerator(req.params.eventURL)
+    .then(function(event) {
+        return eventMembershipCore.isUserModerator(req.user, event)
+        .then(function(result) {
+            console.log(result)
+            if(!result) throw Error();
+            return event;
+        });
+    })
+    .then(function(event) {
+        res.status(200).json({event: event});
+    })
+    .catch(function(error) {
+        res.status(400).json(error);
+    });
+};
+var getEventAsRegular = function(req, res) {
+    eventCore.getEventByURL(req.params.eventURL)
+    .then(function(event) {
+        return returnEventIfVisible(req.user, event);
+    })
+    .then(function(event) {
+        res.status(200).json({event: event});
+    })
+    .catch(function(error) {
+        res.status(400).json(error);
+    });
+};
+
 module.exports.getEvent = function(req, res) {
-    var responseObject = {};
-    responseObject.event = req.event;
-    res.status(200).json(responseObject);
+    if(req.header('moderator') == 1) {
+        if(req.user) {
+            getEventAsModerator(req, res);
+        }
+    }
+    else {
+        getEventAsRegular(req, res);
+    }
 };
 
 module.exports.updateEvent = function(req, res) {
@@ -178,13 +213,11 @@ module.exports.appendEventIfVisible = function(req, res, next) {
     eventCore.getEventByURL(req.params.eventURL)
     .then(function(event) {
         if(event.visibility=="public") {
-            req.event = event;
-            return;
+            return event;
         }
         else if(event.visibility=="unlisted") {
             if(req.user) {
-                req.event = event;
-                return;
+                return event;
             }
             else {
                 throw badAuthError;
@@ -192,12 +225,17 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         }
         else if(event.visibility=="private") {
             return eventMembershipCore.isUserViewer(req.user, event)
+            .then(function(result) {
+                if(!result) throw badAuthError;
+                return event;
+            })
             .catch(function(error) {
                 throw badAuthError;
             });
         }
     })
-    .then(function() {
+    .then(function(event) {
+        req.event = event;
         next();
     })
     .catch(function(error) {
@@ -205,6 +243,32 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         next(error);
     });
 
+};
+
+var returnEventIfVisible = function(user, event) {
+    Q.fcall(function() {
+        if(event.visibility=="public") {
+            return event;
+        }
+        else if(event.visibility=="unlisted") {
+            if(user) {
+                return event;
+            }
+            else {
+                throw badAuthError;
+            }
+        }
+        else if(event.visibility=="private") {
+            return eventMembershipCore.isUserViewer(user, event)
+            .then(function(result) {
+                if(!result) throw badAuthError;
+                return event;
+            })
+            .catch(function(error) {
+                throw badAuthError;
+            });
+        }
+    });
 };
 
 module.exports.moderatorOnly = function(req, res, next) {
