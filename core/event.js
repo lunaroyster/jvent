@@ -69,7 +69,7 @@ module.exports.getEventByID = function(eventID) {
 
 module.exports.getEventByURL = function(url) {
     return Event.findOne({url: url})
-    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation')
+    .select('name byline description url organizer.name ingress visibility timeOfCreation')
     .then(returnEventOrError);
 };
 

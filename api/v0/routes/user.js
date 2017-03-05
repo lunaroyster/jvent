@@ -11,12 +11,13 @@ router.post('/authenticate', authController.localAuth, userController.authentica
 router.post('/signup', userController.signup);
 router.get('/', AuthOnly, userController.returnAuthenticatedUser);
 router.get('/me', AuthOnly, userController.returnAuthenticatedUser);
-router.use('/events', AuthOnly, eventsRouter);
 
 var eventsRouter = express.Router();
 eventsRouter.get('/viewing', userController.getVisibleEvents);
 eventsRouter.get('/attending', userController.getAttendedEvents);
 eventsRouter.get('/invited', userController.getInvitedEvents);
 eventsRouter.get('/moderating', userController.getModeratedEvents);
+
+router.use('/events', AuthOnly, eventsRouter);
 
 module.exports = router;

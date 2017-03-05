@@ -16,8 +16,8 @@ router.patch('/:eventURL', AuthOnly, eventController.appendEventIfVisible, event
 router.delete('/:eventURL', AuthOnly, eventController.appendEventIfVisible, eventController.deleteEvent);
 
 // /event/:eventURL/[function]
-var usersRouter = express.Router();
 
+var usersRouter = express.Router();
 usersRouter.get('/attending', eventController.getEventAttendees);
 usersRouter.get('/viewing', eventController.getEventViewers);
 usersRouter.get('/invited', eventController.getEventInvitees);
