@@ -1,4 +1,5 @@
 var Q = require('q');
+var _ = require('underscore')._;
 var userCore = require('../../../core/user');
 var eventMembershipCore = require('../../../core/eventMembership');
 
@@ -99,11 +100,6 @@ module.exports.getModeratedEvents = function(req, res) {
 
 // Wait, what's this for?
 module.exports.returnAuthenticatedUser = function(req, res) {
-    var u = req.user;
-    var user = {
-        _id: u._id,
-        email: u.email,
-        username: u.username
-    };
+    var user = _.pick(req.user, '_id', 'email', 'username');
     res.status(200).json(user);
 };
