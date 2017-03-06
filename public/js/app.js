@@ -242,22 +242,17 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
 });
 
 app.service('jventService', function($http, $q, urlService) {
-    var events = [];
-    var event = {};
     this.getEvents = function() {
         // $http.get('debugjson/events.json').then(function (data) {
         return $http.get(urlService.event())
         .then(function (data) {
-            var eventList = data.data.events;
-            events = eventList;
-            return eventList;
+            return data.data.events;
         });
     };
     this.getEvent = function(eventURL) {
         return $http.get(urlService.eventURL(eventURL))
         .then(function (data) {
-            event = data.data.event;
-            return event;
+            return data.data.event;
         });
     };
     this.createPost = function(post, eventURL) {
