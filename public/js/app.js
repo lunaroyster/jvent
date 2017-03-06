@@ -333,6 +333,22 @@ app.factory('eventListService', function(jventService, $q) {
 
 app.factory('userMembershipService', function(contextEvent, userService) {
     var userMembershipService;
+    userMembershipService.userLists = [];
+    userMembershipService.roles = [];
+    userMembershipService.getUserList = function(role) {
+        //userMembershipService.userLists[i].role = role
+        //return
+    }
+    userMembershipService.initialize = function(eventURL) {
+        return contextEvent.getEvent(eventURL)
+        .then(function(event) {
+            //Check for moderator status.
+            return event;
+        })
+        .then(function(event) {
+            userMembershipService.roles = event.roles;
+        })
+    }
     return userMembershipService;
 });
 
