@@ -334,9 +334,10 @@ app.factory('eventListService', function(jventService, $q) {
 app.factory('userMembershipService', function(contextEvent, userService, $q, jventService) {
     var userMembershipService = {};
     userMembershipService.userLists = {};
+    userMembershipService.cacheTime = 60000;
     userMembershipService.roles = [];
     var updateRequired = function(userList) {
-        
+        return !((Date.now() - userList.lastTime) < userMembershipService.cacheTime);
     };
     var downloadAndCreateList = function(role) {
         return jventService.getUserList(contextEvent.event.url, role)
