@@ -5,88 +5,93 @@ var app = angular.module("jvent", ['ngRoute']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
-    
+
     .when('/', {
         controller  : 'eventListCtrl',
         controllerAs: 'eventsview',
         templateUrl : './views/event/list.html'
     })
-    
+
     .when('/events', {
         controller  : 'eventListCtrl',
         controllerAs: 'eventsview',
         templateUrl : './views/event/list.html'
     })
-    
+
     .when('/event/new', {
         controller  : 'newEventCtrl',
         controllerAs: 'newEventView',
         templateUrl : './views/event/new.html'
     })
-    
+
     .when('/event/:eventURL', {
         controller  : 'eventCtrl',
         controllerAs: 'eventview',
         templateUrl : './views/event/page.html'
     })
-    
+
     .when('/event/:eventURL/posts', {
         controller  : 'postListCtrl',
         controllerAs: 'postsview',
         templateUrl : './views/post/list.html'
     })
-    
+
     .when('/event/:eventURL/post/new', {
         controller  : 'newPostCtrl',
         controllerAs: 'newPostView',
         templateUrl : './views/post/new.html'
     })
-    
-    .when('/event/:eventURL/people', {
+
+    .when('/event/:eventURL/users', {
         controller  : 'userListCtrl',
         controllerAs: 'userlistview',
         templateUrl : './views/event/userlist.html'
     })
-    
+
     // .when('/event/:eventURL/post/:postURL', {
-        
+
     // })
-    
+    .when('/me/events', {
+        controller  : 'eventMembershipCtrl',
+        controllerAs: 'eventmembershipview',
+        templateUrl : './views/user/eventlist.html'
+    })
+
     .when('/login', {
         controller  : 'loginCtrl',
         controllerAs: 'loginview',
         templateUrl : './views/user/login.html'
     })
-    
+
     .when('/logout', {
         controller  : 'logoutCtrl',
         controllerAs: 'logoutscreen',
         templateUrl : './views/user/logout.html'
     })
-    
+
     .when('/signup', {
         controller  : 'signUpCtrl',
         controllerAs: 'signUpView',
         templateUrl : './views/user/signup.html'
     })
-    
+
     .otherwise({
         controller  : '404Ctrl',
         controllerAs: '404View',
         templateUrl : './views/misc/404.html'
     });
-    
+
 }]);
 
 // Providers
 app.service('urlService', function() {
     var apiURL = 'api/';
     var apiVersion = 'v0/';
-    
+
     this.api = function() {
         return(apiURL+apiVersion);
     };
-    
+
     this.event = function() {
         return(this.api() + 'event/');
     };
@@ -102,21 +107,21 @@ app.service('urlService', function() {
     this.eventUsersRole = function(eventURL, role) {
         return(this.eventUsers(eventURL) + role + '/');
     };
-    
+
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
     };
     this.postID = function(eventURL, postID) {
         return(this.post(eventURL) + postID + '/');
     };
-    
+
     this.comment = function(eventURL, postID) {
         return(this.postID(eventURL, postID) + 'comment/');
     };
     this.commentID = function(eventURL, postID, commentID) {
         return(this.comment(eventURL, postID) + commentID + '/');
     };
-    
+
     this.user = function() {
         return(this.api() + 'user/');
     };
@@ -139,7 +144,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
     obj.authed = false;
     obj.authStore = null;
     obj.timeCreated = Date.now();
-    
+
     var getAuthStore = function() {
         var storage = [window.localStorage, window.sessionStorage];
         for(var i = 0; i<storage.length;i++) {
@@ -179,7 +184,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
         };
         return $http(req)
         .then(function(data) {
-           return data.data.token; 
+           return data.data.token;
         });
     };
     var loadUser = function() {
@@ -193,7 +198,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
             console.log("Loaded User");
         }
     };
-    
+
     obj.isAuthed = function() {return(obj.authed)};
     obj.login = function(creds, options) {
         return getTokenFromServer(creds)
@@ -214,7 +219,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
         obj.authStore.removeItem("token");
         deleteAuthHeader();
         $rootScope.authed = false;
-        //Delete user data in root scope 
+        //Delete user data in root scope
         obj.authed = false;
     };
     obj.register = function(email, username, password) {
@@ -231,7 +236,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
         .then(function(data) {
             if(data.status == 201) {
                 return {success: true, err: null};
-            }  
+            }
         });
     };
     obj.user = function() {
@@ -242,22 +247,24 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
 });
 
 app.service('jventService', function($http, $q, urlService) {
-    var events = [];
-    var event = {};
     this.getEvents = function() {
         // $http.get('debugjson/events.json').then(function (data) {
         return $http.get(urlService.event())
         .then(function (data) {
-            var eventList = data.data.events;
-            events = eventList;
-            return eventList;
+            return data.data.events;
         });
     };
-    this.getEvent = function(eventURL) {
-        return $http.get(urlService.eventURL(eventURL))
+    this.getEvent = function(eventURL, moderator) {
+        var req = {
+            method: 'GET',
+            url: urlService.eventURL(eventURL),
+            headers: {
+                'Moderator': moderator
+            }
+        };
+        return $http(req)
         .then(function (data) {
-            event = data.data.event;
-            return event;
+            return data.data.event;
         });
     };
     this.createPost = function(post, eventURL) {
@@ -296,6 +303,13 @@ app.service('jventService', function($http, $q, urlService) {
             throw Error(); //TODO: Describe error
         });
     };
+    this.getUserList = function(eventURL, role) {
+        var url = urlService.eventUsersRole(eventURL, role);
+        return $http.get(url)
+        .then(function(response) {
+            return response.data;
+        });
+    };
 });
 
 // List Providers
@@ -331,7 +345,86 @@ app.factory('eventListService', function(jventService, $q) {
     return eventListService;
 });
 
-app.factory('userListService', function(jventService, $q) {
+app.factory('userMembershipService', function(contextEvent, userService, $q, jventService) {
+    var userMembershipService = {};
+    userMembershipService.userLists = {};
+    userMembershipService.cacheTime = 60000;
+    userMembershipService.roles = [];
+    var updateRequired = function(userList) {
+        return !((Date.now() - userList.lastTime) < userMembershipService.cacheTime);
+    };
+    var downloadAndCreateList = function(role) {
+        return jventService.getUserList(contextEvent.event.url, role)
+        .then(function(list) {
+            var userList = {
+                list: list,
+                role: role,
+                lastTime: Date.now(),
+                //lastQuery: query
+            };
+            return userList;
+        });
+    };
+    userMembershipService.getUserList = function(role) {
+        $q(function(resolve, reject) {
+            var userList = userMembershipService.userLists[role];
+            if(userList && !updateRequired(userList)) {
+                resolve(userList);
+            }
+            else {
+                downloadAndCreateList(role)
+                .then(function(uL) {
+                    resolve(uL);
+                });
+            }
+        })
+        .then(function(userList) {
+            userMembershipService.userLists[role] = userList;
+        });
+    };
+    userMembershipService.initialize = function(eventURL) {
+        return contextEvent.getEvent(eventURL)
+        .then(function(event) {
+            //Check for moderator status.
+            return event;
+        })
+        .then(function(event) {
+            userMembershipService.roles = event.roles;
+        })
+    }
+    return userMembershipService;
+});
+
+app.factory('eventMembershipService', function(userService, jventService, $q) {
+    var eventMembershipService = {};
+    eventMembershipService.eventLists = {};
+    eventMembershipService.cacheTime = 60000;
+    eventMembershipService.roles = [];
+    var updateRequired = function(eventList) {};
+    var downloadAndCreateList = function(role) {
+        
+    };
+    eventMembershipService.getEventList = function(role) {
+        $q(function(resolve, reject) {
+            var eventList = eventMembershipService.eventLists[role];
+            if(eventList && !updateRequired(eventList)) {
+                resolve(eventList);
+            }
+            else {
+                downloadAndCreateList(role)
+                .then(function(eL) {
+                    resolve(eL);
+                });
+            }
+        })
+        .then(function(eventList) {
+            eventMembershipService.eventLists[role] = eventList;
+        });
+    };
+    return eventMembershipService;
+});
+
+app.factory('userListService', function(jventService, contextEvent, $q) {
     var userListService = {};
     var lastQuery = {};
     var lastTime;
@@ -377,7 +470,7 @@ app.factory('postListService', function(jventService, $q) {
         //TODO: complete
         return $q(function(resolve, reject) {
             if(lastQuery!=postListService.query || deltaTime() > postListService.cacheTime) {
-                
+
             }
             else {
                 resolve(postListService.postList);
@@ -402,7 +495,7 @@ app.factory('contextEvent', function(jventService, $q) {
     };
     //heart
     contextEvent.loadEvent = function(eventURL) {
-        jventService.getEvent(eventURL)
+        jventService.getEvent(eventURL, 0)
         .then(function(event) {
             contextEvent.event = event;
         });
@@ -410,7 +503,7 @@ app.factory('contextEvent', function(jventService, $q) {
     contextEvent.getEvent = function(eventURL) {
         return $q(function(resolve, reject) {
             if(eventURL!=contextEvent.event.url||!fresh()) {
-                return jventService.getEvent(eventURL)
+                return jventService.getEvent(eventURL, 0)
                 .then(function(event) {
                     lastTime = Date.now();
                     contextEvent.event = event;
@@ -448,7 +541,7 @@ app.factory('newEventService', function(userService, jventService) {
         });
     };
     //TODO: Event Validation stuff goes here
-    return(newEventService);    
+    return(newEventService);
 });
 
 app.factory('newPostService', function(userService) {
@@ -557,10 +650,14 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     };
 });
 
-app.controller('userListCtrl', function($scope, userListService) {
-    // $scope.people = userListService;
-    $scope.userListCollection = userListService.userListCollection;
-    $scope.selectedList = {};
+app.controller('userListCtrl', function($scope, $routeParams, userMembershipService) {
+    // // $scope.people = userListService;
+    // $scope.userListCollection = userListService.userListCollection;
+    // $scope.selectedList = {};
+    userMembershipService.initialize($routeParams.eventURL)
+    .then(function() {
+        
+    })
 });
 
 //Post
@@ -658,6 +755,10 @@ app.controller('logoutCtrl', function($scope, $location, userService) {
         userService.logout();
         $location.path('/login');
     }
+});
+
+app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
+    
 });
 
 //Error
