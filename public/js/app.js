@@ -5,88 +5,88 @@ var app = angular.module("jvent", ['ngRoute']);
 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
-    
+
     .when('/', {
         controller  : 'eventListCtrl',
         controllerAs: 'eventsview',
         templateUrl : './views/event/list.html'
     })
-    
+
     .when('/events', {
         controller  : 'eventListCtrl',
         controllerAs: 'eventsview',
         templateUrl : './views/event/list.html'
     })
-    
+
     .when('/event/new', {
         controller  : 'newEventCtrl',
         controllerAs: 'newEventView',
         templateUrl : './views/event/new.html'
     })
-    
+
     .when('/event/:eventURL', {
         controller  : 'eventCtrl',
         controllerAs: 'eventview',
         templateUrl : './views/event/page.html'
     })
-    
+
     .when('/event/:eventURL/posts', {
         controller  : 'postListCtrl',
         controllerAs: 'postsview',
         templateUrl : './views/post/list.html'
     })
-    
+
     .when('/event/:eventURL/post/new', {
         controller  : 'newPostCtrl',
         controllerAs: 'newPostView',
         templateUrl : './views/post/new.html'
     })
-    
+
     // .when('/event/:eventURL/people', {
     //     controller  : 'userListCtrl',
     //     controllerAs: 'userlistview',
     //     templateUrl : './views/event/userlist.html'
     // })
-    
+
     // .when('/event/:eventURL/post/:postURL', {
-        
+
     // })
-    
+
     .when('/login', {
         controller  : 'loginCtrl',
         controllerAs: 'loginview',
         templateUrl : './views/user/login.html'
     })
-    
+
     .when('/logout', {
         controller  : 'logoutCtrl',
         controllerAs: 'logoutscreen',
         templateUrl : './views/user/logout.html'
     })
-    
+
     .when('/signup', {
         controller  : 'signUpCtrl',
         controllerAs: 'signUpView',
         templateUrl : './views/user/signup.html'
     })
-    
+
     .otherwise({
         controller  : '404Ctrl',
         controllerAs: '404View',
         templateUrl : './views/misc/404.html'
     });
-    
+
 }]);
 
 // Providers
 app.service('urlService', function() {
     var apiURL = 'api/';
     var apiVersion = 'v0/';
-    
+
     this.api = function() {
         return(apiURL+apiVersion);
     };
-    
+
     this.event = function() {
         return(this.api() + 'event/');
     };
@@ -102,21 +102,21 @@ app.service('urlService', function() {
     this.eventUsersRole = function(eventURL, role) {
         return(this.eventUsers(eventURL) + role + '/');
     };
-    
+
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
     };
     this.postID = function(eventURL, postID) {
         return(this.post(eventURL) + postID + '/');
     };
-    
+
     this.comment = function(eventURL, postID) {
         return(this.postID(eventURL, postID) + 'comment/');
     };
     this.commentID = function(eventURL, postID, commentID) {
         return(this.comment(eventURL, postID) + commentID + '/');
     };
-    
+
     this.user = function() {
         return(this.api() + 'user/');
     };
@@ -139,7 +139,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
     obj.authed = false;
     obj.authStore = null;
     obj.timeCreated = Date.now();
-    
+
     var getAuthStore = function() {
         var storage = [window.localStorage, window.sessionStorage];
         for(var i = 0; i<storage.length;i++) {
@@ -179,7 +179,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
         };
         return $http(req)
         .then(function(data) {
-           return data.data.token; 
+           return data.data.token;
         });
     };
     var loadUser = function() {
@@ -193,7 +193,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
             console.log("Loaded User");
         }
     };
-    
+
     obj.isAuthed = function() {return(obj.authed)};
     obj.login = function(creds, options) {
         return getTokenFromServer(creds)
@@ -214,7 +214,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
         obj.authStore.removeItem("token");
         deleteAuthHeader();
         $rootScope.authed = false;
-        //Delete user data in root scope 
+        //Delete user data in root scope
         obj.authed = false;
     };
     obj.register = function(email, username, password) {
@@ -231,7 +231,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
         .then(function(data) {
             if(data.status == 201) {
                 return {success: true, err: null};
-            }  
+            }
         });
     };
     obj.user = function() {
@@ -331,10 +331,15 @@ app.factory('eventListService', function(jventService, $q) {
     return eventListService;
 });
 
+app.factory('userMembershipService', function(contextEvent, userService) {
+    var userMembershipService;
+    return userMembershipService;
+});
+
 app.factory('eventMembershipService', function(userService, jventService) {
     var eventMembershipService = {};
     eventMembershipService.eventLists = [];
-    
+
     return eventMembershipService;
 });
 
@@ -384,7 +389,7 @@ app.factory('postListService', function(jventService, $q) {
         //TODO: complete
         return $q(function(resolve, reject) {
             if(lastQuery!=postListService.query || deltaTime() > postListService.cacheTime) {
-                
+
             }
             else {
                 resolve(postListService.postList);
@@ -455,7 +460,7 @@ app.factory('newEventService', function(userService, jventService) {
         });
     };
     //TODO: Event Validation stuff goes here
-    return(newEventService);    
+    return(newEventService);
 });
 
 app.factory('newPostService', function(userService) {
