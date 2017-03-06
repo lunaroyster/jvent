@@ -42,11 +42,11 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/post/new.html'
     })
     
-    .when('/event/:eventURL/people', {
-        controller  : 'userListCtrl',
-        controllerAs: 'userlistview',
-        templateUrl : './views/event/userlist.html'
-    })
+    // .when('/event/:eventURL/people', {
+    //     controller  : 'userListCtrl',
+    //     controllerAs: 'userlistview',
+    //     templateUrl : './views/event/userlist.html'
+    // })
     
     // .when('/event/:eventURL/post/:postURL', {
         
@@ -333,6 +333,7 @@ app.factory('eventListService', function(jventService, $q) {
 
 app.factory('eventMembershipService', function(userService, jventService) {
     var eventMembershipService = {};
+    eventMembershipService.eventLists = [];
     
     return eventMembershipService;
 });
@@ -563,11 +564,11 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     };
 });
 
-app.controller('userListCtrl', function($scope, userListService) {
-    // $scope.people = userListService;
-    $scope.userListCollection = userListService.userListCollection;
-    $scope.selectedList = {};
-});
+// app.controller('userListCtrl', function($scope, userListService) {
+//     // $scope.people = userListService;
+//     $scope.userListCollection = userListService.userListCollection;
+//     $scope.selectedList = {};
+// });
 
 //Post
 app.controller('postListCtrl', function($scope, $location, jventService) {
