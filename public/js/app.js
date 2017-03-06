@@ -398,10 +398,40 @@ app.factory('userMembershipService', function(contextEvent, userService, $q, jve
     return userMembershipService;
 });
 
-app.factory('eventMembershipService', function(userService, jventService) {
+app.factory('eventMembershipService', function(userService, jventService, $q) {
     var eventMembershipService = {};
-    eventMembershipService.eventLists = [];
-
+    eventMembershipService.eventLists = {};
+    eventMembershipService.cacheTime = 60000;
+    eventMembershipService.roles = [];
+    var updateRequired = function(eventList) {};
+    var downloadAndCreateList = function(role) {
+        
+    };
+    eventMembershipService.getEventList = function(role) {
+        $q(function(resolve, reject) {
+            var eventList = eventMembershipService.eventLists[role];
+            if(eventList) {
+                if(updateRequired(eventList)) {
+                    downloadAndCreateList(role)
+                    .then(function(eL) {
+                        resolve(eL);
+                    });
+                }
+                else {
+                    resolve(eventList);
+                }
+            }
+            else {
+                downloadAndCreateList(role)
+                .then(function(eL) {
+                    resolve(eL);
+                });
+            }
+        })
+        .then(function(eventList) {
+            eventMembershipService.eventLists[role] = eventList;
+        });
+    };
     return eventMembershipService;
 });
 
