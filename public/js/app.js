@@ -42,11 +42,11 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/post/new.html'
     })
 
-    // .when('/event/:eventURL/people', {
-    //     controller  : 'userListCtrl',
-    //     controllerAs: 'userlistview',
-    //     templateUrl : './views/event/userlist.html'
-    // })
+    .when('/event/:eventURL/users', {
+        controller  : 'userListCtrl',
+        controllerAs: 'userlistview',
+        templateUrl : './views/event/userlist.html'
+    })
 
     // .when('/event/:eventURL/post/:postURL', {
 
@@ -384,7 +384,7 @@ app.factory('userMembershipService', function(contextEvent, userService, $q, jve
         .then(function(userList) {
             userMembershipService.userLists[role] = userList;
         });
-    }
+    };
     userMembershipService.initialize = function(eventURL) {
         return contextEvent.getEvent(eventURL)
         .then(function(event) {
@@ -631,11 +631,15 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
     };
 });
 
-// app.controller('userListCtrl', function($scope, userListService) {
-//     // $scope.people = userListService;
-//     $scope.userListCollection = userListService.userListCollection;
-//     $scope.selectedList = {};
-// });
+app.controller('userListCtrl', function($scope, $routeParams, userMembershipService) {
+    // // $scope.people = userListService;
+    // $scope.userListCollection = userListService.userListCollection;
+    // $scope.selectedList = {};
+    userMembershipService.initialize($routeParams.eventURL)
+    .then(function() {
+        
+    })
+});
 
 //Post
 app.controller('postListCtrl', function($scope, $location, jventService) {
