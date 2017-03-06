@@ -296,6 +296,13 @@ app.service('jventService', function($http, $q, urlService) {
             throw Error(); //TODO: Describe error
         });
     };
+    this.getUserList = function(eventURL, role) {
+        var url = urlService.eventUsersRole(eventURL, role);
+        return $http.get(url)
+        .then(function(response) {
+            return response.data;
+        });
+    };
 });
 
 // List Providers
