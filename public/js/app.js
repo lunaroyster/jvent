@@ -363,16 +363,8 @@ app.factory('userMembershipService', function(contextEvent, userService, $q, jve
     userMembershipService.getUserList = function(role) {
         $q(function(resolve, reject) {
             var userList = userMembershipService.userLists[role];
-            if(userList) {
-                if(updateRequired(userList)) {
-                    downloadAndCreateList(role)
-                    .then(function(uL) {
-                        resolve(uL);
-                    });
-                }
-                else {
-                    resolve(userList);
-                }
+            if(userList && !updateRequired(userList)) {
+                resolve(userList);
             }
             else {
                 downloadAndCreateList(role)
@@ -410,16 +402,8 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
     eventMembershipService.getEventList = function(role) {
         $q(function(resolve, reject) {
             var eventList = eventMembershipService.eventLists[role];
-            if(eventList) {
-                if(updateRequired(eventList)) {
-                    downloadAndCreateList(role)
-                    .then(function(eL) {
-                        resolve(eL);
-                    });
-                }
-                else {
-                    resolve(eventList);
-                }
+            if(eventList && !updateRequired(eventList)) {
+                resolve(eventList);
             }
             else {
                 downloadAndCreateList(role)
