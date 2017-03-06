@@ -331,13 +331,45 @@ app.factory('eventListService', function(jventService, $q) {
     return eventListService;
 });
 
-app.factory('userMembershipService', function(contextEvent, userService) {
-    var userMembershipService;
-    userMembershipService.userLists = [];
+app.factory('userMembershipService', function(contextEvent, userService, $q, jventService) {
+    var userMembershipService = {};
+    userMembershipService.userLists = {};
     userMembershipService.roles = [];
+    var updateRequired = function(userList) {
+        
+    };
+    var downloadAndCreateList = function(role) {
+        return jventService.getUserList(contextEvent.event.url, role)
+        .then(function(list) {
+            var userList = {
+                list: list,
+                role: role,
+                lastTime: Date.now(),
+                //lastQuery: query
+            };
+            return userList;
+        });
+    };
     userMembershipService.getUserList = function(role) {
-        //userMembershipService.userLists[i].role = role
-        //return
+        $q(function(resolve, reject) {
+            var userList = userMembershipService.userLists[role];
+            if(userList) {
+                if(updateRequired(userList)) {
+                    //Get list
+                    //Initialize as userList
+                }
+                else {
+                    resolve(userList);
+                }
+            }
+            else {
+                //Get list
+                //Initialize as userList
+            }
+        })
+        .then(function(userList) {
+            userMembershipService.userLists[role] = userList;
+        });
     }
     userMembershipService.initialize = function(eventURL) {
         return contextEvent.getEvent(eventURL)
