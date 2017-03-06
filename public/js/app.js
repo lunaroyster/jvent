@@ -51,6 +51,11 @@ app.config(['$routeProvider', function($routeProvider) {
     // .when('/event/:eventURL/post/:postURL', {
 
     // })
+    .when('/me/events', {
+        controller  : 'eventMembershipCtrl',
+        controllerAs: 'eventmembershipview',
+        templateUrl : './views/user/eventlist.html'
+    })
 
     .when('/login', {
         controller  : 'loginCtrl',
@@ -750,6 +755,10 @@ app.controller('logoutCtrl', function($scope, $location, userService) {
         userService.logout();
         $location.path('/login');
     }
+});
+
+app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
+    
 });
 
 //Error
