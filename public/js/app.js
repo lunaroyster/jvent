@@ -355,16 +355,20 @@ app.factory('userMembershipService', function(contextEvent, userService, $q, jve
             var userList = userMembershipService.userLists[role];
             if(userList) {
                 if(updateRequired(userList)) {
-                    //Get list
-                    //Initialize as userList
+                    downloadAndCreateList(role)
+                    .then(function(uL) {
+                        resolve(uL);
+                    });
                 }
                 else {
                     resolve(userList);
                 }
             }
             else {
-                //Get list
-                //Initialize as userList
+                downloadAndCreateList(role)
+                .then(function(uL) {
+                    resolve(uL);
+                });
             }
         })
         .then(function(userList) {
