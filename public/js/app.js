@@ -249,8 +249,15 @@ app.service('jventService', function($http, $q, urlService) {
             return data.data.events;
         });
     };
-    this.getEvent = function(eventURL) {
-        return $http.get(urlService.eventURL(eventURL))
+    this.getEvent = function(eventURL, moderator) {
+        var req = {
+            method: 'GET',
+            url: urlService.eventURL(eventURL),
+            headers: {
+                'Moderator': moderator
+            }
+        };
+        return $http(req)
         .then(function (data) {
             return data.data.event;
         });
@@ -469,7 +476,7 @@ app.factory('contextEvent', function(jventService, $q) {
     };
     //heart
     contextEvent.loadEvent = function(eventURL) {
-        jventService.getEvent(eventURL)
+        jventService.getEvent(eventURL, 0)
         .then(function(event) {
             contextEvent.event = event;
         });
@@ -477,7 +484,7 @@ app.factory('contextEvent', function(jventService, $q) {
     contextEvent.getEvent = function(eventURL) {
         return $q(function(resolve, reject) {
             if(eventURL!=contextEvent.event.url||!fresh()) {
-                return jventService.getEvent(eventURL)
+                return jventService.getEvent(eventURL, 0)
                 .then(function(event) {
                     lastTime = Date.now();
                     contextEvent.event = event;
