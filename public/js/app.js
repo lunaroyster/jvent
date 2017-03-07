@@ -652,8 +652,6 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
 });
 
 app.controller('userListCtrl', function($scope, $routeParams, userMembershipService) {
-    // // $scope.people = userListService;
-    // $scope.userListCollection = userListService.userListCollection;
     $scope.selectedList = {};
     userMembershipService.initialize($routeParams.eventURL)
     .then(function() {
@@ -766,7 +764,14 @@ app.controller('logoutCtrl', function($scope, $location, userService) {
 });
 
 app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
-    
+    $scope.selectedList = {};
+    $scope.getEventList = function(role) {
+        eventMembershipService.getEventList(role)
+        .then(function(eventList) {
+            $scope.selectedList = eventList;
+            console.log(eventList);
+        });
+    };
 });
 
 //Error
