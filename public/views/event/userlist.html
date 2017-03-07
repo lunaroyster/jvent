@@ -12,7 +12,12 @@
         <div class="col s12 m10 push-m1">
             <ul class="collection with-header transparent" style="border: none">
                 <li class="collection-item transparent" ng-repeat="item in selectedList.list">
-                    <span class="white-text" ng-bind="item.user.username"></span>
+                    <div>
+                        <span class="white-text" ng-bind="item.user.username"></span>
+                        <a class="secondary-content">
+                            <i class="material-icons">send</i>
+                        </a>
+                    </div>
                 </li>
             </ul>
         </div>
