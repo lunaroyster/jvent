@@ -366,7 +366,7 @@ app.factory('userMembershipService', function(contextEvent, userService, $q, jve
         });
     };
     userMembershipService.getUserList = function(role) {
-        $q(function(resolve, reject) {
+        return $q(function(resolve, reject) {
             var userList = userMembershipService.userLists[role];
             if(userList && !updateRequired(userList)) {
                 resolve(userList);
@@ -380,6 +380,7 @@ app.factory('userMembershipService', function(contextEvent, userService, $q, jve
         })
         .then(function(userList) {
             userMembershipService.userLists[role] = userList;
+            return userList;
         });
     };
     userMembershipService.initialize = function(eventURL) {
@@ -653,11 +654,18 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
 app.controller('userListCtrl', function($scope, $routeParams, userMembershipService) {
     // // $scope.people = userListService;
     // $scope.userListCollection = userListService.userListCollection;
-    // $scope.selectedList = {};
+    $scope.selectedList = {};
     userMembershipService.initialize($routeParams.eventURL)
     .then(function() {
         $scope.roles = userMembershipService.roles;
-    })
+    });
+    $scope.getUserList = function(role) {
+        userMembershipService.getUserList(role)
+        .then(function(userList) {
+            $scope.selectedList = userList;
+            console.log(userList);
+        });
+    };
 });
 
 //Post

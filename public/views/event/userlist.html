@@ -3,7 +3,7 @@
         <div class="col s12 m10 push-m1">
             <ul class="tabs transparent">
                 <li class="tab" ng-repeat="role in roles">
-                    <a class="teal-text" ng-click="selectedList=list"><span ng-bind="role"></span></a>
+                    <a class="teal-text" ng-click="getUserList(role)"><span ng-bind="role"></span></a>
                 </li>
             </ul>
         </div>
@@ -11,8 +11,8 @@
     <div class="row">
         <div class="col s12 m10 push-m1">
             <ul class="collection with-header transparent" style="border: none">
-                <li class="collection-item transparent" ng-repeat="user in selectedList.list">
-                    <span ng-bind="user.username"></span>
+                <li class="collection-item transparent" ng-repeat="item in selectedList.list">
+                    <span class="white-text" ng-bind="item.user.username"></span>
                 </li>
             </ul>
         </div>
