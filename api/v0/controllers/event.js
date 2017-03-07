@@ -86,7 +86,6 @@ var getEventAsModerator = function(req, res) {
     .then(function(event) {
         return eventMembershipCore.isUserModerator(req.user, event)
         .then(function(result) {
-            console.log(result)
             if(!result) throw Error();
             return event;
         });
