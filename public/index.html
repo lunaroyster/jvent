@@ -29,11 +29,11 @@
           <!-- TODO: Fix this abomination -->
           <li><a href="#!">Username</a></li>
           <!--<li class="divider"></li>-->
-          <li ng-if="authService.isAuthed()" ng-click="settingsClick()"><a>Settings</a></li>
-          <li ng-if="authService.isAuthed()" ng-click="profileClick()"><a>Profile</a></li>
-          <li ng-if="authService.isAuthed()" ng-click="logoutClick()"><a>Log out</a></li>
-          <li ng-if="!authService.isAuthed()" ng-click="loginClick()"><a>Log in</a></li>
-          <li ng-if="!authService.isAuthed()" ng-click="signupClick()"><a>Sign up</a></li>
+          <li ng-if="userService.isAuthed()" ng-click="settingsClick()"><a>Settings</a></li>
+          <li ng-if="userService.isAuthed()" ng-click="profileClick()"><a>Profile</a></li>
+          <li ng-if="userService.isAuthed()" ng-click="logoutClick()"><a>Log out</a></li>
+          <li ng-if="!userService.isAuthed()" ng-click="loginClick()"><a>Log in</a></li>
+          <li ng-if="!userService.isAuthed()" ng-click="signupClick()"><a>Sign up</a></li>
         </ul>
         <ul>
           <li class="tooltipped" data-position="bottom" data-delay="50" data-tooltip="Home" ng-click="homeClick()"><i class="material-icons">home</i></li>

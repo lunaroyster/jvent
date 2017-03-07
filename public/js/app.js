@@ -56,6 +56,12 @@ app.config(['$routeProvider', function($routeProvider) {
         controllerAs: 'eventmembershipview',
         templateUrl : './views/user/eventlist.html'
     })
+    
+    .when('/changepassword', {
+        controller  : 'changePasswordCtrl',
+        controllerAs: 'changepasswordview',
+        templateUrl : './views/user/changepassword.html'
+    })
 
     .when('/login', {
         controller  : 'loginCtrl',
@@ -242,6 +248,11 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
     obj.user = function() {
         return "Username here";
     };
+    obj.validPassword = function(password, repassword) {
+        if(!password){return false}
+        if(password == repassword){return(true)}
+        else {return(false)}
+    };
     loadUser();
     return(obj);
 });
@@ -366,7 +377,7 @@ app.factory('userMembershipService', function(contextEvent, userService, $q, jve
         });
     };
     userMembershipService.getUserList = function(role) {
-        $q(function(resolve, reject) {
+        return $q(function(resolve, reject) {
             var userList = userMembershipService.userLists[role];
             if(userList && !updateRequired(userList)) {
                 resolve(userList);
@@ -380,6 +391,7 @@ app.factory('userMembershipService', function(contextEvent, userService, $q, jve
         })
         .then(function(userList) {
             userMembershipService.userLists[role] = userList;
+            return userList;
         });
     };
     userMembershipService.initialize = function(eventURL) {
@@ -503,7 +515,7 @@ app.factory('contextEvent', function(jventService, $q) {
     contextEvent.getEvent = function(eventURL) {
         return $q(function(resolve, reject) {
             if(eventURL!=contextEvent.event.url||!fresh()) {
-                return jventService.getEvent(eventURL, 0)
+                return jventService.getEvent(eventURL, 1)
                 .then(function(event) {
                     lastTime = Date.now();
                     contextEvent.event = event;
@@ -651,13 +663,18 @@ app.controller('eventCtrl', function($scope, $routeParams, jventService, $locati
 });
 
 app.controller('userListCtrl', function($scope, $routeParams, userMembershipService) {
-    // // $scope.people = userListService;
-    // $scope.userListCollection = userListService.userListCollection;
-    // $scope.selectedList = {};
+    $scope.selectedList = {};
     userMembershipService.initialize($routeParams.eventURL)
     .then(function() {
-        
-    })
+        $scope.roles = userMembershipService.roles;
+    });
+    $scope.getUserList = function(role) {
+        userMembershipService.getUserList(role)
+        .then(function(userList) {
+            $scope.selectedList = userList;
+            console.log(userList);
+        });
+    };
 });
 
 //Post
@@ -704,10 +721,8 @@ app.controller('signUpCtrl', function($scope, $location, userService) {
     $scope.username;
     $scope.password;
     $scope.repassword;
-    $scope.validPassword = function () {
-        if(!$scope.password){return false}
-        if($scope.password == $scope.repassword){return(true)}
-        else {return(false)}
+    $scope.validPassword = function() {
+        return userService.validPassword($scope.password, $scope.repassword);
     };
     $scope.createAccount = function () {
         if($scope.validPassword() && $scope.email && $scope.username) {
@@ -758,7 +773,31 @@ app.controller('logoutCtrl', function($scope, $location, userService) {
 });
 
 app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
-    
+    $scope.selectedList = {};
+    $scope.getEventList = function(role) {
+        eventMembershipService.getEventList(role)
+        .then(function(eventList) {
+            $scope.selectedList = eventList;
+            console.log(eventList);
+        });
+    };
+});
+
+app.controller('changePasswordCtrl', function($scope, userService) {
+    $scope.oldpassword;
+    $scope.password;
+    $scope.repassword;
+    $scope.changePassword = function() {
+        if($scope.validPassword() && $scope.oldpassword) {
+            userService.changePassword($scope.oldpassword, $scope.password)
+            .then(function(status) {
+                //TODO: Handle
+            });
+        }
+    };
+    $scope.validPassword = function() {
+        return userService.validPassword($scope.password, $scope.repassword);
+    };
 });
 
 //Error
