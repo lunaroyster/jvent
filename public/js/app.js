@@ -248,6 +248,11 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
     obj.user = function() {
         return "Username here";
     };
+    obj.validPassword = function(password, repassword) {
+        if(!password){return false}
+        if(password == repassword){return(true)}
+        else {return(false)}
+    };
     loadUser();
     return(obj);
 });
@@ -716,10 +721,8 @@ app.controller('signUpCtrl', function($scope, $location, userService) {
     $scope.username;
     $scope.password;
     $scope.repassword;
-    $scope.validPassword = function () {
-        if(!$scope.password){return false}
-        if($scope.password == $scope.repassword){return(true)}
-        else {return(false)}
+    $scope.validPassword = function() {
+        return userService.validPassword($scope.password, $scope.repassword);
     };
     $scope.createAccount = function () {
         if($scope.validPassword() && $scope.email && $scope.username) {
@@ -780,8 +783,21 @@ app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
     };
 });
 
-app.controller('changePasswordCtrl', function($scope) {
-    
+app.controller('changePasswordCtrl', function($scope, userService) {
+    $scope.oldpassword;
+    $scope.password;
+    $scope.repassword;
+    $scope.changePassword = function() {
+        if($scope.validPassword() && $scope.oldpassword) {
+            userService.changePassword($scope.oldpassword, $scope.password)
+            .then(function(status) {
+                //TODO: Handle
+            });
+        }
+    };
+    $scope.validPassword = function() {
+        return userService.validPassword($scope.password, $scope.repassword);
+    };
 });
 
 //Error
