@@ -245,6 +245,20 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
             }
         });
     };
+    obj.changePassword = function(oldpassword, newpassword) {
+        var req = {
+            method: 'POST', 
+            url: urlService.userChangePassword(),
+            headers: {
+                'oldpassword': oldpassword,
+                'newpassword': newpassword
+            }
+        };
+        return $http(req)
+        .then(function(data) {
+            console.log(data.data); //TODO: write handler
+        });
+    }
     obj.user = function() {
         return "Username here";
     };
