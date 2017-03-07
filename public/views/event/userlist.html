@@ -2,8 +2,8 @@
     <div class="row" style="background-color:#0b0c0d">
         <div class="col s12 m10 push-m1">
             <ul class="tabs transparent">
-                <li class="tab" ng-repeat="list in userListCollection">
-                    <a class="teal-text" ng-click="selectedList=list"><span ng-bind="list.listType"></span></a>
+                <li class="tab" ng-repeat="role in roles">
+                    <a class="teal-text" ng-click="selectedList=list"><span ng-bind="role"></span></a>
                 </li>
             </ul>
         </div>

@@ -503,7 +503,7 @@ app.factory('contextEvent', function(jventService, $q) {
     contextEvent.getEvent = function(eventURL) {
         return $q(function(resolve, reject) {
             if(eventURL!=contextEvent.event.url||!fresh()) {
-                return jventService.getEvent(eventURL, 0)
+                return jventService.getEvent(eventURL, 1)
                 .then(function(event) {
                     lastTime = Date.now();
                     contextEvent.event = event;
@@ -656,7 +656,7 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
     // $scope.selectedList = {};
     userMembershipService.initialize($routeParams.eventURL)
     .then(function() {
-        
+        $scope.roles = userMembershipService.roles;
     })
 });
 
