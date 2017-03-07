@@ -140,6 +140,9 @@ app.service('urlService', function() {
     this.userSignUp = function() {
         return(this.user() + 'signup/');
     };
+    this.userChangePassword = function() {
+        return(this.user() + 'changepassword/');
+    };
     this.userAuthenticate = function() {
         return(this.user() + 'authenticate/');
     };
