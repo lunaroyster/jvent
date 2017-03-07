@@ -56,6 +56,12 @@ app.config(['$routeProvider', function($routeProvider) {
         controllerAs: 'eventmembershipview',
         templateUrl : './views/user/eventlist.html'
     })
+    
+    .when('/changepassword', {
+        controller  : 'changePasswordCtrl',
+        controllerAs: 'changepasswordview',
+        templateUrl : './views/user/changepassword.html'
+    })
 
     .when('/login', {
         controller  : 'loginCtrl',
@@ -772,6 +778,10 @@ app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
             console.log(eventList);
         });
     };
+});
+
+app.controller('changePasswordCtrl', function($scope) {
+    
 });
 
 //Error
