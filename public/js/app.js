@@ -283,6 +283,7 @@ app.service('jventService', function($http, $q, urlService) {
         });
     };
     this.getEvent = function(eventURL, moderator) {
+        var moderator = moderator ? 1 : 0;
         var req = {
             method: 'GET',
             url: urlService.eventURL(eventURL),
@@ -469,10 +470,11 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
     };
     var isEventInList = function(list, eventURL) {
         //TODO: Implement
+        return true;
     };
     eventMembershipService.getEventList = getEventList;
     eventMembershipService.isEventRole = function(role, eventURL) {
-        getEventList(role)
+        return getEventList(role)
         .then(function(list) {
             return isEventInList(list, eventURL);
         });
