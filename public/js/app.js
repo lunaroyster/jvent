@@ -468,8 +468,8 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
         });
     };
     var isEventInList = function(list, eventURL) {
-        
-    }
+        //TODO: Implement
+    };
     eventMembershipService.getEventList = getEventList;
     eventMembershipService.isEventRole = function(role, eventURL) {
         getEventList(role)
@@ -557,20 +557,18 @@ app.factory('contextEvent', function(jventService, $q, eventMembershipService) {
         });
     };
     contextEvent.getEvent = function(eventURL) {
-        return $q(function(resolve, reject) {
+        return eventMembershipService.isEventRole("moderator", eventURL)
+        .then(function(result) {
             if(eventURL!=contextEvent.event.url||!fresh()) {
-                return jventService.getEvent(eventURL, 1)
+                return jventService.getEvent(eventURL, result)
                 .then(function(event) {
                     lastTime = Date.now();
                     contextEvent.event = event;
-                    return resolve(event);
-                })
-                .catch(function(error) {
-                    reject(error);
+                    return event;
                 });
             }
             else {
-                return resolve(contextEvent.event);
+                return contextEvent.event;
             }
         });
     };
