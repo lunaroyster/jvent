@@ -449,7 +449,7 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
             return eventList;
         });
     };
-    eventMembershipService.getEventList = function(role) {
+    var getEventList = function(role) {
         return $q(function(resolve, reject) {
             var eventList = eventMembershipService.eventLists[role];
             if(eventList && !updateRequired(eventList)) {
@@ -465,6 +465,16 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
         .then(function(eventList) {
             eventMembershipService.eventLists[role] = eventList;
             return eventList;
+        });
+    };
+    var isEventInList = function(list, eventURL) {
+        
+    }
+    eventMembershipService.getEventList = getEventList;
+    eventMembershipService.isEventRole = function(role, eventURL) {
+        getEventList(role)
+        .then(function(list) {
+            return isEventInList(list, eventURL);
         });
     };
     return eventMembershipService;
@@ -527,7 +537,7 @@ app.factory('postListService', function(jventService, $q) {
 });
 
 // Context Providers
-app.factory('contextEvent', function(jventService, $q) {
+app.factory('contextEvent', function(jventService, $q, eventMembershipService) {
     var contextEvent = {};
     contextEvent.event = {};
     contextEvent.cacheTime;
@@ -668,7 +678,7 @@ app.controller('newEventCtrl', function($scope, $location, userService, newEvent
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, jventService, $location, contextEvent) {
+app.controller('eventCtrl', function($scope, $routeParams, $location, contextEvent) {
     contextEvent.getEvent($routeParams.eventURL)
     .then(function(event) {
         $scope.event = event;
