@@ -469,14 +469,19 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
         });
     };
     var isEventInList = function(list, eventURL) {
-        //TODO: Implement
-        return true;
+        //TODO: Better implementation
+        for(var item in list) {
+            if(list[item].event.url==eventURL) {
+                return true;
+            }
+        }
+        return false;
     };
     eventMembershipService.getEventList = getEventList;
     eventMembershipService.isEventRole = function(role, eventURL) {
         return getEventList(role)
-        .then(function(list) {
-            return isEventInList(list, eventURL);
+        .then(function(eventList) {
+            return isEventInList(eventList.list, eventURL);
         });
     };
     return eventMembershipService;
