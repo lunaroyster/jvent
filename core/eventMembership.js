@@ -80,7 +80,7 @@ module.exports.getEventModerators = function(event) {
 var getUserMemberships = function(user, role) {
     return EventMembership
     .find({role: role, user: user._id})
-    .populate('event', 'name')
+    .populate('event', 'name url')
     .select('event -_id');
 };
 module.exports.getAttendedEvents = function(user) {
