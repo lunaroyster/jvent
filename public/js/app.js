@@ -338,6 +338,13 @@ app.service('jventService', function($http, $q, urlService) {
             return response.data;
         });
     };
+    this.getEventMembershipList = function(role) {
+        var url = urlService.userEventsRole(role);
+        return $http.get(url)
+        .then(function(response) {
+            return response.data;
+        });
+    };
 });
 
 // List Providers
@@ -443,7 +450,7 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
         });
     };
     eventMembershipService.getEventList = function(role) {
-        $q(function(resolve, reject) {
+        return $q(function(resolve, reject) {
             var eventList = eventMembershipService.eventLists[role];
             if(eventList && !updateRequired(eventList)) {
                 resolve(eventList);
@@ -457,6 +464,7 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
         })
         .then(function(eventList) {
             eventMembershipService.eventLists[role] = eventList;
+            return eventList;
         });
     };
     return eventMembershipService;
