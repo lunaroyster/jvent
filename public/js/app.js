@@ -140,6 +140,9 @@ app.service('urlService', function() {
     this.userSignUp = function() {
         return(this.user() + 'signup/');
     };
+    this.userChangePassword = function() {
+        return(this.user() + 'changepassword/');
+    };
     this.userAuthenticate = function() {
         return(this.user() + 'authenticate/');
     };
@@ -245,6 +248,20 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
             }
         });
     };
+    obj.changePassword = function(oldpassword, newpassword) {
+        var req = {
+            method: 'POST', 
+            url: urlService.userChangePassword(),
+            headers: {
+                'oldpassword': oldpassword,
+                'newpassword': newpassword
+            }
+        };
+        return $http(req)
+        .then(function(data) {
+            console.log(data.data); //TODO: write handler
+        });
+    }
     obj.user = function() {
         return "Username here";
     };
@@ -266,6 +283,7 @@ app.service('jventService', function($http, $q, urlService) {
         });
     };
     this.getEvent = function(eventURL, moderator) {
+        var moderator = moderator ? 1 : 0;
         var req = {
             method: 'GET',
             url: urlService.eventURL(eventURL),
@@ -316,6 +334,13 @@ app.service('jventService', function($http, $q, urlService) {
     };
     this.getUserList = function(eventURL, role) {
         var url = urlService.eventUsersRole(eventURL, role);
+        return $http.get(url)
+        .then(function(response) {
+            return response.data;
+        });
+    };
+    this.getEventMembershipList = function(role) {
+        var url = urlService.userEventsRole(role);
         return $http.get(url)
         .then(function(response) {
             return response.data;
@@ -414,10 +439,19 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
     eventMembershipService.roles = [];
     var updateRequired = function(eventList) {};
     var downloadAndCreateList = function(role) {
-        
+        return jventService.getEventMembershipList(role)
+        .then(function(list) {
+            var eventList = {
+                list: list,
+                role: role,
+                lastTime: Date.now()
+                //lastQuery: query
+            };
+            return eventList;
+        });
     };
-    eventMembershipService.getEventList = function(role) {
-        $q(function(resolve, reject) {
+    var getEventList = function(role) {
+        return $q(function(resolve, reject) {
             var eventList = eventMembershipService.eventLists[role];
             if(eventList && !updateRequired(eventList)) {
                 resolve(eventList);
@@ -431,6 +465,23 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
         })
         .then(function(eventList) {
             eventMembershipService.eventLists[role] = eventList;
+            return eventList;
+        });
+    };
+    var isEventInList = function(list, eventURL) {
+        //TODO: Better implementation
+        for(var item in list) {
+            if(list[item].event.url==eventURL) {
+                return true;
+            }
+        }
+        return false;
+    };
+    eventMembershipService.getEventList = getEventList;
+    eventMembershipService.isEventRole = function(role, eventURL) {
+        return getEventList(role)
+        .then(function(eventList) {
+            return isEventInList(eventList.list, eventURL);
         });
     };
     return eventMembershipService;
@@ -493,7 +544,7 @@ app.factory('postListService', function(jventService, $q) {
 });
 
 // Context Providers
-app.factory('contextEvent', function(jventService, $q) {
+app.factory('contextEvent', function(jventService, $q, eventMembershipService) {
     var contextEvent = {};
     contextEvent.event = {};
     contextEvent.cacheTime;
@@ -513,20 +564,18 @@ app.factory('contextEvent', function(jventService, $q) {
         });
     };
     contextEvent.getEvent = function(eventURL) {
-        return $q(function(resolve, reject) {
+        return eventMembershipService.isEventRole("moderator", eventURL)
+        .then(function(result) {
             if(eventURL!=contextEvent.event.url||!fresh()) {
-                return jventService.getEvent(eventURL, 1)
+                return jventService.getEvent(eventURL, result)
                 .then(function(event) {
                     lastTime = Date.now();
                     contextEvent.event = event;
-                    return resolve(event);
-                })
-                .catch(function(error) {
-                    reject(error);
+                    return event;
                 });
             }
             else {
-                return resolve(contextEvent.event);
+                return contextEvent.event;
             }
         });
     };
@@ -634,7 +683,7 @@ app.controller('newEventCtrl', function($scope, $location, userService, newEvent
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, jventService, $location, contextEvent) {
+app.controller('eventCtrl', function($scope, $routeParams, $location, contextEvent) {
     contextEvent.getEvent($routeParams.eventURL)
     .then(function(event) {
         $scope.event = event;
@@ -774,6 +823,7 @@ app.controller('logoutCtrl', function($scope, $location, userService) {
 
 app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
     $scope.selectedList = {};
+    $scope.roles = ["attendee", "viewer", "invite", "moderator"];
     $scope.getEventList = function(role) {
         eventMembershipService.getEventList(role)
         .then(function(eventList) {
