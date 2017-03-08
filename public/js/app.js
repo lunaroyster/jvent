@@ -431,7 +431,16 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
     eventMembershipService.roles = [];
     var updateRequired = function(eventList) {};
     var downloadAndCreateList = function(role) {
-        
+        return jventService.getEventMembershipList(role)
+        .then(function(list) {
+            var eventList = {
+                list: list,
+                role: role,
+                lastTime: Date.now()
+                //lastQuery: query
+            };
+            return eventList;
+        });
     };
     eventMembershipService.getEventList = function(role) {
         $q(function(resolve, reject) {
@@ -791,6 +800,7 @@ app.controller('logoutCtrl', function($scope, $location, userService) {
 
 app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
     $scope.selectedList = {};
+    $scope.roles = ["attendee", "viewer", "invite", "moderator"];
     $scope.getEventList = function(role) {
         eventMembershipService.getEventList(role)
         .then(function(eventList) {
