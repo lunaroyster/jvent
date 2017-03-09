@@ -821,7 +821,7 @@ app.controller('logoutCtrl', function($scope, $location, userService) {
     }
 });
 
-app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
+app.controller('eventMembershipCtrl', function($scope, $location, eventMembershipService) {
     $scope.selectedList = {};
     $scope.roles = ["attendee", "viewer", "invite", "moderator"];
     $scope.getEventList = function(role) {
@@ -830,6 +830,9 @@ app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
             $scope.selectedList = eventList;
             console.log(eventList);
         });
+    };
+    $scope.navigateEvent = function(eventURL) {
+        $location.path('/event/' + eventURL);
     };
 });
 
