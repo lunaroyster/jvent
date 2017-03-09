@@ -138,7 +138,6 @@ module.exports.getEventAttendees = function(req, res) {
         res.status(200).json(eventAttendeeList);
     })
     .catch(function(error) {
-        console.log(error);
         res.status(error.status).json(error.message);
     });
 };
@@ -149,7 +148,6 @@ module.exports.getEventViewers = function(req, res) {
         res.status(200).json(eventViewerList);
     })
     .catch(function(error) {
-        console.log(error);
         res.status(error.status).json(error.message);
     });
 };
@@ -160,7 +158,6 @@ module.exports.getEventInvitees = function(req, res) {
         res.status(200).json(eventInviteeList);
     })
     .catch(function(error) {
-        console.log(error);
         res.status(error.status).json(error.message);
     });
 };
@@ -171,7 +168,6 @@ module.exports.getEventModerators = function(req, res) {
         res.status(200).json(eventModeratorList);
     })
     .catch(function(error) {
-        console.log(error);
         res.status(error.status).json(error.message);
     });
 };
@@ -203,6 +199,7 @@ module.exports.joinEvent = function(req, res) {
         res.status(200).send();
     })
     .fail(function(error) {
+        console.log(error);
         res.status(400).send();
     })
     .done();
@@ -229,7 +226,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
                 return event;
             })
             .catch(function(error) {
-                throw badAuthError;
+                throw error;
             });
         }
     })

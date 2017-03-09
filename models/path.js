@@ -6,5 +6,6 @@ module.exports = {
     compilation: require('./compilation'),
     user: require('./user'),
     eventMembership: require('./eventmembership'),
+    media: require('./media'),
     userList: require('./userlist')
 };

@@ -6,12 +6,14 @@ var postSchema = new Schema({
     content: {
         text: {type: String}
     },
-    comments: {
-        type: [Schema.Types.ObjectId]
-    },
+    comments: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    }],
     timeOfCreation: Date,
     parentEvent: {
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
+        ref: 'Event'
     },
     parentCollections: {
         type: [Schema.Types.ObjectId],

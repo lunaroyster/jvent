@@ -63,7 +63,6 @@ module.exports.getAttendedEvents = function(req, res) {
         res.status(200).json(attendedEventsList);
     })
     .catch(function(error) {
-        console.log(error);
         res.status(error.status).json(error.message);
     });
 };
@@ -73,7 +72,6 @@ module.exports.getVisibleEvents = function(req, res) {
         res.status(200).json(visibleEventsList);
     })
     .catch(function(error) {
-        console.log(error);
         res.status(error.status).json(error.message);
     });
 };
@@ -83,7 +81,6 @@ module.exports.getInvitedEvents = function(req, res) {
         res.status(200).json(invitedEventsList);
     })
     .catch(function(error) {
-        console.log(error);
         res.status(error.status).json(error.message);
     });
 };
@@ -93,7 +90,6 @@ module.exports.getModeratedEvents = function(req, res) {
         res.status(200).json(moderatedEventsList);
     })
     .catch(function(error) {
-        console.log(error);
         res.status(error.status).json(error.message);
     });
 };
