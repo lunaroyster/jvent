@@ -153,7 +153,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
     obj.authed = false;
     obj.authStore = null;
     obj.timeCreated = Date.now();
-
+    var logoutCallbacks = [];
     var getAuthStore = function() {
         var storage = [window.localStorage, window.sessionStorage];
         for(var i = 0; i<storage.length;i++) {
@@ -207,6 +207,11 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
             console.log("Loaded User");
         }
     };
+    var launchCallbacks = function(callbackArray) {
+        for (var fn in callbackArray) {
+            callbackArray[fn]();
+        }
+    };
 
     obj.isAuthed = function() {return(obj.authed)};
     obj.login = function(creds, options) {
@@ -229,7 +234,11 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
         deleteAuthHeader();
         $rootScope.authed = false;
         //Delete user data in root scope
+        launchCallbacks(logoutCallbacks);
         obj.authed = false;
+    };
+    obj.onLogout = function(callback) {
+        logoutCallbacks.push(callback);
     };
     obj.register = function(email, username, password) {
         var req = {
@@ -484,6 +493,10 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
             return isEventInList(eventList.list, eventURL);
         });
     };
+    userService.onLogout(function() {
+        eventMembershipService.eventLists = {};
+        eventMembershipService.roles = [];
+    });
     return eventMembershipService;
 });
 
@@ -616,7 +629,7 @@ app.factory('newPostService', function(userService) {
 
 // Controllers
 
-app.controller('homeController', function($scope, $location, userService, $rootScope) {
+app.controller('homeController', function($scope, $location, userService, $rootScope, eventMembershipService) {
     $scope.homeClick = function() {
         $location.path('/');
     };
@@ -821,7 +834,7 @@ app.controller('logoutCtrl', function($scope, $location, userService) {
     }
 });
 
-app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
+app.controller('eventMembershipCtrl', function($scope, $location, eventMembershipService) {
     $scope.selectedList = {};
     $scope.roles = ["attendee", "viewer", "invite", "moderator"];
     $scope.getEventList = function(role) {
@@ -830,6 +843,9 @@ app.controller('eventMembershipCtrl', function($scope, eventMembershipService) {
             $scope.selectedList = eventList;
             console.log(eventList);
         });
+    };
+    $scope.navigateEvent = function(eventURL) {
+        $location.path('/event/' + eventURL);
     };
 });
 
