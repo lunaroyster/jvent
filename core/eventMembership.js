@@ -26,9 +26,9 @@ module.exports.addAttendee = function(user, event) {
 module.exports.addViewer = function(user, event) {
     return addAsRole(user, event, "viewer");
 };
-module.exports.addInvitee = function(user, event) {
+module.exports.addInvite = function(user, event) {
     //module.exports.invite breaks symmetry
-    return addAsRole(user, event, "invitee");
+    return addAsRole(user, event, "invite");
 };
 module.exports.addModerator = function(user, event) {
     return addAsRole(user, event, "moderator");
@@ -51,8 +51,8 @@ module.exports.isUserAttendee = function(user, event) {
 module.exports.isUserViewer = function(user, event) {
     return isUserRole(user, event, "viewer");
 };
-module.exports.isUserInvitee = function(user, event) {
-    return isUserRole(user, event, "invitee");
+module.exports.isUserInvited = function(user, event) {
+    return isUserRole(user, event, "invite");
 };
 module.exports.isUserModerator = function(user, event) {
     return isUserRole(user, event, "moderator");
@@ -70,8 +70,8 @@ module.exports.getEventAttendees = function(event) {
 module.exports.getEventViewers = function(event) {
     return getEventMemberships(event, "viewer");
 };
-module.exports.getEventInvitees = function(event) {
-    return getEventMemberships(event, "invitee");
+module.exports.getEventInvited = function(event) {
+    return getEventMemberships(event, "invite");
 };
 module.exports.getEventModerators = function(event) {
     return getEventMemberships(event, "moderator");

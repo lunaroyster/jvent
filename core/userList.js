@@ -97,7 +97,7 @@ module.exports.isUserViewer = function(user, event) {
     });
 };
 
-module.exports.isUserInvitee = function(user, event) {
+module.exports.isUserInvited = function(user, event) {
     return UserList.findOne({_id: event.userLists.invite.list, list: user._id})
     .then(function(userlist) {
         if(!userlist) throw Error("No userlist"); //TODO: Wrong error

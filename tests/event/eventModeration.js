@@ -128,7 +128,7 @@ var failJoinEventWithLink = function(event, user) {
     return deferred.promise;
 };
 
-var inviteToEvent = function(event, inviter, invitee) {
+var inviteToEvent = function(event, inviter, invite) {
     var deferred = Q.defer();
     agent
     // invite url using event url
@@ -141,7 +141,7 @@ var inviteToEvent = function(event, inviter, invitee) {
     return deferred.promise;
 };
 
-var failInviteToEvent = function(event, inviter, invitee) {
+var failInviteToEvent = function(event, inviter, invite) {
     var deferred = Q.defer();
     agent
     // invite url using event url

@@ -152,10 +152,10 @@ module.exports.getEventViewers = function(req, res) {
     });
 };
 
-module.exports.getEventInvitees = function(req, res) {
-    return eventMembershipCore.getEventInvitees(req.event)
-    .then(function(eventInviteeList) {
-        res.status(200).json(eventInviteeList);
+module.exports.getEventInvited = function(req, res) {
+    return eventMembershipCore.getEventInvited(req.event)
+    .then(function(eventInviteList) {
+        res.status(200).json(eventInviteList);
     })
     .catch(function(error) {
         res.status(error.status).json(error.message);
@@ -189,7 +189,7 @@ module.exports.joinEvent = function(req, res) {
             }
         }
         else if(ingress=="invite") {
-            return eventMembershipCore.isUserInvitee(req.user, req.event);
+            return eventMembershipCore.isUserInvited(req.user, req.event);
         }
     })
     .then(function() {

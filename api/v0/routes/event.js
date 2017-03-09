@@ -20,7 +20,7 @@ router.delete('/:eventURL', AuthOnly, eventController.appendEventIfVisible, even
 var usersRouter = express.Router();
 usersRouter.get('/viewer', eventController.getEventViewers);
 usersRouter.get('/attendee', eventController.getEventAttendees);
-usersRouter.get('/invite', eventController.getEventInvitees);
+usersRouter.get('/invite', eventController.getEventInvited);
 usersRouter.get('/moderator', eventController.getEventModerators);
 
 router.use('/:eventURL/users', AuthOnly, eventController.appendEventIfVisible, usersRouter);
