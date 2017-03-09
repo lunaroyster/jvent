@@ -16,9 +16,10 @@ var eventSchema = new Schema({
         type: String,
         required: true
     },
-    collections: {
-        type: [Schema.Types.ObjectId]
-    },
+    collections: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Collection'
+    }],
     superCollection: {
         type: Schema.Types.ObjectId, 
         ref: 'SuperCollection'
@@ -75,7 +76,7 @@ eventSchema.methods.assignUserLists = function(userLists) {
 eventSchema.methods.assignRoles = function() {
     var roles = ["attendee", "moderator"];
     if(this.ingress=="invite") {
-        roles.push("invitee");
+        roles.push("invite");
     }
     if(this.visibility=="private") {
         roles.push("viewer");

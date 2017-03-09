@@ -6,9 +6,10 @@ var collectionSchema = new Schema({
         type: Schema.Types.ObjectId, 
         ref: 'Event'
     },
-    posts: {
-        type: [Schema.Types.ObjectId]
-    }
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }]
 });
 
 collectionSchema.methods.postCount = function() {
