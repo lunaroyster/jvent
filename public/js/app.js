@@ -494,7 +494,6 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
         });
     };
     userService.onLogout(function() {
-        console.log("Resetting");
         eventMembershipService.eventLists = {};
         eventMembershipService.roles = [];
     });
@@ -630,7 +629,7 @@ app.factory('newPostService', function(userService) {
 
 // Controllers
 
-app.controller('homeController', function($scope, $location, userService, $rootScope) {
+app.controller('homeController', function($scope, $location, userService, $rootScope, eventMembershipService) {
     $scope.homeClick = function() {
         $location.path('/');
     };
