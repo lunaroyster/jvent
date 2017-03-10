@@ -66,10 +66,12 @@ nav ul {
     
 }
 
-#organizer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
+.organizer {
+    transition-duration: 0.2s;
+}
+
+.organizer:hover {
+    color: #26a69a;
 }
 
 #eventpage {
