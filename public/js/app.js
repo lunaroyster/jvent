@@ -148,6 +148,18 @@ app.service('urlService', function() {
     };
 });
 
+app.service('locService', function($location) {
+    this.home = function() {
+        $location.path('/');
+    };
+    this.events = function() {
+        $location.path('/events');
+    };
+    this.event = function(eventURL) {
+        $location.path('/event/' + eventURL);
+    };
+});
+
 app.factory('userService', function($http, $q, urlService, $rootScope) {
     var obj = {};
     obj.authed = false;
