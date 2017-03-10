@@ -740,11 +740,14 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, $location, jventService) {
-    jventService.getPosts()
-    .then(function(postList) {
-        $scope.postArray = postList;
-    });
+app.controller('postListCtrl', function($scope, $location, jventService, contextEvent) {
+    // jventService.getPosts()
+    // .then(function(postList) {
+    //     $scope.postArray = postList;
+    // });
+    $scope.newPost = function() {
+        $location.path('event/' + contextEvent.event.url + '/post/new');
+    };
 });
 
 app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, newPostService) {
