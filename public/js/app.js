@@ -693,7 +693,7 @@ app.controller('homeController', function($scope, $location, userService, $rootS
 });
 
 //Event
-app.controller('eventListCtrl', function($scope, $location, eventListService, navService) {
+app.controller('eventListCtrl', function($scope, eventListService, navService) {
     eventListService.getEventList()
     .then(function(eventList) {
         $scope.eventArray = eventList;
@@ -707,7 +707,7 @@ app.controller('eventListCtrl', function($scope, $location, eventListService, na
     }
 });
 
-app.controller('newEventCtrl', function($scope, $location, userService, newEventService, navService) {
+app.controller('newEventCtrl', function($scope, userService, newEventService, navService) {
     $scope.newEvent = newEventService.event;
     $scope.newEventEnabled = true;
     $scope.createEvent = function() {
@@ -730,7 +730,7 @@ app.controller('newEventCtrl', function($scope, $location, userService, newEvent
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, $location, contextEvent, navService) {
+app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navService) {
     contextEvent.getEvent($routeParams.eventURL)
     .then(function(event) {
         $scope.event = event;
@@ -774,7 +774,7 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, $location, jventService, contextEvent, navService) {
+app.controller('postListCtrl', function($scope, jventService, contextEvent, navService) {
     // jventService.getPosts()
     // .then(function(postList) {
     //     $scope.postArray = postList;
@@ -784,7 +784,7 @@ app.controller('postListCtrl', function($scope, $location, jventService, context
     };
 });
 
-app.controller('newPostCtrl', function($scope, $location, $routeParams, jventService, newPostService) {
+app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPostService) {
     $scope.newPost = newPostService;
     $scope.validTitle = function() {
         var l = $scope.newPost.title.length;
@@ -812,7 +812,7 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 });
 
 //User
-app.controller('signUpCtrl', function($scope, $location, userService, navService) {
+app.controller('signUpCtrl', function($scope, userService, navService) {
     if(userService.authed) {
         navService.home();
     }
@@ -835,7 +835,7 @@ app.controller('signUpCtrl', function($scope, $location, userService, navService
     };
 });
 
-app.controller('loginCtrl', function($scope, $location, userService, navService) {
+app.controller('loginCtrl', function($scope, userService, navService) {
     $scope.email;
     $scope.password;
     $scope.remainSignedIn = false;
@@ -864,14 +864,14 @@ app.controller('loginCtrl', function($scope, $location, userService, navService)
     console.log(userService);
 });
 
-app.controller('logoutCtrl', function($scope, $location, userService, navService) {
+app.controller('logoutCtrl', function($scope, userService, navService) {
     if(userService.isAuthed) {
         userService.logout();
         navService.login();
     }
 });
 
-app.controller('eventMembershipCtrl', function($scope, $location, eventMembershipService, navService) {
+app.controller('eventMembershipCtrl', function($scope, eventMembershipService, navService) {
     $scope.selectedList = {};
     $scope.roles = ["attendee", "viewer", "invite", "moderator"];
     $scope.getEventList = function(role) {
