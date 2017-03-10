@@ -681,13 +681,13 @@ app.controller('homeController', function($scope, $location, userService, $rootS
 });
 
 //Event
-app.controller('eventListCtrl', function($scope, $location, eventListService) {
+app.controller('eventListCtrl', function($scope, $location, eventListService, navService) {
     eventListService.getEventList()
     .then(function(eventList) {
         $scope.eventArray = eventList;
     });
     $scope.eventClick = function(eventURL) {
-        $location.path('/event/' + eventURL);
+        navService.event(eventURL);
     };
     $scope.organizerClick = function(event) {
         //TODO: Navigate to page showing all events organised by event.organizer
@@ -695,7 +695,7 @@ app.controller('eventListCtrl', function($scope, $location, eventListService) {
     }
 });
 
-app.controller('newEventCtrl', function($scope, $location, userService, newEventService) {
+app.controller('newEventCtrl', function($scope, $location, userService, newEventService, navService) {
     $scope.newEvent = newEventService.event;
     $scope.newEventEnabled = true;
     $scope.createEvent = function() {
@@ -703,7 +703,7 @@ app.controller('newEventCtrl', function($scope, $location, userService, newEvent
             $scope.newEventEnabled = false;
             newEventService.publish()
             .then(function(eventURL) {
-                $location.path('/event/' + eventURL);
+                navService.event(eventURL);
             },
             function(err) {
                 for (var i = 0; i < err.length; i++) {
@@ -800,9 +800,9 @@ app.controller('newPostCtrl', function($scope, $location, $routeParams, jventSer
 });
 
 //User
-app.controller('signUpCtrl', function($scope, $location, userService) {
+app.controller('signUpCtrl', function($scope, $location, userService, navService) {
     if(userService.authed) {
-        $location.path('/');
+        navService.home();
     }
     $scope.email;
     $scope.username;
@@ -816,14 +816,14 @@ app.controller('signUpCtrl', function($scope, $location, userService) {
             userService.register($scope.email, $scope.username, $scope.password)
             .then(function(status) {
                 if(status.success) {
-                    $location.path('/login');
+                    navService.login();
                 }
             });
         }
     };
 });
 
-app.controller('loginCtrl', function($scope, $location, userService) {
+app.controller('loginCtrl', function($scope, $location, userService, navService) {
     $scope.email;
     $scope.password;
     $scope.remainSignedIn = false;
@@ -838,7 +838,7 @@ app.controller('loginCtrl', function($scope, $location, userService) {
             userService.login(creds, {remainSignedIn:$scope.remainSignedIn})
             .then(function(success) {
                 if (success) {
-                    $location.path('/');
+                    navService.home();
                 }
             })
             .finally(function() {
@@ -852,14 +852,14 @@ app.controller('loginCtrl', function($scope, $location, userService) {
     console.log(userService);
 });
 
-app.controller('logoutCtrl', function($scope, $location, userService) {
+app.controller('logoutCtrl', function($scope, $location, userService, navService) {
     if(userService.isAuthed) {
         userService.logout();
-        $location.path('/login');
+        navService.login();
     }
 });
 
-app.controller('eventMembershipCtrl', function($scope, $location, eventMembershipService) {
+app.controller('eventMembershipCtrl', function($scope, $location, eventMembershipService, navService) {
     $scope.selectedList = {};
     $scope.roles = ["attendee", "viewer", "invite", "moderator"];
     $scope.getEventList = function(role) {
@@ -870,7 +870,7 @@ app.controller('eventMembershipCtrl', function($scope, $location, eventMembershi
         });
     };
     $scope.navigateEvent = function(eventURL) {
-        $location.path('/event/' + eventURL);
+        navService.event(eventURL);
     };
 });
 
