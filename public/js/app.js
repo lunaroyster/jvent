@@ -158,11 +158,23 @@ app.service('navService', function($location) {
     this.event = function(eventURL) {
         $location.path('/event/' + eventURL);
     };
+    this.posts = function(eventURL) {
+        $location.path('/event/' + eventURL + '/posts');
+    };
+    this.newEvent = function() {
+        $location.path('/event/new');
+    };
+    this.newPost = function(eventURL) {
+        $location.path('/event/' + eventURL + '/post/new');
+    };
     this.login = function() {
         $location.path('/login');
     };
     this.logout = function() {
         $location.path('/logout');
+    };
+    this.signup = function() {
+        $location.path('/signup');
     };
 });
 
@@ -653,10 +665,10 @@ app.controller('homeController', function($scope, $location, userService, $rootS
     };
     $scope.createEventClick = function() {
         if(userService.authed) {
-            $location.path('/event/new');
+            navService.newEvent();
         }
         else {
-            $location.path('/login');
+            navService.login();
         }
     };
     $scope.loginClick = function() {
@@ -674,7 +686,7 @@ app.controller('homeController', function($scope, $location, userService, $rootS
         $location.path('/profile');
     };
     $scope.signupClick = function() {
-        $location.path('/signup');
+        navService.signup();
     };
     $scope.userService = userService;
     // setInterval(function() {console.log(userService)}, 1000);
@@ -718,7 +730,7 @@ app.controller('newEventCtrl', function($scope, $location, userService, newEvent
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, $location, contextEvent) {
+app.controller('eventCtrl', function($scope, $routeParams, $location, contextEvent, navService) {
     contextEvent.getEvent($routeParams.eventURL)
     .then(function(event) {
         $scope.event = event;
@@ -742,7 +754,7 @@ app.controller('eventCtrl', function($scope, $routeParams, $location, contextEve
         });
     };
     $scope.view = function() {
-        $location.path($location.path()+'/posts')
+        navService.posts(contextEvent.event.url);
     };
 });
 
@@ -762,13 +774,13 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, $location, jventService, contextEvent) {
+app.controller('postListCtrl', function($scope, $location, jventService, contextEvent, navService) {
     // jventService.getPosts()
     // .then(function(postList) {
     //     $scope.postArray = postList;
     // });
     $scope.newPost = function() {
-        $location.path('event/' + contextEvent.event.url + '/post/new');
+        navService.newPost(contextEvent.event.url);
     };
 });
 
@@ -847,7 +859,7 @@ app.controller('loginCtrl', function($scope, $location, userService, navService)
         }
     };
     $scope.signUp = function() {
-        $location.path('/signup');
+        navService.signup();
     };
     console.log(userService);
 });
