@@ -6,7 +6,7 @@
         <span class="description" ng-bind="event.byline"></span>
       </div>
       <div class="bottom">
-        <span class="organizer" ng-bind="event.organizer.name"></span>
+        <span class="organizer"  ng-click="organizerClick(event); $event.stopPropagation();" ng-bind="event.organizer.name"></span>
       </div>
     </div>
   </div>

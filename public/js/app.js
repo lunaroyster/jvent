@@ -671,6 +671,10 @@ app.controller('eventListCtrl', function($scope, $location, eventListService) {
     $scope.eventClick = function(eventURL) {
         $location.path('/event/' + eventURL);
     };
+    $scope.organizerClick = function(event) {
+        //TODO: Navigate to page showing all events organised by event.organizer
+        console.log(event);
+    }
 });
 
 app.controller('newEventCtrl', function($scope, $location, userService, newEventService) {
