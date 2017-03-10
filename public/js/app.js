@@ -148,7 +148,7 @@ app.service('urlService', function() {
     };
 });
 
-app.service('locService', function($location) {
+app.service('navService', function($location) {
     this.home = function() {
         $location.path('/');
     };
@@ -157,6 +157,12 @@ app.service('locService', function($location) {
     };
     this.event = function(eventURL) {
         $location.path('/event/' + eventURL);
+    };
+    this.login = function() {
+        $location.path('/login');
+    };
+    this.logout = function() {
+        $location.path('/logout');
     };
 });
 
@@ -641,9 +647,9 @@ app.factory('newPostService', function(userService) {
 
 // Controllers
 
-app.controller('homeController', function($scope, $location, userService, $rootScope, eventMembershipService) {
+app.controller('homeController', function($scope, $location, userService, $rootScope, eventMembershipService, navService) {
     $scope.homeClick = function() {
-        $location.path('/');
+        navService.home();
     };
     $scope.createEventClick = function() {
         if(userService.authed) {
@@ -654,11 +660,11 @@ app.controller('homeController', function($scope, $location, userService, $rootS
         }
     };
     $scope.loginClick = function() {
-        $location.path('/login');
+        navService.login();
     };
     $scope.logoutClick = function() {
         if(userService.authed) {
-            $location.path('/logout');
+            navService.logout();
         }
     };
     $scope.settingsClick = function() {
