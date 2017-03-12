@@ -647,19 +647,29 @@ app.factory('newEventService', function(userService, jventService) {
     };
     newEventService.valid = {
         name: function() {
-            
+            return (!!event.name && event.name.length>=4 && event.name.length<=64)
         },
         byline: function() {
-            
+            if(event.byline) {
+                return (event.byline.length<=128);
+            }
+            else {
+                return true;
+            }
         },
         description: function() {
-            
+            if(event.description) {
+                return (event.description.length <=1024);
+            }
+            else {
+                return true;
+            }
         },
         visibility: function() {
-            
+            return (event.visibility=="public"||event.visibility=="unlisted"||event.visibility=="private");
         },
         ingress: function() {
-            
+            return (event.ingress=="everyone"||event.ingress=="link"||event.ingress=="invited");
         }
     }
     return(newEventService);
