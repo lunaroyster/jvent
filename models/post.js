@@ -6,6 +6,10 @@ var postSchema = new Schema({
     content: {
         text: {type: String}
     },
+    media: {
+        type: Schema.Types.ObjectId,
+        ref: 'Media'
+    },
     comments: [{
         type: Schema.Types.ObjectId,
         ref: 'Comment'
