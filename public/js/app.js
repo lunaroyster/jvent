@@ -685,12 +685,23 @@ app.factory('newEventService', function(userService, jventService) {
 });
 
 app.factory('newPostService', function(userService) {
-   var post;
-   post.publish = function() {
-        //Publish post using jvent service
-        //Reset
+   var newPostService = {};
+   var post = {};
+   newPostService.post = post;
+   newPostService.publish = function() {
+        if(valid.all()) {
+            //Publish post using jvent service
+            //Reset
+        }
    };
-   return(post);
+   var valid = {
+       //Validation functions go here
+        all: function() {
+            return true;
+        }
+   };
+   newPostService.valid = valid;
+   return(newPostService);
 });
 
 // Controllers
