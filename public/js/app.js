@@ -841,7 +841,7 @@ app.controller('postListCtrl', function($scope, jventService, contextEvent, navS
     };
 });
 
-app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPostService) {
+app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPostService, navService) {
     $scope.newPost = newPostService.post;
     $scope.valid = newPostService.valid;
     $scope.newPostEnabled = function() {
@@ -857,18 +857,21 @@ app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPo
             return(false);
         }
     };
-    $scope.post = function() {
-        var post = {
-            title: $scope.title,
-            content: {
-                text: $scope.body
-            },
-            link: $scope.link
-        };
-        var eventURL = $routeParams.eventURL;
-        console.log(eventURL);
-        if($scope.validTitle()){
-            jventService.createPost(post, eventURL);
+    $scope.createPost = function() {
+        if(!$scope.pendingRequest) {
+            $scope.pendingRequest = true;
+            newPostService.publish()
+            // .then(function(postURL) {
+            //     // navService.post(postURL);
+            // },
+            // function(err) {
+            //     for (var i = 0; i < err.length; i++) {
+            //         Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
+            //     }
+            // })
+            // .finally(function() {
+            //     $scope.pendingRequest = false;
+            // });
         }
     };
 });
