@@ -669,10 +669,10 @@ app.factory('newEventService', function(userService, jventService) {
             return (event.visibility=="public"||event.visibility=="unlisted"||event.visibility=="private");
         },
         ingress: function() {
-            return (event.ingress=="everyone"||event.ingress=="link"||event.ingress=="invited");
+            return (event.ingress=="everyone"||event.ingress=="link"||event.ingress=="invite");
         },
         all: function() {
-            return (valid.name&&valid.byline()&&valid.description()&&valid.visibility()&&valid.ingress());
+            return (valid.name()&&valid.byline()&&valid.description()&&valid.visibility()&&valid.ingress());
         }
     };
     newEventService.valid = valid;
@@ -740,10 +740,13 @@ app.controller('eventListCtrl', function($scope, eventListService, navService) {
 
 app.controller('newEventCtrl', function($scope, userService, newEventService, navService) {
     $scope.newEvent = newEventService.event;
-    $scope.newEventEnabled = true;
+    $scope.newEventEnabled = function() {
+        return !$scope.pendingRequest && newEventService.valid.all();
+    };
+    $scope.pendingRequest = false;
     $scope.createEvent = function() {
-        if($scope.newEventEnabled) {
-            $scope.newEventEnabled = false;
+        if(!$scope.pendingRequest) {
+            $scope.pendingRequest = true;
             newEventService.publish()
             .then(function(eventURL) {
                 navService.event(eventURL);
@@ -754,7 +757,7 @@ app.controller('newEventCtrl', function($scope, userService, newEventService, na
                 }
             })
             .finally(function() {
-                $scope.newEventEnabled = true;
+                $scope.pendingRequest = false;
             });
         }
     };
