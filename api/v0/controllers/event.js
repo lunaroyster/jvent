@@ -33,6 +33,7 @@ module.exports.createEvent = function(req, res) {
             description: req.body.event.description,
             visibility: req.body.event.visibility,
             ingress: req.body.event.ingress,
+            comment: req.body.event.comment,
             user: req.user
         };
         return eventCore.createEvent(eventSettings, req.user);

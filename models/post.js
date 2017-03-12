@@ -6,10 +6,10 @@ var postSchema = new Schema({
     content: {
         text: {type: String}
     },
-    comments: [{
+    media: {
         type: Schema.Types.ObjectId,
-        ref: 'Comment'
-    }],
+        ref: 'Media'
+    },
     timeOfCreation: Date,
     parentEvent: {
         type: Schema.Types.ObjectId,
@@ -37,8 +37,6 @@ var postSchema = new Schema({
         index: true,
         unique: true
     }
-    // resource: String, // Can be URL or something else
-    // resourceType: String, // Stores the type of resource
 });
 
 postSchema.methods.collectionCount = function() {
