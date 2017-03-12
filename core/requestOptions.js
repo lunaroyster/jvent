@@ -15,6 +15,14 @@ module.exports = {
             else {
                 return(false);
             }
+        },
+        isCommentSetting: function(value) {
+            if(value=="anyone"||value=="attendee"||value=="nobody") {
+                return(true);
+            }
+            else {
+                return(false);
+            }
         }
     }
 };
