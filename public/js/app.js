@@ -633,28 +633,75 @@ app.factory('contextPost', function() {
 // New Providers
 app.factory('newEventService', function(userService, jventService) {
     var newEventService = {};
-    newEventService.event = {};
+    var event = {};
+    newEventService.event = event;
     newEventService.event.organizer = {
         name: userService.user()
     }; //Is this even required?
     newEventService.publish = function() {
-        return jventService.createEvent(newEventService.event)
-        .then(function(eventURL) {
-            newEventService.event = {};
-            return(eventURL);
-        });
+        if(valid.all()) {
+            return jventService.createEvent(newEventService.event)
+            .then(function(eventURL) {
+                newEventService.event = {};
+                return(eventURL);
+            });
+        }
     };
-    //TODO: Event Validation stuff goes here
+    var valid = {
+        name: function() {
+            return (!!event.name && event.name.length>=4 && event.name.length<=64);
+        },
+        byline: function() {
+            if(event.byline) {
+                return (event.byline.length<=128);
+            }
+            else {
+                return true;
+            }
+        },
+        description: function() {
+            if(event.description) {
+                return (event.description.length <=1024);
+            }
+            else {
+                return true;
+            }
+        },
+        visibility: function() {
+            return (event.visibility=="public"||event.visibility=="unlisted"||event.visibility=="private");
+        },
+        ingress: function() {
+            return (event.ingress=="everyone"||event.ingress=="link"||event.ingress=="invite");
+        },
+        comment: function() {
+            return (event.comment=="anyone"||event.comment=="attendee"||event.comment=="nobody");
+        },
+        all: function() {
+            return (valid.name()&&valid.byline()&&valid.description()&&valid.visibility()&&valid.ingress()&&valid.comment());
+        }
+    };
+    newEventService.valid = valid;
     return(newEventService);
 });
 
 app.factory('newPostService', function(userService) {
-   var post;
-   post.publish = function() {
-        //Publish post using jvent service
-        //Reset
+   var newPostService = {};
+   var post = {};
+   newPostService.post = post;
+   newPostService.publish = function() {
+        if(valid.all()) {
+            //Publish post using jvent service
+            //Reset
+        }
    };
-   return(post);
+   var valid = {
+       //Validation functions go here
+        all: function() {
+            return true;
+        }
+   };
+   newPostService.valid = valid;
+   return(newPostService);
 });
 
 // Controllers
@@ -709,10 +756,14 @@ app.controller('eventListCtrl', function($scope, eventListService, navService) {
 
 app.controller('newEventCtrl', function($scope, userService, newEventService, navService) {
     $scope.newEvent = newEventService.event;
-    $scope.newEventEnabled = true;
+    $scope.valid = newEventService.valid;
+    $scope.newEventEnabled = function() {
+        return !$scope.pendingRequest && $scope.valid.all();
+    };
+    $scope.pendingRequest = false;
     $scope.createEvent = function() {
-        if($scope.newEventEnabled) {
-            $scope.newEventEnabled = false;
+        if(!$scope.pendingRequest) {
+            $scope.pendingRequest = true;
             newEventService.publish()
             .then(function(eventURL) {
                 navService.event(eventURL);
@@ -723,7 +774,7 @@ app.controller('newEventCtrl', function($scope, userService, newEventService, na
                 }
             })
             .finally(function() {
-                $scope.newEventEnabled = true;
+                $scope.pendingRequest = false;
             });
         }
     };

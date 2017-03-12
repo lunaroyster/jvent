@@ -21,7 +21,7 @@
                         <label for="name">Event Name</label>
                     </div>
                     <div class="input-field col s12">
-                        <input id="byline" type="text" ng-model="newEvent.byline" length="144" required></input>
+                        <input id="byline" type="text" ng-model="newEvent.byline" length="144"></input>
                         <label for="byline">Byline</label>
                     </div>
                     <div class="input-field col s12">
@@ -79,7 +79,7 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 m4 push-m4">
-                    <a class="waves-effect waves-dark btn-large" style="width:100%" ng-click="createEvent()" ng-disabled="!newEventEnabled">Create Event<i class="material-icons right">send</i></a>
+                    <a class="waves-effect waves-dark btn-large" style="width:100%" ng-click="createEvent()" ng-disabled="!newEventEnabled()">Create Event<i class="material-icons right">send</i></a>
                 </div>
             </div>
         </div>
