@@ -633,7 +633,7 @@ app.factory('contextPost', function() {
 // New Providers
 app.factory('newEventService', function(userService, jventService) {
     var newEventService = {};
-    var event = {}
+    var event = {};
     newEventService.event = event;
     newEventService.event.organizer = {
         name: userService.user()
@@ -645,9 +645,9 @@ app.factory('newEventService', function(userService, jventService) {
             return(eventURL);
         });
     };
-    newEventService.valid = {
+    var valid = {
         name: function() {
-            return (!!event.name && event.name.length>=4 && event.name.length<=64)
+            return (!!event.name && event.name.length>=4 && event.name.length<=64);
         },
         byline: function() {
             if(event.byline) {
@@ -670,8 +670,12 @@ app.factory('newEventService', function(userService, jventService) {
         },
         ingress: function() {
             return (event.ingress=="everyone"||event.ingress=="link"||event.ingress=="invited");
+        },
+        all: function() {
+            return (valid.name&&valid.byline()&&valid.description()&&valid.visibility()&&valid.ingress());
         }
-    }
+    };
+    newEventService.valid = valid;
     return(newEventService);
 });
 
