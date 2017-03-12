@@ -1,28 +1,13 @@
 module.exports = {
     customValidators: {
         isVisibility: function(value) {
-            if(value=="public"||value=="unlisted"||value=="private") {
-                return(true);
-            }
-            else {
-                return(false);
-            }
+            return (value=="public"||value=="unlisted"||value=="private");
         },
         isIngress: function(value) {
-            if(value=="everyone"||value=="link"||value=="invite") {
-                return(true);
-            }
-            else {
-                return(false);
-            }
+            return (value=="everyone"||value=="link"||value=="invite");
         },
         isCommentSetting: function(value) {
-            if(value=="anyone"||value=="attendee"||value=="nobody") {
-                return(true);
-            }
-            else {
-                return(false);
-            }
+            return (value=="anyone"||value=="attendee"||value=="nobody");
         }
     }
 };
