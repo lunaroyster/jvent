@@ -633,7 +633,8 @@ app.factory('contextPost', function() {
 // New Providers
 app.factory('newEventService', function(userService, jventService) {
     var newEventService = {};
-    newEventService.event = {};
+    var event = {}
+    newEventService.event = event;
     newEventService.event.organizer = {
         name: userService.user()
     }; //Is this even required?
@@ -644,7 +645,23 @@ app.factory('newEventService', function(userService, jventService) {
             return(eventURL);
         });
     };
-    //TODO: Event Validation stuff goes here
+    newEventService.valid = {
+        name: function() {
+            
+        },
+        byline: function() {
+            
+        },
+        description: function() {
+            
+        },
+        visibility: function() {
+            
+        },
+        ingress: function() {
+            
+        }
+    }
     return(newEventService);
 });
 
