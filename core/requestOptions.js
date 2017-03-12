@@ -6,7 +6,7 @@ module.exports = {
         isIngress: function(value) {
             return (value=="everyone"||value=="link"||value=="invite");
         },
-        isCommentSetting: function(value) {
+        isComment: function(value) {
             return (value=="anyone"||value=="attendee"||value=="nobody");
         }
     }

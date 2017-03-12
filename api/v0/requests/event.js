@@ -32,6 +32,12 @@ module.exports.postEvent = {
         isIngress: {
             errorMessage: 'Invalid ingress setting'
         }
+    },
+    'event.comment': {
+        notEmpty: true,
+        isComment: {
+            errorMessage: 'Invalid comment setting'
+        }
     }
 };
 
