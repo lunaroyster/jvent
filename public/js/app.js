@@ -639,11 +639,13 @@ app.factory('newEventService', function(userService, jventService) {
         name: userService.user()
     }; //Is this even required?
     newEventService.publish = function() {
-        return jventService.createEvent(newEventService.event)
-        .then(function(eventURL) {
-            newEventService.event = {};
-            return(eventURL);
-        });
+        if(valid.all()) {
+            return jventService.createEvent(newEventService.event)
+            .then(function(eventURL) {
+                newEventService.event = {};
+                return(eventURL);
+            });
+        }
     };
     var valid = {
         name: function() {
@@ -740,8 +742,9 @@ app.controller('eventListCtrl', function($scope, eventListService, navService) {
 
 app.controller('newEventCtrl', function($scope, userService, newEventService, navService) {
     $scope.newEvent = newEventService.event;
+    $scope.valid = newEventService.valid;
     $scope.newEventEnabled = function() {
-        return !$scope.pendingRequest && newEventService.valid.all();
+        return !$scope.pendingRequest && $scope.valid.all();
     };
     $scope.pendingRequest = false;
     $scope.createEvent = function() {
