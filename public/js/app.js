@@ -673,8 +673,11 @@ app.factory('newEventService', function(userService, jventService) {
         ingress: function() {
             return (event.ingress=="everyone"||event.ingress=="link"||event.ingress=="invite");
         },
+        comment: function() {
+            return (event.comment=="anyone"||event.comment=="attendee"||event.comment=="nobody");
+        },
         all: function() {
-            return (valid.name()&&valid.byline()&&valid.description()&&valid.visibility()&&valid.ingress());
+            return (valid.name()&&valid.byline()&&valid.description()&&valid.visibility()&&valid.ingress()&&valid.comment());
         }
     };
     newEventService.valid = valid;
