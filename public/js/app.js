@@ -642,11 +642,14 @@ app.factory('newEventService', function(userService, jventService) {
         if(valid.all()) {
             return jventService.createEvent(newEventService.event)
             .then(function(eventURL) {
-                newEventService.event = {};
+                reset();
                 return(eventURL);
             });
         }
     };
+    var reset = function() {
+        newEventService.event = {};
+    }
     var valid = {
         name: function() {
             return (!!event.name && event.name.length>=4 && event.name.length<=64);
@@ -691,7 +694,7 @@ app.factory('newPostService', function(userService) {
    newPostService.publish = function() {
         if(valid.all()) {
             //Publish post using jvent service
-            //Reset
+            reset();
         }
    };
    var valid = {
@@ -699,6 +702,9 @@ app.factory('newPostService', function(userService) {
         all: function() {
             return true;
         }
+   };
+   var reset = function() {
+       newPostService.post = {};
    };
    newPostService.valid = valid;
    return(newPostService);
