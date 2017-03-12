@@ -836,7 +836,12 @@ app.controller('postListCtrl', function($scope, jventService, contextEvent, navS
 });
 
 app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPostService) {
-    $scope.newPost = newPostService;
+    $scope.newPost = newPostService.post;
+    $scope.valid = newPostService.valid;
+    $scope.newPostEnabled = function() {
+        return !$scope.pendingRequest && $scope.valid.all();
+    };
+    $scope.pendingRequest = false;
     $scope.validTitle = function() {
         var l = $scope.newPost.title.length;
         if(l<=144 && l>0){
