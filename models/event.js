@@ -8,6 +8,7 @@ var eventSchema = new Schema({
     },
     byline: String,
     description: String,
+    comment: String,
     visibility: {
         type: String,
         required: true

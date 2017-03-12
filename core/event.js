@@ -15,6 +15,7 @@ module.exports.createEvent = function(eventSettings, user) {
         description: eventSettings.description,
         visibility: eventSettings.visibility,
         ingress: eventSettings.ingress,
+        comment: eventSettings.comment,
         url: urlCore.generateRandomUrl(6),
         timeOfCreation: Date.now()
     });
