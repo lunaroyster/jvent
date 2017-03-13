@@ -2,7 +2,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var postSchema = new Schema({
-    title: String,
+    title: {
+        type: String,
+        required: true
+    },
     content: {
         text: {type: String}
     },
@@ -10,6 +13,7 @@ var postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Media'
     },
+    link: String,
     timeOfCreation: Date,
     parentEvent: {
         type: Schema.Types.ObjectId,

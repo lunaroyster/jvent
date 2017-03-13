@@ -6,7 +6,7 @@ var mediaSchema = new Schema({
     type: String, //image/video/gif/link
     strategy: String, //jvent/imgur/other
     access: {
-        type: Schema.Types.Mixed //Unique ID on webiste
+        type: Schema.Types.Mixed //Whatever required to access the resource 
     },
     event: {
         type: Schema.Types.ObjectId,
