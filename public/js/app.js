@@ -642,11 +642,14 @@ app.factory('newEventService', function(userService, jventService) {
         if(valid.all()) {
             return jventService.createEvent(newEventService.event)
             .then(function(eventURL) {
-                newEventService.event = {};
+                reset();
                 return(eventURL);
             });
         }
     };
+    var reset = function() {
+        newEventService.event = {};
+    }
     var valid = {
         name: function() {
             return (!!event.name && event.name.length>=4 && event.name.length<=64);
@@ -691,7 +694,7 @@ app.factory('newPostService', function(userService) {
    newPostService.publish = function() {
         if(valid.all()) {
             //Publish post using jvent service
-            //Reset
+            reset();
         }
    };
    var valid = {
@@ -699,6 +702,9 @@ app.factory('newPostService', function(userService) {
         all: function() {
             return true;
         }
+   };
+   var reset = function() {
+       newPostService.post = {};
    };
    newPostService.valid = valid;
    return(newPostService);
@@ -835,8 +841,13 @@ app.controller('postListCtrl', function($scope, jventService, contextEvent, navS
     };
 });
 
-app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPostService) {
-    $scope.newPost = newPostService;
+app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPostService, navService) {
+    $scope.newPost = newPostService.post;
+    $scope.valid = newPostService.valid;
+    $scope.newPostEnabled = function() {
+        return !$scope.pendingRequest && $scope.valid.all();
+    };
+    $scope.pendingRequest = false;
     $scope.validTitle = function() {
         var l = $scope.newPost.title.length;
         if(l<=144 && l>0){
@@ -846,18 +857,21 @@ app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPo
             return(false);
         }
     };
-    $scope.post = function() {
-        var post = {
-            title: $scope.title,
-            content: {
-                text: $scope.body
-            },
-            link: $scope.link
-        };
-        var eventURL = $routeParams.eventURL;
-        console.log(eventURL);
-        if($scope.validTitle()){
-            jventService.createPost(post, eventURL);
+    $scope.createPost = function() {
+        if(!$scope.pendingRequest) {
+            $scope.pendingRequest = true;
+            newPostService.publish()
+            // .then(function(postURL) {
+            //     // navService.post(postURL);
+            // },
+            // function(err) {
+            //     for (var i = 0; i < err.length; i++) {
+            //         Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
+            //     }
+            // })
+            // .finally(function() {
+            //     $scope.pendingRequest = false;
+            // });
         }
     };
 });
