@@ -10,6 +10,7 @@ var postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Media'
     },
+    link: String,
     timeOfCreation: Date,
     parentEvent: {
         type: Schema.Types.ObjectId,
