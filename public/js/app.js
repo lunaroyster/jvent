@@ -698,24 +698,18 @@ app.factory('newPostService', function(userService) {
         }
    };
    var valid = {
-        //Validation functions go here
         title: function() {
             var l = newPostService.post.title.length;
-            if(l<=144 && l>0){
-                return(true);
-            }
-            else {
-                return(false);
-            }
+            return(l<=144 && l>0);
         },
         all: function() {
-            return true;
+            return (valid.title());
         }
    };
+   newPostService.valid = valid;
    var reset = function() {
        newPostService.post = {};
    };
-   newPostService.valid = valid;
    return(newPostService);
 });
 
