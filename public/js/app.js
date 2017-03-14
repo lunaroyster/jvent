@@ -687,14 +687,17 @@ app.factory('newEventService', function(userService, jventService) {
     return(newEventService);
 });
 
-app.factory('newPostService', function(userService) {
+app.factory('newPostService', function(userService, jventService, contextEvent) {
    var newPostService = {};
    var post = {};
    newPostService.post = post;
    newPostService.publish = function() {
         if(valid.all()) {
-            //Publish post using jvent service
-            reset();
+            return jventService.createPost(newPostService.post, contextEvent.event.url)
+            .then(function(postURL) {
+                reset();
+                return(postURL);
+            });
         }
    };
    var valid = {
@@ -844,7 +847,14 @@ app.controller('postListCtrl', function($scope, jventService, contextEvent, navS
     };
 });
 
-app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPostService, navService) {
+app.controller('newPostCtrl', function($scope, $routeParams, newPostService, navService, contextEvent) {
+    contextEvent.getEvent($routeParams.eventURL)
+    .then(function(event) {
+        $scope.event = event;
+    })
+    .catch(function(error) {
+        Materialize.toast(error.status + ' ' + error.statusText, 4000);
+    });
     $scope.newPost = newPostService.post;
     $scope.valid = newPostService.valid;
     $scope.newPostEnabled = function() {
