@@ -698,7 +698,16 @@ app.factory('newPostService', function(userService) {
         }
    };
    var valid = {
-       //Validation functions go here
+        //Validation functions go here
+        title: function() {
+            var l = newPostService.post.title.length;
+            if(l<=144 && l>0){
+                return(true);
+            }
+            else {
+                return(false);
+            }
+        },
         all: function() {
             return true;
         }
@@ -848,15 +857,6 @@ app.controller('newPostCtrl', function($scope, $routeParams, jventService, newPo
         return !$scope.pendingRequest && $scope.valid.all();
     };
     $scope.pendingRequest = false;
-    $scope.validTitle = function() {
-        var l = $scope.newPost.title.length;
-        if(l<=144 && l>0){
-            return(true);
-        }
-        else {
-            return(false);
-        }
-    };
     $scope.createPost = function() {
         if(!$scope.pendingRequest) {
             $scope.pendingRequest = true;
