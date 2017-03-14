@@ -161,6 +161,9 @@ app.service('navService', function($location) {
     this.posts = function(eventURL) {
         $location.path('/event/' + eventURL + '/posts');
     };
+    this.post = function(eventURL, postURL) {
+        $location.path('/event/' + eventURL + '/post/' + postURL);
+    };
     this.newEvent = function() {
         $location.path('/event/new');
     };
@@ -865,17 +868,17 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, nav
         if(!$scope.pendingRequest) {
             $scope.pendingRequest = true;
             newPostService.publish()
-            // .then(function(postURL) {
-            //     // navService.post(postURL);
-            // },
-            // function(err) {
-            //     for (var i = 0; i < err.length; i++) {
-            //         Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
-            //     }
-            // })
-            // .finally(function() {
-            //     $scope.pendingRequest = false;
-            // });
+            .then(function(postURL) {
+                navService.post($scope.event.url, postURL);
+            },
+            function(err) {
+                for (var i = 0; i < err.length; i++) {
+                    Materialize.toast(err[i].param + ' ' + err[i].msg, 4000);
+                }
+            })
+            .finally(function() {
+                $scope.pendingRequest = false;
+            });
         }
     };
 });
