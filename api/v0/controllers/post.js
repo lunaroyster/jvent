@@ -2,6 +2,7 @@ var postCore = require('../../../core/post');
 // var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
 var collectionCore = require('../../../core/collection');
+var mediaCore = require('../../../core/media');
 var eventMembershipCore = require('../../../core/eventMembership');
 var postRequestSchema = require('../requests/post');
 
@@ -31,11 +32,14 @@ module.exports.createPost = function(req, res) {
         });
     })         //Check if user is attendee
     .then(function(event) {
+        
+    })    //Create media
+    .then(function(media) {
         var postSettings = {
             title: req.body.post.title,
             contentText: req.body.post.content.text
         };
-        return postCore.createPost(req.user, postSettings, event)
+        return postCore.createPost(req.user, postSettings, req.event)
         .then(function(post) {
             collectionCore.addPostToCollectionByID(post, req.user.posts)
             .then(function(collection) {
