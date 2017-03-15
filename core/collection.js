@@ -13,7 +13,7 @@ module.exports.createSuperCollection = function(event) {
 
 module.exports.getSuperCollectionByID = function(superCollectionID) {
     var superCollectionQuery = SuperCollection.findOne({_id: superCollectionID});
-    return superCollectionQuery.exec();
+    return superCollectionQuery;
 };
 
 module.exports.addPostToSuperCollection = function(post, superCollection) {
