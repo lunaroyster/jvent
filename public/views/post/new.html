@@ -6,13 +6,13 @@
         <div class="col s12 m8">
             <div id="text">
                 <div class="input-field col s12">
-                    <textarea id="postText" class="materialize-textarea"></textarea>
+                    <textarea id="postText" ng-model="newPost.content.text" class="materialize-textarea"></textarea>
                     <label for="postText">Post Body</label>
                 </div>
             </div>
             <div id="link">
                 <div class="input-field col s12">
-                    <input id="link" type="text" class="validate">
+                    <input id="link" type="text" ng-model="newPost.link" class="validate">
                     <label for="link">Link</label>
                 </div>
             </div>
