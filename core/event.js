@@ -53,6 +53,21 @@ module.exports.getPublicEvents = function() {
     return eventQuery.exec();
 };
 
+var getUniqueUrl = function(length) {
+    return Q.fcall(function() {
+        var url = urlCore.generateRandomUrl(length);
+        return Event.findOne({url: url})
+        .then(function(event) {
+            if(!event) {
+                return url;
+            }
+            else {
+                return getUniqueUrl(length);
+            }
+        });
+    });
+};
+
 var returnEventOrError = function(event) {
     if(!event) {
         var err = Error("Can't find event");
