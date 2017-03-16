@@ -42,6 +42,12 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/post/new.html'
     })
 
+    .when('/event/:eventURL/post/:postURL', {
+        // controller  : 'newPostCtrl',
+        // controllerAs: 'newPostView',
+        // templateUrl : './views/post/new.html'
+    })
+
     .when('/event/:eventURL/users', {
         controller  : 'userListCtrl',
         controllerAs: 'userlistview',
