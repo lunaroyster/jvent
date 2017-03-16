@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 // var User = mongoose.model('User');
 var eventCore = require('./event');
+var urlCore = require('./url');
 var collectionCore = require('./collection');
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
@@ -24,6 +25,7 @@ module.exports.createPost = function(user, post, event) {
         var newPost = new Post({
             title: post.title,
             parentEvent: event._id,
+            url: urlCore.generateRandomUrl(6),
             superCollection: sc._id,
             content: {
                 text: post.contentText
