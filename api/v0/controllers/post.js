@@ -48,7 +48,13 @@ module.exports.createPost = function(req, res) {
         // }); //TODO: secondary collections
     })    //Create post and add to collections
     .then(function(post) {
-        res.status(201).json(post);
+        var state = {
+            status: "Created",
+            post: {
+                url: post.url
+            }
+        };
+        res.status(201).json(state);
     })     //Send post creation success
     .catch(function(error) {
         var err;
