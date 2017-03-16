@@ -345,7 +345,7 @@ app.service('jventService', function($http, $q, urlService) {
         };
         return $http.post(url, data)
         .then(function(response){
-            var postID = response.data.post;
+            var postID = response.data.post.url;
             return postID;
         });
     };
