@@ -9,24 +9,29 @@ var eventMembershipCore = require('./eventMembership');
 var Event = mongoose.model('Event');
 
 module.exports.createEvent = function(eventSettings, user) {
-    var newEvent = new Event({
-        name: eventSettings.name,
-        byline: eventSettings.byline,
-        description: eventSettings.description,
-        visibility: eventSettings.visibility,
-        ingress: eventSettings.ingress,
-        comment: eventSettings.comment,
-        url: urlCore.generateRandomUrl(6),
-        timeOfCreation: Date.now()
-    });
-    if(eventSettings.ingress=="link") {
-        newEvent.joinUrl = urlCore.generateRandomUrl(11);
-    }
-    newEvent.organizer = {
-        user: user._id,
-        name: user.username
-    };
-    return newEvent.save()
+    return Q.fcall(function() {
+        return getUniqueUrl(6);
+    })
+    .then(function(newEventURL) {
+        var newEvent = new Event({
+            name: eventSettings.name,
+            byline: eventSettings.byline,
+            description: eventSettings.description,
+            visibility: eventSettings.visibility,
+            ingress: eventSettings.ingress,
+            comment: eventSettings.comment,
+            url: newEventURL,
+            timeOfCreation: Date.now()
+        });
+        if(eventSettings.ingress=="link") {
+            newEvent.joinUrl = urlCore.generateRandomUrl(11);
+        }
+        newEvent.organizer = {
+            user: user._id,
+            name: user.username
+        };
+        return newEvent.save();
+    })
     .then(function(event) {
         //TODO: Remove promise array and simplify as needed
         var promises = [];
