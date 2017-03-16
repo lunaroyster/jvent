@@ -42,6 +42,12 @@ app.config(['$routeProvider', function($routeProvider) {
         templateUrl : './views/post/new.html'
     })
 
+    .when('/event/:eventURL/post/:postURL', {
+        // controller  : 'newPostCtrl',
+        // controllerAs: 'newPostView',
+        // templateUrl : './views/post/new.html'
+    })
+
     .when('/event/:eventURL/users', {
         controller  : 'userListCtrl',
         controllerAs: 'userlistview',
@@ -345,7 +351,7 @@ app.service('jventService', function($http, $q, urlService) {
         };
         return $http.post(url, data)
         .then(function(response){
-            var postID = response.data.post;
+            var postID = response.data.post.url;
             return postID;
         });
     };
