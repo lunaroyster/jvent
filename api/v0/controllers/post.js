@@ -40,15 +40,21 @@ module.exports.createPost = function(req, res) {
             contentText: req.body.post.content.text
         };
         return postCore.createPost(req.user, postSettings, req.event)
-        .then(function(post) {
-            collectionCore.addPostToCollectionByID(post, req.user.posts)
-            .then(function(collection) {
-                return post;
-            });
-        });
+        // .then(function(post) {
+        //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
+        //     .then(function(collection) {
+        //         return post;
+        //     });
+        // }); //TODO: secondary collections
     })    //Create post and add to collections
     .then(function(post) {
-        res.status(201).json(post);
+        var state = {
+            status: "Created",
+            post: {
+                url: post.url
+            }
+        };
+        res.status(201).json(state);
     })     //Send post creation success
     .catch(function(error) {
         var err;
