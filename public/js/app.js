@@ -1,6 +1,6 @@
 /* global angular Materialize*/
+// ["$scope","$rootScope", "$routeParams", "userService","newObjectService","contextService","listService","skeletal service","angular library service"]
 "use strict";
-
 var app = angular.module("jvent", ['ngRoute']);
 
 app.config(['$routeProvider', function($routeProvider) {
@@ -187,7 +187,7 @@ app.service('navService', function($location) {
     };
 });
 
-app.factory('userService', function($http, $q, urlService, $rootScope) {
+app.factory('userService', function($rootScope, urlService, $http, $q) {
     var obj = {};
     obj.authed = false;
     obj.authStore = null;
@@ -322,7 +322,7 @@ app.factory('userService', function($http, $q, urlService, $rootScope) {
     return(obj);
 });
 
-app.service('jventService', function($http, $q, urlService) {
+app.service('jventService', function(urlService, $http, $q) {
     this.getEvents = function() {
         // $http.get('debugjson/events.json').then(function (data) {
         return $http.get(urlService.event())
@@ -429,7 +429,7 @@ app.factory('eventListService', function(jventService, $q) {
     return eventListService;
 });
 
-app.factory('userMembershipService', function(contextEvent, userService, $q, jventService) {
+app.factory('userMembershipService', function(userService, contextEvent, jventService, $q) {
     var userMembershipService = {};
     userMembershipService.userLists = {};
     userMembershipService.cacheTime = 60000;
@@ -539,7 +539,7 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
     return eventMembershipService;
 });
 
-app.factory('userListService', function(jventService, contextEvent, $q) {
+app.factory('userListService', function(contextEvent, jventService, $q) {
     var userListService = {};
     var lastQuery = {};
     var lastTime;
@@ -570,7 +570,7 @@ app.factory('userListService', function(jventService, contextEvent, $q) {
     return userListService;
 });
 
-app.factory('postListService', function(jventService, contextEvent, $q) {
+app.factory('postListService', function(contextEvent, jventService, $q) {
     var postListService = {};
     var lastQuery = {};
     var lastTime;
@@ -609,7 +609,7 @@ app.factory('postListService', function(jventService, contextEvent, $q) {
 });
 
 // Context Providers
-app.factory('contextEvent', function(jventService, $q, eventMembershipService) {
+app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
     var contextEvent = {};
     contextEvent.event = {};
     contextEvent.cacheTime;
@@ -709,7 +709,7 @@ app.factory('newEventService', function(userService, jventService) {
     return(newEventService);
 });
 
-app.factory('newPostService', function(userService, jventService, contextEvent) {
+app.factory('newPostService', function(userService, contextEvent, jventService) {
    var newPostService = {};
    var post = {};
    newPostService.post = post;
@@ -740,7 +740,7 @@ app.factory('newPostService', function(userService, jventService, contextEvent) 
 
 // Controllers
 
-app.controller('homeController', function($scope, $location, userService, $rootScope, eventMembershipService, navService) {
+app.controller('homeController', function($scope, $rootScope, userService, eventMembershipService, navService, $location) {
     $scope.homeClick = function() {
         navService.home();
     };
@@ -859,7 +859,7 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, postListService, $routeParams, navService) {
+app.controller('postListCtrl', function($scope, $routeParams, postListService, navService) {
     postListService.getPostList($routeParams.eventURL)
     .then(function(postList) {
         $scope.postList = postList;
@@ -869,7 +869,7 @@ app.controller('postListCtrl', function($scope, postListService, $routeParams, n
     };
 });
 
-app.controller('newPostCtrl', function($scope, $routeParams, newPostService, navService, contextEvent) {
+app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {
     contextEvent.getEvent($routeParams.eventURL)
     .then(function(event) {
         $scope.event = event;
