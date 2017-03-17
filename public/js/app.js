@@ -846,11 +846,11 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, jventService, contextEvent, navService) {
-    // jventService.getPosts()
-    // .then(function(postList) {
-    //     $scope.postArray = postList;
-    // });
+app.controller('postListCtrl', function($scope, postListService, $routeParams, navService) {
+    postListService.getPostList($routeParams.eventURL)
+    .then(function(postList) {
+        $scope.postList = postList;
+    });
     $scope.newPost = function() {
         navService.newPost(contextEvent.event.url);
     };
