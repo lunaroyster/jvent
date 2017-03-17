@@ -9,24 +9,27 @@ var eventMembershipCore = require('./eventMembership');
 var Event = mongoose.model('Event');
 
 module.exports.createEvent = function(eventSettings, user) {
-    var newEvent = new Event({
-        name: eventSettings.name,
-        byline: eventSettings.byline,
-        description: eventSettings.description,
-        visibility: eventSettings.visibility,
-        ingress: eventSettings.ingress,
-        comment: eventSettings.comment,
-        url: urlCore.generateRandomUrl(6),
-        timeOfCreation: Date.now()
-    });
-    if(eventSettings.ingress=="link") {
-        newEvent.joinUrl = urlCore.generateRandomUrl(11);
-    }
-    newEvent.organizer = {
-        user: user._id,
-        name: user.username
-    };
-    return newEvent.save()
+    return getUniqueEventURL(6)
+    .then(function(newEventURL) {
+        var newEvent = new Event({
+            name: eventSettings.name,
+            byline: eventSettings.byline,
+            description: eventSettings.description,
+            visibility: eventSettings.visibility,
+            ingress: eventSettings.ingress,
+            comment: eventSettings.comment,
+            url: newEventURL,
+            timeOfCreation: Date.now()
+        });
+        if(eventSettings.ingress=="link") {
+            newEvent.joinUrl = urlCore.generateRandomUrl(11);
+        }
+        newEvent.organizer = {
+            user: user._id,
+            name: user.username
+        };
+        return newEvent.save();
+    })
     .then(function(event) {
         //TODO: Remove promise array and simplify as needed
         var promises = [];
@@ -51,6 +54,21 @@ module.exports.getPublicEvents = function() {
     .find({visibility: "public"})
     .select('-_id name description byline url organizer.name ingress');
     return eventQuery.exec();
+};
+
+var getUniqueEventURL = function(length) {
+    return Q.fcall(function() {
+        var url = urlCore.generateRandomUrl(length);
+        return Event.findOne({url: url})
+        .then(function(event) {
+            if(!event) {
+                return url;
+            }
+            else {
+                return getUniqueEventURL(length);
+            }
+        });
+    });
 };
 
 var returnEventOrError = function(event) {

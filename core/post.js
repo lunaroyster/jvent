@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var Q = require('q');
+
 // var User = mongoose.model('User');
 var eventCore = require('./event');
 var urlCore = require('./url');
@@ -20,32 +22,49 @@ var Post = mongoose.model('Post');
 // };
 
 module.exports.createPost = function(user, post, event) {
-    return collectionCore.getSuperCollectionByID(event.superCollection)
-    .then(function(sc) {
-        var newPost = new Post({
-            title: post.title,
-            parentEvent: event._id,
-            url: urlCore.generateRandomUrl(6),
-            superCollection: sc._id,
-            content: {
-                text: post.contentText
-            },
-            timeOfCreation: Date.now()
-        });
-        newPost.submitter.user = user._id;
-        newPost.submitter.name = user.username;
-        return newPost.save()
-        .then(function(post) {
-            sc.addPost(post);
-            return sc.save()
-            .then(function(sc) {
-                return post;
+    return getUniquePostURL(6, event)
+    .then(function(newPostUrl) {
+        return collectionCore.getSuperCollectionByID(event.superCollection)
+        .then(function(sc) {
+            var newPost = new Post({
+                title: post.title,
+                parentEvent: event._id,
+                url: newPostUrl,
+                superCollection: sc._id,
+                content: {
+                    text: post.contentText
+                },
+                timeOfCreation: Date.now()
             });
+            newPost.submitter.user = user._id;
+            newPost.submitter.name = user.username;
+            return newPost.save()
+            .then(function(post) {
+                sc.addPost(post);
+                return sc.save()
+                .then(function(sc) {
+                    return post;
+                });
+            });
+            //Regular Collections?
         });
-        //Regular Collections?
-    });
+    })
 };
 
+var getUniquePostURL = function(length, event) {
+    return Q.fcall(function() {
+        var url = urlCore.generateRandomUrl(length);
+        return Post.findOne({url: url, parentEvent: event._id})
+        .then(function(post) {
+            if(!post) {
+                return url;
+            }
+            else {
+                return getUniquePostURL(length, event);
+            }
+        });
+    });
+};
 
 module.exports.getEventPosts = function(event) {
     //TODO: Queries
