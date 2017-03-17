@@ -9,9 +9,7 @@ var eventMembershipCore = require('./eventMembership');
 var Event = mongoose.model('Event');
 
 module.exports.createEvent = function(eventSettings, user) {
-    return Q.fcall(function() {
-        return getUniqueUrl(6);
-    })
+    return getUniqueEventURL(6)
     .then(function(newEventURL) {
         var newEvent = new Event({
             name: eventSettings.name,
@@ -58,7 +56,7 @@ module.exports.getPublicEvents = function() {
     return eventQuery.exec();
 };
 
-var getUniqueUrl = function(length) {
+var getUniqueEventURL = function(length) {
     return Q.fcall(function() {
         var url = urlCore.generateRandomUrl(length);
         return Event.findOne({url: url})
@@ -67,7 +65,7 @@ var getUniqueUrl = function(length) {
                 return url;
             }
             else {
-                return getUniqueUrl(length);
+                return getUniqueEventURL(length);
             }
         });
     });
