@@ -593,7 +593,12 @@ app.factory('postListService', function(jventService, contextEvent, $q) {
         .then(function(event) {
             //use event
             if(queryChange() || !fresh()) {
-                //Fetch postList
+                return jventService.getPosts(eventURL)
+                .then(function(postList) {
+                    lastTime = Date.now();
+                    postListService.postList = postList;
+                    return postList;
+                });
             }
             else {
                 return (postListService.postList);
