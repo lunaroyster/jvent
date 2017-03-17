@@ -570,25 +570,38 @@ app.factory('userListService', function(jventService, contextEvent, $q) {
     return userListService;
 });
 
-app.factory('postListService', function(jventService, $q) {
+app.factory('postListService', function(jventService, contextEvent, $q) {
     var postListService = {};
     var lastQuery = {};
     var lastTime;
     var deltaTime = function() {
         return lastTime - Date.now();
     };
+    var queryChange = function() {
+        //TODO: compare postListService.query and lastQuery
+        return false;
+    };
+    var fresh = function() {
+        return (Date.now() - lastTime) < postListService.cacheTime;
+    };
     postListService.query = {};
     postListService.postList = [];
     postListService.cacheTime;
     postListService.eventURL;
     postListService.getPostList = function(eventURL) {
-        //TODO: complete
-        return $q(function(resolve, reject) {
-            if(lastQuery!=postListService.query || deltaTime() > postListService.cacheTime) {
-
+        return contextEvent.getEvent(eventURL)
+        .then(function(event) {
+            //use event
+            if(queryChange() || !fresh()) {
+                return jventService.getPosts(eventURL)
+                .then(function(postList) {
+                    lastTime = Date.now();
+                    postListService.postList = postList;
+                    return postList;
+                });
             }
             else {
-                resolve(postListService.postList);
+                return (postListService.postList);
             }
         });
     };
@@ -846,11 +859,11 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, jventService, contextEvent, navService) {
-    // jventService.getPosts()
-    // .then(function(postList) {
-    //     $scope.postArray = postList;
-    // });
+app.controller('postListCtrl', function($scope, postListService, $routeParams, navService) {
+    postListService.getPostList($routeParams.eventURL)
+    .then(function(postList) {
+        $scope.postList = postList;
+    });
     $scope.newPost = function() {
         navService.newPost(contextEvent.event.url);
     };
