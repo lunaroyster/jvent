@@ -669,14 +669,16 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
         return (Date.now() - lastTime) < contextPost.cacheTime;
     };
     contextPost.cacheTime = 60000;
-    contextPost.upvote = function() {
-        return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
-    };
-    contextPost.downvote = function() {
-        return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
-    };
-    contextPost.unvote = function() {
-        return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
+    contextPost.vote = {
+        up: function() {
+            return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
+        },
+        down: function() {
+            return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
+        },
+        un: function() {
+            return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
+        }
     };
     return contextPost;
 });
