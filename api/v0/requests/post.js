@@ -15,3 +15,11 @@ module.exports.createPost = {
         }
     }
 };
+module.exports.vote = {
+    'direction': {
+        optional: false,
+        isVoteDirection: {
+            errorMessage: 'Not a valid vote'
+        }
+    }
+}
