@@ -7,6 +7,7 @@ var urlCore = require('./url');
 var collectionCore = require('./collection');
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
+var Vote = mongoose.model('Vote');
 
 // module.exports.createPost = function(postSettings, event, superCollection) {
 //     var newPost = new Post({
@@ -80,6 +81,29 @@ var returnPostOrError = function(post) {
         throw err;
     }
     return post;
+};
+
+var vote = function(post, direction) {
+    return Q.fcall(function() {
+        //check previous votes
+        //return if null
+    })
+    .then(function() {
+        var newVote = new Vote({
+            user: user._id,
+            post: post._id
+        })
+    })
+};
+
+module.exports.upvote = function(post) {
+    return vote(post, 1);
+};
+module.exports.downvote = function(post) {
+    return vote(post, -1);
+};
+module.exports.unvote = function(post) {
+    return vote(post, 0);
 };
 
 module.exports.getPostByID = function(event, postID) {
