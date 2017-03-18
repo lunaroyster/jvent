@@ -5,6 +5,7 @@ module.exports = {
     superCollection: require('./supercollection'),
     compilation: require('./compilation'),
     user: require('./user'),
+    vote: require('./vote'),
     eventMembership: require('./eventmembership'),
     media: require('./media'),
     userList: require('./userlist')
