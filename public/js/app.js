@@ -661,8 +661,16 @@ app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
 });
 
 app.factory('contextPost', function() {
-    var post;
-    return post;
+    var contextPost = {};
+    contextPost.post = {};
+    contextPost.cacheTime;
+    var lastTime;
+    var fresh = function() {
+        return (Date.now() - lastTime) < contextPost.cacheTime;
+    };
+    contextPost.cacheTime = 60000;
+    
+    return contextPost;
 });
 
 // New Providers
