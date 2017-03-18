@@ -12,6 +12,8 @@ router.get('/:postURL', postController.getPost);
 router.patch('/:postURL', AuthOnly, postController.updatePost);
 router.delete('/:postURL', AuthOnly, postController.deletePost);
 
+router.patch('/:postURL/vote', postController.vote);
+
 router.use('/:postURL/comment', postController.appendPostID, require('./comment'));
 
 module.exports = router;

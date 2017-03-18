@@ -8,6 +8,9 @@ module.exports = {
         },
         isComment: function(value) {
             return (value=="anyone"||value=="attendee"||value=="nobody");
+        },
+        isVoteDirection: function(value) {
+            return (value==-1||value==0||value==1);
         }
     }
 };

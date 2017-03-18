@@ -10,14 +10,16 @@ badAuthError.status = 404;
 // /event/
 
 module.exports.createEvent = function(req, res) {
-    req.check(eventRequestSchema.postEvent);
-    req.getValidationResult()
-    .then(function(result) {
-        if(!result.isEmpty()) {
-            result.throw();
-        }
-        return;
-    })   //Validate request
+    Q.fcall(function() {
+        req.check(eventRequestSchema.postEvent);
+        req.getValidationResult()
+        .then(function(result) {
+            if(!result.isEmpty()) {
+                result.throw();
+            }
+            return;
+        });
+    })       //Validate request   
     .then(function() {
         if(req.user.privileges.createEvent) {
             return;
