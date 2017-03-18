@@ -79,7 +79,7 @@ module.exports.getPosts = function(req, res) {
     });
 };
 
-// /post/:postID
+// /post/:postURL
 
 module.exports.getPostByID = function(req, res) {
     // Check user privilege
@@ -110,4 +110,10 @@ module.exports.deletePost = function(req, res) {
 module.exports.appendPostID = function(req, res, next) {
     req.postID = req.params.postID;
     next();
+};
+
+// /post/:postURL/vote
+
+module.exports.vote = function(req, res) {
+    
 };
