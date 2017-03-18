@@ -129,18 +129,7 @@ module.exports.vote = function(req, res) {
         });
     })
     .then(function() {
-        // var votePromise;
-        // var direction = req.body.direction;
-        // if(direction == 1) {
-        //     votePromise = postCore.upvote(req.post);
-        // }
-        // else if (direction == 0) {
-        //     votePromise = postCore.unvote(req.post);
-        // }
-        // else if (direction == -1) {
-        //     votePromise = postCore.downvote(req.post);
-        // }
-        // return votePromise;
+        return postCore.vote(req.user, req.post, req.body.direction)
     })
     .then(function(success) {
         if(success) {

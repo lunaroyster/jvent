@@ -83,7 +83,7 @@ var returnPostOrError = function(post) {
     return post;
 };
 
-var vote = function(post, direction) {
+var vote = function(user, post, direction) {
     return Q.fcall(function() {
         //check previous votes
         //return if null
@@ -94,16 +94,6 @@ var vote = function(post, direction) {
             post: post._id
         })
     })
-};
-
-module.exports.upvote = function(post) {
-    return vote(post, 1);
-};
-module.exports.downvote = function(post) {
-    return vote(post, -1);
-};
-module.exports.unvote = function(post) {
-    return vote(post, 0);
 };
 
 module.exports.getPostByID = function(event, postID) {
