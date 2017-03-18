@@ -83,17 +83,40 @@ var returnPostOrError = function(post) {
     return post;
 };
 
-var vote = function(user, post, direction) {
+module.exports.vote = function(user, post, direction) {
     return Q.fcall(function() {
-        //check previous votes
-        //return if null
+        return Vote.findOne({user: user._id, post: post._id})
+        .then(function(vote) {
+            if(vote) {
+                return vote;
+            }
+            else {
+                var newVote = new Vote({
+                    user: user._id,
+                    post: post._id
+                });
+                return newVote;
+            }
+        });
     })
-    .then(function() {
-        var newVote = new Vote({
-            user: user._id,
-            post: post._id
+    .then(function(vote) {
+        return Q.fcall(function() {
+            if(direction==1) {
+                return vote.upvote();
+            }
+            else if(direction==0) {
+                return vote.unvote();
+            }
+            else if(direction==-1) {
+                return vote.downvote();
+            }
         })
-    })
+        .then(function(change) {
+            if(change) {
+                return vote.save();
+            }
+        });
+    });
 };
 
 module.exports.getPostByID = function(event, postID) {
