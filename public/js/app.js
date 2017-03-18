@@ -1,5 +1,6 @@
 /* global angular Materialize*/
 // ["$scope","$rootScope", "$routeParams", "userService","newObjectService","contextService","listService","skeletal service","angular library service"]
+// ["other", "user", "commentURL", "postURL", "eventURL", "comment", "post", "event"]
 "use strict";
 var app = angular.module("jvent", ['ngRoute']);
 
@@ -123,15 +124,18 @@ app.service('urlService', function() {
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
     };
-    this.postID = function(eventURL, postID) {
-        return(this.post(eventURL) + postID + '/');
+    this.postURL = function(eventURL, postURL) {
+        return(this.post(eventURL) + postURL + '/');
+    };
+    this.postURLVote = function(eventURL, postURL) {
+        return(this.postURL(eventURL, postURL) + '/vote');
     };
 
-    this.comment = function(eventURL, postID) {
-        return(this.postID(eventURL, postID) + 'comment/');
+    this.comment = function(eventURL, postURL) {
+        return(this.postURL(eventURL, postURL) + 'comment/');
     };
-    this.commentID = function(eventURL, postID, commentID) {
-        return(this.comment(eventURL, postID) + commentID + '/');
+    this.commentURL = function(eventURL, postURL, commentURL) {
+        return(this.comment(eventURL, postURL) + commentURL + '/');
     };
 
     this.user = function() {
@@ -351,8 +355,8 @@ app.service('jventService', function(urlService, $http, $q) {
         };
         return $http.post(url, data)
         .then(function(response){
-            var postID = response.data.post.url;
-            return postID;
+            var postURL = response.data.post.url;
+            return postURL;
         });
     };
     this.createEvent = function(event) {
@@ -367,6 +371,16 @@ app.service('jventService', function(urlService, $http, $q) {
         },
         function(response) {
             throw response.data; //HACK: Does this even make sense?
+        });
+    };
+    this.postVote = function(eventURL, postURL, direction) {
+        var url = urlService.postURLVote(eventURL, postURL);
+        var data = {
+            direction: direction
+        };
+        return $http.patch(url, data)
+        .then(function(response) {
+            // TODO
         });
     };
     this.joinEvent = function(eventURL) {
@@ -647,9 +661,27 @@ app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
     return contextEvent;
 });
 
-app.factory('contextPost', function() {
-    var post;
-    return post;
+app.factory('contextPost', function(contextEvent, jventService, $q) {
+    var contextPost = {};
+    contextPost.post = {};
+    contextPost.cacheTime;
+    var lastTime;
+    var fresh = function() {
+        return (Date.now() - lastTime) < contextPost.cacheTime;
+    };
+    contextPost.cacheTime = 60000;
+    contextPost.vote = {
+        up: function() {
+            return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
+        },
+        down: function() {
+            return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
+        },
+        un: function() {
+            return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
+        }
+    };
+    return contextPost;
 });
 
 // New Providers
