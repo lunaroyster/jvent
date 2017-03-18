@@ -123,18 +123,18 @@ app.service('urlService', function() {
     this.post = function(eventURL) {
         return(this.eventURL(eventURL) + 'post/');
     };
-    this.postID = function(eventURL, postID) {
-        return(this.post(eventURL) + postID + '/');
+    this.postURL = function(eventURL, postURL) {
+        return(this.post(eventURL) + postURL + '/');
     };
-    this.postIDVote = function(eventURL, postID) {
-        return(this.postID(eventURL, postID) + '/vote');
+    this.postURLVote = function(eventURL, postURL) {
+        return(this.postURL(eventURL, postURL) + '/vote');
     };
 
-    this.comment = function(eventURL, postID) {
-        return(this.postID(eventURL, postID) + 'comment/');
+    this.comment = function(eventURL, postURL) {
+        return(this.postURL(eventURL, postURL) + 'comment/');
     };
-    this.commentID = function(eventURL, postID, commentID) {
-        return(this.comment(eventURL, postID) + commentID + '/');
+    this.commentURL = function(eventURL, postURL, commentURL) {
+        return(this.comment(eventURL, postURL) + commentURL + '/');
     };
 
     this.user = function() {
@@ -354,8 +354,8 @@ app.service('jventService', function(urlService, $http, $q) {
         };
         return $http.post(url, data)
         .then(function(response){
-            var postID = response.data.post.url;
-            return postID;
+            var postURL = response.data.post.url;
+            return postURL;
         });
     };
     this.createEvent = function(event) {
@@ -373,7 +373,7 @@ app.service('jventService', function(urlService, $http, $q) {
         });
     };
     this.postVote = function(eventURL, postURL, direction) {
-        var url = urlService.postIDVote(eventURL, postURL);
+        var url = urlService.postURLVote(eventURL, postURL);
         var data = {
             direction: direction
         };
