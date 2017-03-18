@@ -1,4 +1,5 @@
 var postCore = require('../../../core/post');
+var Q = require('q');
 // var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
 var collectionCore = require('../../../core/collection');
@@ -115,5 +116,26 @@ module.exports.appendPostID = function(req, res, next) {
 // /post/:postURL/vote
 
 module.exports.vote = function(req, res) {
-    
+    return Q.fcall(function() {
+        var votePromise;
+        var direction = req.body.direction;
+        if(direction == 1) {
+            votePromise = postCore.upvote(req.post);
+        }
+        else if (direction == 0) {
+            votePromise = postCore.unvote(req.post);
+        }
+        else if (direction == -1) {
+            votePromise = postCore.downvote(req.post);
+        }
+        return votePromise;
+    })
+    .then(function(success) {
+        if(success) {
+            res.status(200).send();
+        }
+        else {
+            res.status(400).send();
+        }
+    })
 };
