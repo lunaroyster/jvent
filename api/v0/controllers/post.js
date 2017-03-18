@@ -10,14 +10,16 @@ var postRequestSchema = require('../requests/post');
 // /post/
 
 module.exports.createPost = function(req, res) {
-    req.check(postRequestSchema.createPost);
-    req.getValidationResult()
-    .then(function(result) {
-        if(!result.isEmpty()) {
-            result.throw();
-        }
-        return;
-    })   //Request Validation
+    Q.fcall(function() {
+        req.check(postRequestSchema.createPost);
+        req.getValidationResult()
+        .then(function(result) {
+            if(!result.isEmpty()) {
+                result.throw();
+            }
+            return;
+        });   
+    })       //Request Validation
     .then(function() {
         if(req.user.privileges.createPost) {
             return;
