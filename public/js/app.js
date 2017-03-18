@@ -126,6 +126,9 @@ app.service('urlService', function() {
     this.postID = function(eventURL, postID) {
         return(this.post(eventURL) + postID + '/');
     };
+    this.postIDVote = function(eventURL, postID) {
+        return(this.postID(eventURL, postID) + '/vote');
+    };
 
     this.comment = function(eventURL, postID) {
         return(this.postID(eventURL, postID) + 'comment/');
@@ -367,6 +370,16 @@ app.service('jventService', function(urlService, $http, $q) {
         },
         function(response) {
             throw response.data; //HACK: Does this even make sense?
+        });
+    };
+    this.postVote = function(eventURL, postURL, direction) {
+        var url = urlService.postIDVote(eventURL, postURL);
+        var data = {
+            direction: direction
+        };
+        return $http.patch(url, data)
+        .then(function(response) {
+            // TODO
         });
     };
     this.joinEvent = function(eventURL) {
