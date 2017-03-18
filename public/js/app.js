@@ -1,5 +1,6 @@
 /* global angular Materialize*/
 // ["$scope","$rootScope", "$routeParams", "userService","newObjectService","contextService","listService","skeletal service","angular library service"]
+// ["other", "user", "commentURL", "postURL", "eventURL", "comment", "post", "event"]
 "use strict";
 var app = angular.module("jvent", ['ngRoute']);
 
