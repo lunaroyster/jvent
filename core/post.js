@@ -113,7 +113,15 @@ module.exports.vote = function(user, post, direction) {
         })
         .then(function(change) {
             if(change) {
-                return vote.save();
+                return vote.save()
+                .then(function(vote) {
+                    if(vote) {
+                        return true;
+                    }
+                });
+            }
+            else {
+                return false;
             }
         });
     });
