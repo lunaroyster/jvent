@@ -660,7 +660,7 @@ app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
     return contextEvent;
 });
 
-app.factory('contextPost', function() {
+app.factory('contextPost', function(contextEvent, jventService, $q) {
     var contextPost = {};
     contextPost.post = {};
     contextPost.cacheTime;
@@ -669,7 +669,15 @@ app.factory('contextPost', function() {
         return (Date.now() - lastTime) < contextPost.cacheTime;
     };
     contextPost.cacheTime = 60000;
-    
+    contextPost.upvote = function() {
+        return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
+    };
+    contextPost.downvote = function() {
+        return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
+    };
+    contextPost.unvote = function() {
+        return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
+    };
     return contextPost;
 });
 
