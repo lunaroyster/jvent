@@ -5,6 +5,7 @@ require('./collection');
 require('./supercollection');
 require('./compilation');
 require('./user');
+require('./vote');
 require('./eventmembership');
 require('./media');
 require('./userlist');
