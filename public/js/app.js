@@ -541,9 +541,18 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
     };
     eventMembershipService.getEventList = getEventList;
     eventMembershipService.isEventRole = function(role, eventURL) {
-        return getEventList(role)
-        .then(function(eventList) {
-            return isEventInList(eventList.list, eventURL);
+        return $q(function(resolve, reject) {
+            if(userService.authed) {
+                getEventList(role)
+                .then(function(eventList) {
+                    resolve(isEventInList(eventList.list, eventURL));
+                });
+            }
+            else {
+                resolve(false);
+            }
+        })
+        .then(function() {
         });
     };
     userService.onLogout(function() {
