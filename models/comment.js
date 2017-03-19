@@ -6,10 +6,15 @@ var commentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    event: {
+        type: Schema.Types.ObjectId,
+        ref: 'Event'
+    },
     post: { 
         type: Schema.Types.ObjectId,
         ref: 'Post'
     },
+    body: String,
     time: Date
 });
 
