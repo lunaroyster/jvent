@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var commentSchema = new Schema({
-    user: { 
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
@@ -10,10 +10,15 @@ var commentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Event'
     },
-    post: { 
+    post: {
         type: Schema.Types.ObjectId,
         ref: 'Post'
     },
+    isPrimary: Boolean,
+    parent: {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    }
     body: String,
     time: Date
 });
