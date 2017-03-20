@@ -74,11 +74,11 @@ module.exports.getEventPosts = function(event) {
     return postQuery.exec();
 };
 
-var postQueryBuilder = function() {
+var postFindQuery = function() {
     
 };
 
-module.exports.postQueryBuilder = postQueryBuilder;
+module.exports.postFindQuery = postFindQuery;
 
 var returnPostOrError = function(post) {
     if(!post) {

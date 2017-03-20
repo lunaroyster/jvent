@@ -56,11 +56,18 @@ module.exports.getPublicEvents = function() {
     return eventQuery.exec();
 };
 
-var eventQueryBuilder = function() {
-    
+var eventFindQuery = function() {
+    this.Event = Event;
 };
-
-module.exports.eventQueryBuilder = eventQueryBuilder;
+eventFindQuery.prototype = {
+    visibility: function(setting) {
+        return this;
+    },
+    ingress: function(setting) {
+        return this;
+    }
+}
+module.exports.eventFindQuery = eventFindQuery;
 
 var getUniqueEventURL = function(length) {
     return Q.fcall(function() {
