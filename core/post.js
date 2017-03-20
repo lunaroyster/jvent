@@ -74,6 +74,12 @@ module.exports.getEventPosts = function(event) {
     return postQuery.exec();
 };
 
+var postQueryBuilder = function() {
+    
+};
+
+module.exports.postQueryBuilder = postQueryBuilder;
+
 var returnPostOrError = function(post) {
     if(!post) {
         var err = Error("Can't find post");

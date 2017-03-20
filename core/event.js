@@ -56,6 +56,12 @@ module.exports.getPublicEvents = function() {
     return eventQuery.exec();
 };
 
+var eventQueryBuilder = function() {
+    
+};
+
+module.exports.eventQueryBuilder = eventQueryBuilder;
+
 var getUniqueEventURL = function(length) {
     return Q.fcall(function() {
         var url = urlCore.generateRandomUrl(length);
