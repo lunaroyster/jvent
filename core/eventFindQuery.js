@@ -16,6 +16,17 @@ eventFindQuery.prototype = {
     //sort
     //field
     //limit
+    limit: function(n) {
+        //check if n is acceptable
+        this.limit.count = n;
+        return this;
+    },
+    page: function(n) {
+        //check if acceptable.
+        //Switch to offsets?
+        this.limit.page = n;
+        return this;
+    },
     //other
     then: function() {
         //Convert to query and return promise
