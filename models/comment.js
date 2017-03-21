@@ -18,7 +18,8 @@ var commentSchema = new Schema({
     parent: {
         type: Schema.Types.ObjectId,
         ref: 'Comment'
-    }
+    },
+    degree: Number,
     body: String,
     time: Date
 });
