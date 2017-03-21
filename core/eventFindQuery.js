@@ -17,10 +17,12 @@ eventFindQuery.prototype = {
     //field
     fields: function() {
         this.field.fields = Array.from(arguments);
+        return this;
     },
     addFields: function() {
         //Check dups
         this.field.fields.push(Array.from(arguments));
+        return this;
     },
     //limit
     limit: function(n) {
