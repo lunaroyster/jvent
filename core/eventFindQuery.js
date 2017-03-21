@@ -15,6 +15,13 @@ eventFindQuery.prototype = {
     //find
     //sort
     //field
+    fields: function() {
+        this.field.fields = Array.from(arguments);
+    },
+    addFields: function() {
+        //Check dups
+        this.field.fields.push(Array.from(arguments));
+    },
     //limit
     limit: function(n) {
         //check if n is acceptable
