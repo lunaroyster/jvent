@@ -56,19 +56,6 @@ module.exports.getPublicEvents = function() {
     return eventQuery.exec();
 };
 
-var eventFindQuery = function() {
-    this.Event = Event;
-};
-eventFindQuery.prototype = {
-    visibility: function(setting) {
-        return this;
-    },
-    ingress: function(setting) {
-        return this;
-    }
-}
-module.exports.eventFindQuery = eventFindQuery;
-
 var getUniqueEventURL = function(length) {
     return Q.fcall(function() {
         var url = urlCore.generateRandomUrl(length);
