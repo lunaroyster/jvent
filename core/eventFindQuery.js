@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Q = require('q');
+var _ = require('underscore')._;
 
 var Event = mongoose.model('Event');
 
@@ -14,7 +15,10 @@ var eventFindQuery = function() {
 eventFindQuery.prototype = {
     //find
     all: function() {
-        this.find = {};
+        // this.find = {};
+        _.each(this.find, function(finder) {
+            finder.enabled = false;
+        });
         return this;
     },
     location: function(location) {
