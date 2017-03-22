@@ -39,6 +39,12 @@ eventFindQuery.prototype = {
     //other
     then: function() {
         //Convert to query and return promise
+        var query = this.Event;
+        //find
+        //sort
+        //field
+        query = query.select(this.field.fields);
+        return query.exec();
     }
 };
 
