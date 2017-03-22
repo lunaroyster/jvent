@@ -97,9 +97,16 @@ eventFindQuery.prototype = {
     },
     //other
     then: function() {
-        //Convert to query and return promise
         var query = this.Event;
         //find
+        var findQuery = {};
+        if(this.find.time.enabled) {
+            findQuery["timeOfCreation"] = {
+                $gte: this.find.time.data.start,
+                $lt: this.find.time.data.end
+            };
+        }
+        query = query.find(findQuery);
         //sort
         //field
         query = query.select(this.field.fields);
