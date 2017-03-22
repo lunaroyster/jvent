@@ -106,6 +106,15 @@ eventFindQuery.prototype = {
                 $lt: this.find.time.data.end
             };
         }
+        if(this.find.organizer.enabled) {
+            findQuery["organizer.name"] = this.find.organizer.data;
+        }
+        if(this.find.location.enabled) {
+            
+        }
+        if(this.find.genre.enabled) {
+            
+        }
         query = query.find(findQuery);
         //sort
         //field
