@@ -14,25 +14,43 @@ var eventFindQuery = function() {
 eventFindQuery.prototype = {
     //find
     all: function() {
-        //reset finds
+        this.find = {};
         return this;
     },
     location: function(location) {
         //verify location is legitimate
-        //enable location search and store provided loc
+        this.find.location = {
+            enabled: true,
+            data: location
+        };
         return this;
     },
     time: function(start, end) {
         //verify args are legitimate time values
-        //enable time search and store provided time
+        this.find.time = {
+            enabled: true,
+            data: {
+                start: start,
+                end: end
+            }
+        };
         return this;
     },
     organizer: function(organizer) {
         //enable org search and store provided organizer
+        this.find.organizer = {
+            enabled: true,
+            data: organizer
+        };
         return this;
     },
-    genre: function(genre) {
-        //verify genre exists and store provided genre
+    genre: function() {
+        var genres = Array.from(arguments);
+        //verify genres exist
+        this.find.genre = {
+            enabled: true,
+            data: genres
+        };
         return this;
     },
     //sort
