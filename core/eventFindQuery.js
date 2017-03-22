@@ -13,7 +13,28 @@ var eventFindQuery = function() {
 
 eventFindQuery.prototype = {
     //find
+    all: function() {
+        return this;
+    },
+    location: function(location) {
+        return this;
+    },
+    time: function(start, end) {
+        return this;
+    },
+    organizer: function(organizer) {
+        return this;
+    },
+    genre: function(genre) {
+        return this;
+    },
     //sort
+    byTime: function(direction) {
+        return this;
+    },
+    byRank: function() {
+        return this;
+    },
     //field
     fields: function() {
         this.field.fields = Array.from(arguments);
