@@ -117,8 +117,12 @@ eventFindQuery.prototype = {
         }
         query = query.find(findQuery);
         //sort
+        
         //field
         query = query.select(this.field.fields);
+        //limit
+        query = query.limit(this.limit.count);
+        query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
         return query.exec();
     }
 };
