@@ -1,15 +1,51 @@
 var mongoose = require('mongoose');
 var Q = require('q');
 var _ = require('underscore')._;
+var assert = require('chai').assert;
 
 var Event = mongoose.model('Event');
 
 var eventFindQuery = function() {
     this.Event = Event;
-    this.find = {};
-    this.sort = {};
-    this.limit = {};
-    this.field = {};
+    this.find = {
+        location: {
+            enabled: false,
+            data: {}
+        },
+        time: {
+            enabled: false,
+            data: {}
+        },
+        organizer: {
+            enabled: false,
+            data: {}
+        },
+        genre: {
+            enabled: false,
+            data: {}
+        },
+        visibility: {
+            enabled: true,
+            data: "public"
+        },
+        // ingress: {
+        //     enabled: false,
+        //     data: "everyone"
+        // }
+    };
+    this.sort = {
+        enabled: false,
+        time: {},
+        rank: {}
+    };
+    this.limit = {
+        enabled: true,
+        count: 25
+    };
+    this.field = {
+        enabled: true,
+        fields: []
+    };
 };
 
 eventFindQuery.prototype = {
@@ -31,6 +67,9 @@ eventFindQuery.prototype = {
     },
     time: function(start, end) {
         //verify args are legitimate time values
+        assert.typeOf(start, 'Date');
+        assert.typeOf(end, 'Date');
+        assert(end>start, "The end date must be after the start date");
         this.find.time = {
             enabled: true,
             data: {
@@ -46,6 +85,18 @@ eventFindQuery.prototype = {
             enabled: true,
             data: organizer
         };
+        return this;
+    },
+    visibility: function(visibility) {
+        assert.include(["public", "unlisted", "private"], visibility, "Invalid visibility setting");
+        this.find.visibility.enabled = true;
+        this.find.visibility.data = visibility;
+        return this;
+    },
+    ingress: function(ingress) {
+        assert.include(["everyone", "link", "invite"], ingress, "Invalid ingress setting");
+        this.find.ingress.enabled = true;
+        this.find.ingress.data = ingress;
         return this;
     },
     genre: function() {
@@ -70,27 +121,30 @@ eventFindQuery.prototype = {
     },
     //field
     fields: function() {
+        this.field.enabled = true;
         this.field.fields = Array.from(arguments);
         return this;
     },
     addFields: function() {
-        //Check dups
-        this.field.fields.push(Array.from(arguments));
+        //Check for valid fields
+        var fields = Array.from(arguments);
+        this.field.fields = _.union(this.field.fields, fields);
+        this.field.enabled = true;
         return this;
     },
     noSelect: function() {
-        //TODO: complete
+        this.field.enabled = false;
         this.field.fields = [];
         return this;
     },
     //limit
     limit: function(n) {
-        //check if n is valid
+        assert.isNumber(n);
         this.limit.count = n;
         return this;
     },
     page: function(n) {
-        //check if n is valid.
+        assert.isNumber(n);
         //Switch to offsets?
         this.limit.page = n;
         return this;
@@ -127,4 +181,4 @@ eventFindQuery.prototype = {
     }
 };
 
-module.exports.eventFindQuery = eventFindQuery;
+module.exports = eventFindQuery;
