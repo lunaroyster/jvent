@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Q = require('q');
 var _ = require('underscore')._;
+var assert = require('chai').assert
 
 
 var Event = mongoose.model('Event');
@@ -32,6 +33,9 @@ eventFindQuery.prototype = {
     },
     time: function(start, end) {
         //verify args are legitimate time values
+        assert.typeOf(start, 'Date');
+        assert.typeOf(end, 'Date');
+        assert(end>start, "The end date must be after the start date");
         this.find.time = {
             enabled: true,
             data: {
@@ -86,12 +90,12 @@ eventFindQuery.prototype = {
     },
     //limit
     limit: function(n) {
-        //check if n is valid
+        assert.isNumber(n);
         this.limit.count = n;
         return this;
     },
     page: function(n) {
-        //check if n is valid.
+        assert.isNumber(n);
         //Switch to offsets?
         this.limit.page = n;
         return this;
