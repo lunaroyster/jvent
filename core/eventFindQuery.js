@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Q = require('q');
 var _ = require('underscore')._;
 
+
 var Event = mongoose.model('Event');
 
 var eventFindQuery = function() {
