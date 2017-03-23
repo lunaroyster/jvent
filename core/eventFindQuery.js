@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 var Q = require('q');
 var _ = require('underscore')._;
-var assert = require('chai').assert
-
+var assert = require('chai').assert;
 
 var Event = mongoose.model('Event');
 
@@ -75,16 +74,19 @@ eventFindQuery.prototype = {
     },
     //field
     fields: function() {
+        this.field.enabled = true;
         this.field.fields = Array.from(arguments);
         return this;
     },
     addFields: function() {
-        //Check dups
-        this.field.fields.push(Array.from(arguments));
+        //Check for valid fields
+        var fields = Array.from(arguments);
+        this.field.fields = _.union(this.field.fields, fields);
+        this.field.enabled = true;
         return this;
     },
     noSelect: function() {
-        //TODO: complete
+        this.field.enabled = false;
         this.field.fields = [];
         return this;
     },
