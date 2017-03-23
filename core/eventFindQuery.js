@@ -88,8 +88,15 @@ eventFindQuery.prototype = {
         return this;
     },
     visibility: function(visibility) {
+        assert.include(["public", "unlisted", "private"], visibility, "Invalid visibility setting");
         this.find.visibility.enabled = true;
         this.find.visibility.data = visibility;
+        return this;
+    },
+    ingress: function(ingress) {
+        assert.include(["everyone", "link", "invite"], ingress, "Invalid ingress setting");
+        this.find.ingress.enabled = true;
+        this.find.ingress.data = ingress;
         return this;
     },
     genre: function() {
