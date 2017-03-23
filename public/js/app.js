@@ -236,7 +236,7 @@ app.factory('userService', function($rootScope, urlService, $http, $q) {
         };
         return $http(req)
         .then(function(data) {
-           return data.data.token;
+            return data.data.token;
         });
     };
     var loadUser = function() {
@@ -256,7 +256,10 @@ app.factory('userService', function($rootScope, urlService, $http, $q) {
         }
     };
 
-    obj.isAuthed = function() {return(obj.authed)};
+    obj.isAuthed = function() {
+        return(obj.authed);
+    };
+    
     obj.login = function(creds, options) {
         return getTokenFromServer(creds)
         .then(function(token) {
@@ -313,14 +316,14 @@ app.factory('userService', function($rootScope, urlService, $http, $q) {
         .then(function(data) {
             console.log(data.data); //TODO: write handler
         });
-    }
+    };
     obj.user = function() {
         return "Username here";
     };
     obj.validPassword = function(password, repassword) {
-        if(!password){return false}
-        if(password == repassword){return(true)}
-        else {return(false)}
+        if(!password){return false;}
+        if(password == repassword){return(true);}
+        else {return(false);}
     };
     loadUser();
     return(obj);
@@ -335,7 +338,7 @@ app.service('jventService', function(urlService, $http, $q) {
         });
     };
     this.getEvent = function(eventURL, moderator) {
-        var moderator = moderator ? 1 : 0;
+        moderator = moderator ? 1 : 0;
         var req = {
             method: 'GET',
             url: urlService.eventURL(eventURL),
@@ -489,8 +492,8 @@ app.factory('userMembershipService', function(userService, contextEvent, jventSe
         })
         .then(function(event) {
             userMembershipService.roles = event.roles;
-        })
-    }
+        });
+    };
     return userMembershipService;
 });
 
@@ -712,7 +715,7 @@ app.factory('newEventService', function(userService, jventService) {
     };
     var reset = function() {
         newEventService.event = {};
-    }
+    };
     var valid = {
         name: function() {
             return (!!event.name && event.name.length>=4 && event.name.length<=64);
@@ -751,10 +754,10 @@ app.factory('newEventService', function(userService, jventService) {
 });
 
 app.factory('newPostService', function(userService, contextEvent, jventService) {
-   var newPostService = {};
-   var post = {};
-   newPostService.post = post;
-   newPostService.publish = function() {
+    var newPostService = {};
+    var post = {};
+    newPostService.post = post;
+    newPostService.publish = function() {
         if(valid.all()) {
             return jventService.createPost(newPostService.post, contextEvent.event.url)
             .then(function(postURL) {
@@ -762,8 +765,8 @@ app.factory('newPostService', function(userService, contextEvent, jventService) 
                 return(postURL);
             });
         }
-   };
-   var valid = {
+    };
+    var valid = {
         title: function() {
             var l = newPostService.post.title.length;
             return(l<=144 && l>0);
@@ -771,12 +774,12 @@ app.factory('newPostService', function(userService, contextEvent, jventService) 
         all: function() {
             return (valid.title());
         }
-   };
-   newPostService.valid = valid;
-   var reset = function() {
-       newPostService.post = {};
-   };
-   return(newPostService);
+    };
+    newPostService.valid = valid;
+    var reset = function() {
+        newPostService.post = {};
+    };
+    return(newPostService);
 });
 
 // Controllers
@@ -826,7 +829,7 @@ app.controller('eventListCtrl', function($scope, eventListService, navService) {
     $scope.organizerClick = function(event) {
         //TODO: Navigate to page showing all events organised by event.organizer
         console.log(event);
-    }
+    };
 });
 
 app.controller('newEventCtrl', function($scope, userService, newEventService, navService) {
@@ -1044,4 +1047,4 @@ app.controller('404Ctrl', function($scope, $location) {
         }
     };
     setTimeout($scope.redirect, 5000);
-})
+});
