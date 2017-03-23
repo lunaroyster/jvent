@@ -7,10 +7,37 @@ var Event = mongoose.model('Event');
 
 var eventFindQuery = function() {
     this.Event = Event;
-    this.find = {};
-    this.sort = {};
-    this.limit = {};
-    this.field = {};
+    this.find = {
+        location: {
+            enabled: false,
+            date: {}
+        },
+        time: {
+            enabled: false,
+            date: {}
+        },
+        organizer: {
+            enabled: false,
+            date: {}
+        },
+        genre: {
+            enabled: false,
+            date: {}
+        }
+    };
+    this.sort = {
+        enabled: false,
+        time: {},
+        rank: {}
+    };
+    this.limit = {
+        enabled: true,
+        count: 25
+    };
+    this.field = {
+        enabled: true,
+        fields: []
+    };
 };
 
 eventFindQuery.prototype = {
