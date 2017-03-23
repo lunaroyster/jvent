@@ -10,20 +10,28 @@ var eventFindQuery = function() {
     this.find = {
         location: {
             enabled: false,
-            date: {}
+            data: {}
         },
         time: {
             enabled: false,
-            date: {}
+            data: {}
         },
         organizer: {
             enabled: false,
-            date: {}
+            data: {}
         },
         genre: {
             enabled: false,
-            date: {}
-        }
+            data: {}
+        },
+        visibility: {
+            enabled: true,
+            data: "public"
+        },
+        // ingress: {
+        //     enabled: false,
+        //     data: "everyone"
+        // }
     };
     this.sort = {
         enabled: false,
@@ -77,6 +85,11 @@ eventFindQuery.prototype = {
             enabled: true,
             data: organizer
         };
+        return this;
+    },
+    visibility: function(visibility) {
+        this.find.visibility.enabled = true;
+        this.find.visibility.data = visibility;
         return this;
     },
     genre: function() {
