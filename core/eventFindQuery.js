@@ -161,4 +161,4 @@ eventFindQuery.prototype = {
     }
 };
 
-module.exports.eventFindQuery = eventFindQuery;
+module.exports = eventFindQuery;

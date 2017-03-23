@@ -5,6 +5,7 @@ var urlCore = require('./url');
 var collectionCore = require('./collection');
 var userListCore = require('./userList');
 var eventMembershipCore = require('./eventMembership');
+var eventFindQuery = require('./eventFindQuery');
 
 var Event = mongoose.model('Event');
 
@@ -54,6 +55,10 @@ module.exports.getPublicEvents = function() {
     .find({visibility: "public"})
     .select('-_id name description byline url organizer.name ingress');
     return eventQuery.exec();
+};
+
+module.exports.queryEvents = function(query) {
+    
 };
 
 var getUniqueEventURL = function(length) {
