@@ -7,7 +7,9 @@ var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 
 var postFindQuery = function(event) {
-    
+    this.Post = Post;
+    this.Event = Event;
+    this.contextEvent = event;
 };
 
 postFindQuery.prototype = {
