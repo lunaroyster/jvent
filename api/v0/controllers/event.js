@@ -136,44 +136,31 @@ module.exports.deleteEvent = function(req, res) {
 };
 
 // /event/:eventID/users
-module.exports.getEventAttendees = function(req, res) {
-    return eventMembershipCore.getEventAttendees(req.event)
-    .then(function(eventAttendeeList) {
-        res.status(200).json(eventAttendeeList);
+
+var getUserList = function(req, res, userListPromise) {
+    return userListPromise
+    .then(function(userList) {
+        res.status(200).json(userList);
     })
     .catch(function(error) {
         res.status(error.status).json(error.message);
     });
+};
+
+module.exports.getEventAttendees = function(req, res) {
+    return getUserList(req, res, eventMembershipCore.getEventAttendees(req.event));
 };
 
 module.exports.getEventViewers = function(req, res) {
-    return eventMembershipCore.getEventViewers(req.event)
-    .then(function(eventViewerList) {
-        res.status(200).json(eventViewerList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getUserList(req, res, eventMembershipCore.getEventViewers(req.event));
 };
 
 module.exports.getEventInvited = function(req, res) {
-    return eventMembershipCore.getEventInvited(req.event)
-    .then(function(eventInviteList) {
-        res.status(200).json(eventInviteList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getUserList(req, res, eventMembershipCore.getEventInvited(req.event));
 };
 
 module.exports.getEventModerators = function(req, res) {
-    return eventMembershipCore.getEventModerators(req.event)
-    .then(function(eventModeratorList) {
-        res.status(200).json(eventModeratorList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getUserList(req, res, eventMembershipCore.getEventModerators(req.event));
 };
 
 // /event/:eventID/join
