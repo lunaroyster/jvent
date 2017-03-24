@@ -2,6 +2,7 @@ var Q = require('q');
 var eventCore = require('../../../core/event');
 var eventMembershipCore = require('../../../core/eventMembership');
 var eventRequestSchema = require('../requests/event');
+var assert = require('chai').assert;
 
 // Errors
 var badAuthError = Error("Bad Auth");
@@ -184,12 +185,14 @@ module.exports.joinEvent = function(req, res) {
             return;
         }
         else if(ingress=="link") {
-            if(req.query.c==event.joinUrl) {
-                return;
-            }
-            else {
-                throw new Error("Bad link");
-            }
+            assert.equal(req.query.c, event.joinUrl, "Bad link");
+            return;
+            // if(req.query.c==event.joinUrl) {
+            //     return;
+            // }
+            // else {
+            //     throw new Error("Bad link");
+            // }
         }
         else if(ingress=="invite") {
             return eventMembershipCore.isUserInvited(req.user, req.event);
