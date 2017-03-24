@@ -57,41 +57,27 @@ module.exports.changePassword = function(req, res) {
     });
 };
 
-module.exports.getAttendedEvents = function(req, res) {
-    return eventMembershipCore.getAttendedEvents(req.user)
-    .then(function(attendedEventsList) {
-        res.status(200).json(attendedEventsList);
+var getEventList = function(req, res, eventListPromise) {
+    return eventListPromise
+    .then(function(eventList) {
+        res.status(200).json(eventList);
     })
     .catch(function(error) {
         res.status(error.status).json(error.message);
     });
+};
+
+module.exports.getAttendedEvents = function(req, res) {
+    return getEventList(req, res, eventMembershipCore.getAttendedEvents(req.user));
 };
 module.exports.getVisibleEvents = function(req, res) {
-    return eventMembershipCore.getVisibleEvents(req.user)
-    .then(function(visibleEventsList) {
-        res.status(200).json(visibleEventsList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getEventList(req, res, eventMembershipCore.getVisibleEvents(req.user));
 };
 module.exports.getInvitedEvents = function(req, res) {
-    return eventMembershipCore.getInvitedEvents(req.user)
-    .then(function(invitedEventsList) {
-        res.status(200).json(invitedEventsList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getEventList(req, res, eventMembershipCore.getInvitedEvents(req.user));
 };
 module.exports.getModeratedEvents = function(req, res) {
-    return eventMembershipCore.getModeratedEvents(req.user)
-    .then(function(moderatedEventsList) {
-        res.status(200).json(moderatedEventsList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getEventList(req, res, eventMembershipCore.getModeratedEvents(req.user));
 };
 
 // Wait, what's this for?
