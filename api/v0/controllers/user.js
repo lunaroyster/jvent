@@ -57,6 +57,7 @@ module.exports.changePassword = function(req, res) {
     });
 };
 
+// /user/events/[role]
 var getEventList = function(req, res, eventListPromise) {
     return eventListPromise
     .then(function(eventList) {

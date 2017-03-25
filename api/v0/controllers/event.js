@@ -135,7 +135,7 @@ module.exports.deleteEvent = function(req, res) {
     res.send();
 };
 
-// /event/:eventID/users
+// /event/:eventID/users/[role]
 
 var getUserList = function(req, res, userListPromise) {
     return userListPromise
@@ -150,15 +150,12 @@ var getUserList = function(req, res, userListPromise) {
 module.exports.getEventAttendees = function(req, res) {
     return getUserList(req, res, eventMembershipCore.getEventAttendees(req.event));
 };
-
 module.exports.getEventViewers = function(req, res) {
     return getUserList(req, res, eventMembershipCore.getEventViewers(req.event));
 };
-
 module.exports.getEventInvited = function(req, res) {
     return getUserList(req, res, eventMembershipCore.getEventInvited(req.event));
 };
-
 module.exports.getEventModerators = function(req, res) {
     return getUserList(req, res, eventMembershipCore.getEventModerators(req.event));
 };
