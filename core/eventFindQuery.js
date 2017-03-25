@@ -5,47 +5,63 @@ var assert = require('chai').assert;
 
 var Event = mongoose.model('Event');
 
-var eventFindQuery = function() {
+var eventFindQuery = function(query) {
     this.Event = Event;
-    this.find = {
-        location: {
+    if(typeof query == "undefined") {
+        //generate default query
+        this.find = {
+            location: {
+                enabled: false,
+                data: {}
+            },
+            time: {
+                enabled: false,
+                data: {}
+            },
+            organizer: {
+                enabled: false,
+                data: {}
+            },
+            genre: {
+                enabled: false,
+                data: {}
+            },
+            visibility: {
+                enabled: true,
+                data: "public"
+            },
+            // ingress: {
+            //     enabled: false,
+            //     data: "everyone"
+            // }
+        };
+        this.sort = {
             enabled: false,
-            data: {}
-        },
-        time: {
-            enabled: false,
-            data: {}
-        },
-        organizer: {
-            enabled: false,
-            data: {}
-        },
-        genre: {
-            enabled: false,
-            data: {}
-        },
-        visibility: {
+            time: {
+                enabled: false,
+                data: {
+                    direction: 0
+                }
+            },
+            rank: {
+                enabled: false,
+                data: {
+                    type: "hot"
+                }
+            }
+        };
+        this.limit = {
             enabled: true,
-            data: "public"
-        },
-        // ingress: {
-        //     enabled: false,
-        //     data: "everyone"
-        // }
-    };
-    this.sort = {
-        enabled: false,
-        time: {},
-        rank: {}
-    };
-    this.limit = {
-        enabled: true,
-        count: 25
-    };
-    this.field = {
-        enabled: true,
-        fields: []
-    };
+            count: 25
+        };
+        this.field = {
+            enabled: true,
+            fields: []
+        };
+    }
+    else {
+        //Load query
+    }
 };
 
 eventFindQuery.prototype = {
@@ -115,7 +131,7 @@ eventFindQuery.prototype = {
         return this;
     },
     byRank: function(rankType) {
-        //Verify rankType is real
+        assert.include(["top", "new"], rankType, "Invalid rankType"); //TODO: More Ranks.
         //Enable rank sort and store provided rankType
         return this;
     },
@@ -152,32 +168,47 @@ eventFindQuery.prototype = {
     //other
     then: function() {
         var query = this.Event;
-        //find
-        var findQuery = {};
-        if(this.find.time.enabled) {
-            findQuery["timeOfCreation"] = {
-                $gte: this.find.time.data.start,
-                $lt: this.find.time.data.end
-            };
-        }
-        if(this.find.organizer.enabled) {
-            findQuery["organizer.name"] = this.find.organizer.data;
-        }
-        if(this.find.location.enabled) {
+        var thenPromise = Q.fcall(function() {
+            var queryPromises = [];
+            //find
+            var findQuery = {};
+            if(this.find.time.enabled) {
+                findQuery["timeOfCreation"] = {
+                    $gte: this.find.time.data.start,
+                    $lt: this.find.time.data.end
+                };
+            }
+            if(this.find.organizer.enabled) {
+                findQuery["organizer.name"] = this.find.organizer.data;
+            }
+            if(this.find.location.enabled) {
+                
+            }
+            if(this.find.genre.enabled) {
+                
+            }
+            query = query.find(findQuery);
+            //sort
             
-        }
-        if(this.find.genre.enabled) {
-            
-        }
-        query = query.find(findQuery);
-        //sort
-        
-        //field
-        query = query.select(this.field.fields);
-        //limit
-        query = query.limit(this.limit.count);
-        query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
-        return query.exec();
+            //field
+            query = query.select(this.field.fields);
+            //limit
+            query = query.limit(this.limit.count);
+            query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
+            // if(required) {
+            //      var p = MongooseObject.find({data:data})
+            //      .then(function(object) {
+            //          this.find.field.data = object.data
+            //          return object.event
+            //      })
+            //  queryPromises.push(p)
+            // }
+            return Q.all(queryPromises);
+        })
+        .then(function() {
+            return query.exec();
+        });
+        return thenPromise;
     }
 };
 

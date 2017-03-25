@@ -42,7 +42,7 @@ module.exports.createPost = function(req, res) {
             title: req.body.post.title,
             contentText: req.body.post.content.text
         };
-        return postCore.createPost(req.user, postSettings, req.event)
+        return postCore.createPost(req.user, postSettings, req.event);
         // .then(function(post) {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
         //     .then(function(collection) {
@@ -129,7 +129,7 @@ module.exports.vote = function(req, res) {
         });
     })
     .then(function() {
-        return postCore.vote(req.user, req.post, req.body.direction)
+        return postCore.vote(req.user, req.post, req.body.direction);
     })
     .then(function(success) {
         if(success) {

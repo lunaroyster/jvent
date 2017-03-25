@@ -2,6 +2,7 @@ var Q = require('q');
 var eventCore = require('../../../core/event');
 var eventMembershipCore = require('../../../core/eventMembership');
 var eventRequestSchema = require('../requests/event');
+var assert = require('chai').assert;
 
 // Errors
 var badAuthError = Error("Bad Auth");
@@ -134,45 +135,29 @@ module.exports.deleteEvent = function(req, res) {
     res.send();
 };
 
-// /event/:eventID/users
+// /event/:eventID/users/[role]
+
+var getUserList = function(req, res, userListPromise) {
+    return userListPromise
+    .then(function(userList) {
+        res.status(200).json(userList);
+    })
+    .catch(function(error) {
+        res.status(error.status).json(error.message);
+    });
+};
+
 module.exports.getEventAttendees = function(req, res) {
-    return eventMembershipCore.getEventAttendees(req.event)
-    .then(function(eventAttendeeList) {
-        res.status(200).json(eventAttendeeList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getUserList(req, res, eventMembershipCore.getEventAttendees(req.event));
 };
-
 module.exports.getEventViewers = function(req, res) {
-    return eventMembershipCore.getEventViewers(req.event)
-    .then(function(eventViewerList) {
-        res.status(200).json(eventViewerList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getUserList(req, res, eventMembershipCore.getEventViewers(req.event));
 };
-
 module.exports.getEventInvited = function(req, res) {
-    return eventMembershipCore.getEventInvited(req.event)
-    .then(function(eventInviteList) {
-        res.status(200).json(eventInviteList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getUserList(req, res, eventMembershipCore.getEventInvited(req.event));
 };
-
 module.exports.getEventModerators = function(req, res) {
-    return eventMembershipCore.getEventModerators(req.event)
-    .then(function(eventModeratorList) {
-        res.status(200).json(eventModeratorList);
-    })
-    .catch(function(error) {
-        res.status(error.status).json(error.message);
-    });
+    return getUserList(req, res, eventMembershipCore.getEventModerators(req.event));
 };
 
 // /event/:eventID/join
@@ -184,12 +169,14 @@ module.exports.joinEvent = function(req, res) {
             return;
         }
         else if(ingress=="link") {
-            if(req.query.c==event.joinUrl) {
-                return;
-            }
-            else {
-                throw new Error("Bad link");
-            }
+            assert.equal(req.query.c, event.joinUrl, "Bad link");
+            return;
+            // if(req.query.c==event.joinUrl) {
+            //     return;
+            // }
+            // else {
+            //     throw new Error("Bad link");
+            // }
         }
         else if(ingress=="invite") {
             return eventMembershipCore.isUserInvited(req.user, req.event);
