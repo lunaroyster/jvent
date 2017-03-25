@@ -158,32 +158,37 @@ eventFindQuery.prototype = {
     //other
     then: function() {
         var query = this.Event;
-        //find
-        var findQuery = {};
-        if(this.find.time.enabled) {
-            findQuery["timeOfCreation"] = {
-                $gte: this.find.time.data.start,
-                $lt: this.find.time.data.end
-            };
-        }
-        if(this.find.organizer.enabled) {
-            findQuery["organizer.name"] = this.find.organizer.data;
-        }
-        if(this.find.location.enabled) {
+        var thenPromise = Q.fcall(function() {
+            //find
+            var findQuery = {};
+            if(this.find.time.enabled) {
+                findQuery["timeOfCreation"] = {
+                    $gte: this.find.time.data.start,
+                    $lt: this.find.time.data.end
+                };
+            }
+            if(this.find.organizer.enabled) {
+                findQuery["organizer.name"] = this.find.organizer.data;
+            }
+            if(this.find.location.enabled) {
+                
+            }
+            if(this.find.genre.enabled) {
+                
+            }
+            query = query.find(findQuery);
+            //sort
             
-        }
-        if(this.find.genre.enabled) {
-            
-        }
-        query = query.find(findQuery);
-        //sort
-        
-        //field
-        query = query.select(this.field.fields);
-        //limit
-        query = query.limit(this.limit.count);
-        query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
-        return query.exec();
+            //field
+            query = query.select(this.field.fields);
+            //limit
+            query = query.limit(this.limit.count);
+            query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
+        })
+        .then(function() {
+            return query.exec();
+        });
+        return thenPromise;
     }
 };
 
