@@ -121,7 +121,7 @@ eventFindQuery.prototype = {
         return this;
     },
     byRank: function(rankType) {
-        //Verify rankType is real
+        assert.include(["top", "new"], rankType, "Invalid rankType"); //TODO: More Ranks.
         //Enable rank sort and store provided rankType
         return this;
     },
@@ -159,6 +159,7 @@ eventFindQuery.prototype = {
     then: function() {
         var query = this.Event;
         var thenPromise = Q.fcall(function() {
+            var queryPromises = [];
             //find
             var findQuery = {};
             if(this.find.time.enabled) {
@@ -184,6 +185,15 @@ eventFindQuery.prototype = {
             //limit
             query = query.limit(this.limit.count);
             query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
+            // if(required) {
+            //      var p = MongooseObject.find({data:data})
+            //      .then(function(object) {
+            //          this.find.field.data = object.data
+            //          return object.event
+            //      })
+            //  queryPromises.push(p)
+            // }
+            return Q.all(queryPromises);
         })
         .then(function() {
             return query.exec();
