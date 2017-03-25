@@ -37,8 +37,18 @@ var eventFindQuery = function(query) {
         };
         this.sort = {
             enabled: false,
-            time: {},
-            rank: {}
+            time: {
+                enabled: false,
+                data: {
+                    direction: 0
+                }
+            },
+            rank: {
+                enabled: false,
+                data: {
+                    type: "hot"
+                }
+            }
         };
         this.limit = {
             enabled: true,
