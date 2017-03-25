@@ -5,47 +5,53 @@ var assert = require('chai').assert;
 
 var Event = mongoose.model('Event');
 
-var eventFindQuery = function() {
+var eventFindQuery = function(query) {
     this.Event = Event;
-    this.find = {
-        location: {
+    if(typeof query == "undefined") {
+        //generate default query
+        this.find = {
+            location: {
+                enabled: false,
+                data: {}
+            },
+            time: {
+                enabled: false,
+                data: {}
+            },
+            organizer: {
+                enabled: false,
+                data: {}
+            },
+            genre: {
+                enabled: false,
+                data: {}
+            },
+            visibility: {
+                enabled: true,
+                data: "public"
+            },
+            // ingress: {
+            //     enabled: false,
+            //     data: "everyone"
+            // }
+        };
+        this.sort = {
             enabled: false,
-            data: {}
-        },
-        time: {
-            enabled: false,
-            data: {}
-        },
-        organizer: {
-            enabled: false,
-            data: {}
-        },
-        genre: {
-            enabled: false,
-            data: {}
-        },
-        visibility: {
+            time: {},
+            rank: {}
+        };
+        this.limit = {
             enabled: true,
-            data: "public"
-        },
-        // ingress: {
-        //     enabled: false,
-        //     data: "everyone"
-        // }
-    };
-    this.sort = {
-        enabled: false,
-        time: {},
-        rank: {}
-    };
-    this.limit = {
-        enabled: true,
-        count: 25
-    };
-    this.field = {
-        enabled: true,
-        fields: []
-    };
+            count: 25
+        };
+        this.field = {
+            enabled: true,
+            fields: []
+        };
+    }
+    else {
+        //Load query
+    }
 };
 
 eventFindQuery.prototype = {
