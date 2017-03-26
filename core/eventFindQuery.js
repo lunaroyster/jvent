@@ -177,6 +177,11 @@ eventFindQuery.prototype = {
     
     // }
     
+    user: function(user) {
+        this.user = user;
+        return this;
+    },
+    
     then: function() {
         var query = this.Event;
         
