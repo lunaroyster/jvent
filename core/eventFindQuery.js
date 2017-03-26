@@ -184,39 +184,43 @@ eventFindQuery.prototype = {
             var queryPromises = [];
             
             //  Find {
-                var findQuery = {};
-                //  No query {
-                if(this.find.time.enabled) {
-                    findQuery["timeOfCreation"] = {
-                        $gte: this.find.time.data.start,
-                        $lt: this.find.time.data.end
-                    };
-                }
-                if(this.find.organizer.enabled) {
-                    findQuery["organizer.name"] = this.find.organizer.data;
-                }
-                if(this.find.location.enabled) {
-                    //TODO
-                }
-                if(this.find.genre.enabled) {
-                    //TODO
-                }
-                //  }
-                //  Query {
-                // if(this.find.property.enabled) {
-                //      
-                // }
-                //  }
-                query = query.find(findQuery);
+                queryPromises.push(Q.fcall(function() {
+                    var findQuery = {};
+                    //  No query {
+                        if(this.find.time.enabled) {
+                            findQuery["timeOfCreation"] = {
+                                $gte: this.find.time.data.start,
+                                $lt: this.find.time.data.end
+                            };
+                        }
+                        if(this.find.organizer.enabled) {
+                            findQuery["organizer.name"] = this.find.organizer.data;
+                        }
+                        if(this.find.location.enabled) {
+                            //TODO
+                        }
+                        if(this.find.genre.enabled) {
+                            //TODO
+                        }
+                    //  }
+                    //  Query {
+                    // if(this.find.property.enabled) {
+                    //      
+                    // }
+                    //  }
+                    query = query.find(findQuery);
+                }));
             // }
             
             //  Sort {
-                //  No Query {
-                    
-                //  }
-                //  Query {
-                    
-                //  }
+                queryPromises.push(Q.fcall(function() {
+                    //  No Query {
+                        
+                    //  }
+                    //  Query {
+                        
+                    //  }
+                }));
             // } 
             
             //  Select {
