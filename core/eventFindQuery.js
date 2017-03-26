@@ -65,7 +65,7 @@ var eventFindQuery = function(query) {
 };
 
 eventFindQuery.prototype = {
-    //find
+    // {
     all: function() {
         // this.find = {};
         _.each(this.find, function(finder) {
@@ -124,7 +124,8 @@ eventFindQuery.prototype = {
         };
         return this;
     },
-    //sort
+    // } Find
+    // {
     byTime: function(direction) {
         //verify direction
         //Enable time sort and store provided direction
@@ -135,7 +136,8 @@ eventFindQuery.prototype = {
         //Enable rank sort and store provided rankType
         return this;
     },
-    //field
+    // } Sort
+    // {
     fields: function() {
         this.field.enabled = true;
         this.field.fields = Array.from(arguments);
@@ -153,7 +155,8 @@ eventFindQuery.prototype = {
         this.field.fields = [];
         return this;
     },
-    //limit
+    // } Field
+    // {
     limit: function(n) {
         assert.isNumber(n);
         this.limit.count = n;
@@ -165,13 +168,22 @@ eventFindQuery.prototype = {
         this.limit.page = n;
         return this;
     },
-    //other
+    // } Limit
+    // {
     then: function() {
         var query = this.Event;
         var thenPromise = Q.fcall(function() {
             var queryPromises = [];
-            //find
+            // {
             var findQuery = {};
+            // if(required) {
+            //      var p = MongooseObject.find({data:data})
+            //      .then(function(object) {
+            //          this.find.field.data = object.data
+            //          return object.event
+            //      })
+            //  queryPromises.push(p)
+            // }
             if(this.find.time.enabled) {
                 findQuery["timeOfCreation"] = {
                     $gte: this.find.time.data.start,
@@ -188,21 +200,16 @@ eventFindQuery.prototype = {
                 
             }
             query = query.find(findQuery);
-            //sort
-            
-            //field
+            // } Find
+            // {
+            // } Sort
+            // {
             query = query.select(this.field.fields);
-            //limit
+            // } Select
+            // {
             query = query.limit(this.limit.count);
             query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
-            // if(required) {
-            //      var p = MongooseObject.find({data:data})
-            //      .then(function(object) {
-            //          this.find.field.data = object.data
-            //          return object.event
-            //      })
-            //  queryPromises.push(p)
-            // }
+            // } Limit
             return Q.all(queryPromises);
         })
         .then(function() {
@@ -210,6 +217,7 @@ eventFindQuery.prototype = {
         });
         return thenPromise;
     }
+    // } Field
 };
 
 module.exports = eventFindQuery;
