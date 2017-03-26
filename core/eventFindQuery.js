@@ -65,7 +65,7 @@ var eventFindQuery = function(query) {
 };
 
 eventFindQuery.prototype = {
-    // {
+    //  {
     all: function() {
         // this.find = {};
         _.each(this.find, function(finder) {
@@ -73,11 +73,11 @@ eventFindQuery.prototype = {
         });
         return this;
     },
-    location: function(location) {
-        //verify location is legitimate
-        this.find.location = {
+    organizer: function(organizer) {
+        //enable org search and store provided organizer
+        this.find.organizer = {
             enabled: true,
-            data: location
+            data: organizer
         };
         return this;
     },
@@ -95,11 +95,20 @@ eventFindQuery.prototype = {
         };
         return this;
     },
-    organizer: function(organizer) {
-        //enable org search and store provided organizer
-        this.find.organizer = {
+    location: function(location) {
+        //verify location is legitimate
+        this.find.location = {
             enabled: true,
-            data: organizer
+            data: location
+        };
+        return this;
+    },
+    genre: function() {
+        var genres = Array.from(arguments);
+        //verify genres exist
+        this.find.genre = {
+            enabled: true,
+            data: genres
         };
         return this;
     },
@@ -115,17 +124,9 @@ eventFindQuery.prototype = {
         this.find.ingress.data = ingress;
         return this;
     },
-    genre: function() {
-        var genres = Array.from(arguments);
-        //verify genres exist
-        this.find.genre = {
-            enabled: true,
-            data: genres
-        };
-        return this;
-    },
-    // } Find
-    // {
+    //  } Find
+    
+    //  {
     byTime: function(direction) {
         //verify direction
         //Enable time sort and store provided direction
@@ -136,8 +137,9 @@ eventFindQuery.prototype = {
         //Enable rank sort and store provided rankType
         return this;
     },
-    // } Sort
-    // {
+    //  } Sort
+    
+    //  {
     fields: function() {
         this.field.enabled = true;
         this.field.fields = Array.from(arguments);
@@ -156,7 +158,8 @@ eventFindQuery.prototype = {
         return this;
     },
     // } Field
-    // {
+    
+    //  {
     limit: function(n) {
         assert.isNumber(n);
         this.limit.count = n;
@@ -169,21 +172,20 @@ eventFindQuery.prototype = {
         return this;
     },
     // } Limit
-    // {
+    
+    //  {
+    
+    // } Field
+    
     then: function() {
         var query = this.Event;
+        
         var thenPromise = Q.fcall(function() {
             var queryPromises = [];
-            // {
+            
+            //  {
             var findQuery = {};
-            // if(required) {
-            //      var p = MongooseObject.find({data:data})
-            //      .then(function(object) {
-            //          this.find.field.data = object.data
-            //          return object.event
-            //      })
-            //  queryPromises.push(p)
-            // }
+            //  {
             if(this.find.time.enabled) {
                 findQuery["timeOfCreation"] = {
                     $gte: this.find.time.data.start,
@@ -194,22 +196,37 @@ eventFindQuery.prototype = {
                 findQuery["organizer.name"] = this.find.organizer.data;
             }
             if(this.find.location.enabled) {
-                
+                //TODO
             }
             if(this.find.genre.enabled) {
-                
+                //TODO
             }
+            //  } No query
+            //  {
+            // if(required) {
+            //      var p = MongooseObject.find({data:data})
+            //      .then(function(object) {
+            //          this.find.field.data = object.data
+            //          return object.event
+            //      })
+            //  queryPromises.push(p)
+            // }
+            //  } Query
             query = query.find(findQuery);
             // } Find
-            // {
+            
+            //  {
             // } Sort
-            // {
+            
+            //  {
             query = query.select(this.field.fields);
             // } Select
-            // {
+            
+            //  {
             query = query.limit(this.limit.count);
             query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
             // } Limit
+            
             return Q.all(queryPromises);
         })
         .then(function() {
@@ -217,7 +234,6 @@ eventFindQuery.prototype = {
         });
         return thenPromise;
     }
-    // } Field
 };
 
 module.exports = eventFindQuery;
