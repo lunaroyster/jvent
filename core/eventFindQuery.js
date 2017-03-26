@@ -65,7 +65,7 @@ var eventFindQuery = function(query) {
 };
 
 eventFindQuery.prototype = {
-    //find
+    //  Find {
     all: function() {
         // this.find = {};
         _.each(this.find, function(finder) {
@@ -73,11 +73,11 @@ eventFindQuery.prototype = {
         });
         return this;
     },
-    location: function(location) {
-        //verify location is legitimate
-        this.find.location = {
+    organizer: function(organizer) {
+        //enable org search and store provided organizer
+        this.find.organizer = {
             enabled: true,
-            data: location
+            data: organizer
         };
         return this;
     },
@@ -95,11 +95,20 @@ eventFindQuery.prototype = {
         };
         return this;
     },
-    organizer: function(organizer) {
-        //enable org search and store provided organizer
-        this.find.organizer = {
+    location: function(location) {
+        //verify location is legitimate
+        this.find.location = {
             enabled: true,
-            data: organizer
+            data: location
+        };
+        return this;
+    },
+    genre: function() {
+        var genres = Array.from(arguments);
+        //verify genres exist
+        this.find.genre = {
+            enabled: true,
+            data: genres
         };
         return this;
     },
@@ -115,16 +124,9 @@ eventFindQuery.prototype = {
         this.find.ingress.data = ingress;
         return this;
     },
-    genre: function() {
-        var genres = Array.from(arguments);
-        //verify genres exist
-        this.find.genre = {
-            enabled: true,
-            data: genres
-        };
-        return this;
-    },
-    //sort
+    //  }
+    
+    //  Sort {
     byTime: function(direction) {
         //verify direction
         //Enable time sort and store provided direction
@@ -135,7 +137,9 @@ eventFindQuery.prototype = {
         //Enable rank sort and store provided rankType
         return this;
     },
-    //field
+    //  }
+    
+    //  Field {
     fields: function() {
         this.field.enabled = true;
         this.field.fields = Array.from(arguments);
@@ -153,7 +157,9 @@ eventFindQuery.prototype = {
         this.field.fields = [];
         return this;
     },
-    //limit
+    // }
+    
+    //  Limit {
     limit: function(n) {
         assert.isNumber(n);
         this.limit.count = n;
@@ -165,44 +171,72 @@ eventFindQuery.prototype = {
         this.limit.page = n;
         return this;
     },
-    //other
+    // }
+    
+    //  Field {
+    
+    // }
+    
+    user: function(user) {
+        this.user = user;
+        return this;
+    },
+    
     then: function() {
         var query = this.Event;
+        
         var thenPromise = Q.fcall(function() {
             var queryPromises = [];
-            //find
-            var findQuery = {};
-            if(this.find.time.enabled) {
-                findQuery["timeOfCreation"] = {
-                    $gte: this.find.time.data.start,
-                    $lt: this.find.time.data.end
-                };
-            }
-            if(this.find.organizer.enabled) {
-                findQuery["organizer.name"] = this.find.organizer.data;
-            }
-            if(this.find.location.enabled) {
-                
-            }
-            if(this.find.genre.enabled) {
-                
-            }
-            query = query.find(findQuery);
-            //sort
             
-            //field
-            query = query.select(this.field.fields);
-            //limit
-            query = query.limit(this.limit.count);
-            query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
-            // if(required) {
-            //      var p = MongooseObject.find({data:data})
-            //      .then(function(object) {
-            //          this.find.field.data = object.data
-            //          return object.event
-            //      })
-            //  queryPromises.push(p)
+            //  Find {
+                queryPromises.push(Q.fcall(function() {
+                    var findQuery = {};
+                    //  No query {
+                        if(this.find.time.enabled) {
+                            findQuery["timeOfCreation"] = {
+                                $gte: this.find.time.data.start,
+                                $lt: this.find.time.data.end
+                            };
+                        }
+                        if(this.find.organizer.enabled) {
+                            findQuery["organizer.name"] = this.find.organizer.data;
+                        }
+                        if(this.find.location.enabled) {
+                            //TODO
+                        }
+                        if(this.find.genre.enabled) {
+                            //TODO
+                        }
+                    //  }
+                    //  Query {
+                    // if(this.find.property.enabled) {
+                    //      
+                    // }
+                    //  }
+                    query = query.find(findQuery);
+                }));
             // }
+            
+            //  Sort {
+                queryPromises.push(Q.fcall(function() {
+                    //  No Query {
+                        
+                    //  }
+                    //  Query {
+                        
+                    //  }
+                }));
+            // } 
+            
+            //  Select {
+                query = query.select(this.field.fields);
+            // }
+            
+            //  Limit  {
+                query = query.limit(this.limit.count);
+                query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
+            // }
+            
             return Q.all(queryPromises);
         })
         .then(function() {
