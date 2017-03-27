@@ -827,6 +827,19 @@ app.controller('eventListCtrl', function($scope, eventListService, navService) {
     .then(function(eventList) {
         $scope.eventArray = eventList;
     });
+    // $scope.query = {
+    //     find: {
+    //         time: {
+    //             enabled: false
+    //         }
+    //     }
+    // };
+    $scope.refresh = function() {
+        return eventListService.getEventList()
+        .then(function(eventList) {
+            $scope.eventArray = eventList;
+        });
+    };
     $scope.eventClick = function(eventURL) {
         navService.event(eventURL);
     };
