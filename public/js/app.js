@@ -823,10 +823,13 @@ app.controller('homeController', function($scope, $rootScope, userService, event
 
 //Event
 app.controller('eventListCtrl', function($scope, eventListService, navService) {
-    eventListService.getEventList()
-    .then(function(eventList) {
-        $scope.eventArray = eventList;
-    });
+    $scope.refresh = function() {
+        return eventListService.getEventList()
+        .then(function(eventList) {
+            $scope.eventArray = eventList;
+        });
+    };
+    $scope.refresh();
     // $scope.query = {
     //     find: {
     //         time: {
@@ -834,12 +837,6 @@ app.controller('eventListCtrl', function($scope, eventListService, navService) {
     //         }
     //     }
     // };
-    $scope.refresh = function() {
-        return eventListService.getEventList()
-        .then(function(eventList) {
-            $scope.eventArray = eventList;
-        });
-    };
     $scope.eventClick = function(eventURL) {
         navService.event(eventURL);
     };
@@ -877,13 +874,16 @@ app.controller('newEventCtrl', function($scope, userService, newEventService, na
 });
 
 app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navService) {
-    contextEvent.getEvent($routeParams.eventURL)
-    .then(function(event) {
-        $scope.event = event;
-    })
-    .catch(function(error) {
-        Materialize.toast(error.status + ' ' + error.statusText, 4000);
-    });
+    $scope.refresh = function() {
+        return contextEvent.getEvent($routeParams.eventURL)
+        .then(function(event) {
+            $scope.event = event;
+        })
+        .catch(function(error) {
+            Materialize.toast(error.status + ' ' + error.statusText, 4000);
+        });
+    };
+    $scope.refresh();
     $scope.joinPending = false;
     $scope.join = function() {
         //Make sure request can be made
@@ -901,15 +901,6 @@ app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navServ
     };
     $scope.view = function() {
         navService.posts(contextEvent.event.url);
-    };
-    $scope.refresh = function() {
-        return contextEvent.getEvent($routeParams.eventURL)
-        .then(function(event) {
-            $scope.event = event;
-        })
-        .catch(function(error) {
-            Materialize.toast(error.status + ' ' + error.statusText, 4000);
-        });
     };
 });
 
