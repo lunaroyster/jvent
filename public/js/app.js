@@ -906,10 +906,13 @@ app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navServ
 
 app.controller('userListCtrl', function($scope, $routeParams, userMembershipService) {
     $scope.selectedList = {};
-    userMembershipService.initialize($routeParams.eventURL)
-    .then(function() {
-        $scope.roles = userMembershipService.roles;
-    });
+    $scope.refresh = function() {
+        return userMembershipService.initialize($routeParams.eventURL)
+        .then(function() {
+            $scope.roles = userMembershipService.roles;
+        });
+    };
+    $scope.refresh();
     $scope.getUserList = function(role) {
         userMembershipService.getUserList(role)
         .then(function(userList) {
@@ -921,23 +924,29 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 
 //Post
 app.controller('postListCtrl', function($scope, $routeParams, postListService, navService) {
-    postListService.getPostList($routeParams.eventURL)
-    .then(function(postList) {
-        $scope.postList = postList;
-    });
+    $scope.refresh = function() {
+        return postListService.getPostList($routeParams.eventURL)
+        .then(function(postList) {
+            $scope.postList = postList;
+        });
+    };
+    $scope.refresh();
     $scope.newPost = function() {
         navService.newPost(contextEvent.event.url);
     };
 });
 
 app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {
-    contextEvent.getEvent($routeParams.eventURL)
-    .then(function(event) {
-        $scope.event = event;
-    })
-    .catch(function(error) {
-        Materialize.toast(error.status + ' ' + error.statusText, 4000);
-    });
+    $scope.refresh = function() {
+        return contextEvent.getEvent($routeParams.eventURL)
+        .then(function(event) {
+            $scope.event = event;
+        })
+        .catch(function(error) {
+            Materialize.toast(error.status + ' ' + error.statusText, 4000);
+        });
+    };
+    $scope.refresh();
     $scope.newPost = newPostService.post;
     $scope.valid = newPostService.valid;
     $scope.newPostEnabled = function() {
