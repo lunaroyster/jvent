@@ -48,9 +48,9 @@ app.config(['$routeProvider', function($routeProvider) {
     })
 
     .when('/event/:eventURL/post/:postURL', {
-        // controller  : 'newPostCtrl',
-        // controllerAs: 'newPostView',
-        // templateUrl : './views/post/new.html'
+        controller  : 'postCtrl',
+        controllerAs: 'postview',
+        templateUrl : './views/post/page.html'
     })
 
     .when('/event/:eventURL/users', {
@@ -968,6 +968,10 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
             });
         }
     };
+});
+
+app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, navService) {
+    
 });
 
 //User
