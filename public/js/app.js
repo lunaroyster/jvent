@@ -96,7 +96,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
 }]);
 
-// Providers
+//  Location Services {
 app.service('urlService', function() {
     var apiURL = 'api/';
     var apiVersion = 'v0/';
@@ -190,6 +190,7 @@ app.service('navService', function($location) {
         $location.path('/signup');
     };
 });
+//  }
 
 app.factory('userService', function($rootScope, urlService, $http, $q) {
     var obj = {};
@@ -413,7 +414,7 @@ app.service('jventService', function(urlService, $http, $q) {
     };
 });
 
-// List Providers
+//  List Providers {
 app.factory('eventListService', function(jventService, $q) {
     var eventListService = {};
     var lastQuery = {};
@@ -633,8 +634,9 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
     };
     return postListService;
 });
+//  }
 
-// Context Providers
+//  Context Providers {
 app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
     var contextEvent = {};
     contextEvent.event = {};
@@ -695,8 +697,9 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
     };
     return contextPost;
 });
+//  }
 
-// New Providers
+//  New Providers {
 app.factory('newEventService', function(userService, jventService) {
     var newEventService = {};
     var event = {};
@@ -781,8 +784,9 @@ app.factory('newPostService', function(userService, contextEvent, jventService) 
     };
     return(newPostService);
 });
+//  }
 
-// Controllers
+//  Controllers {
 
 app.controller('homeController', function($scope, $rootScope, userService, eventMembershipService, navService, $location) {
     $scope.homeClick = function() {
@@ -1048,3 +1052,4 @@ app.controller('404Ctrl', function($scope, $location) {
     };
     setTimeout($scope.redirect, 5000);
 });
+//  }
