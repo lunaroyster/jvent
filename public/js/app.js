@@ -1,7 +1,11 @@
+//  JS Options {
+"use strict";
 /* global angular Materialize*/
+//  }
+//  {
 // ["$scope","$rootScope", "$routeParams", "userService","newObjectService","contextService","listService","skeletal service","angular library service"]
 // ["other", "user", "commentURL", "postURL", "eventURL", "comment", "post", "event"]
-"use strict";
+//  }
 var app = angular.module("jvent", ['ngRoute']);
 
 app.config(['$routeProvider', function($routeProvider) {
@@ -54,10 +58,7 @@ app.config(['$routeProvider', function($routeProvider) {
         controllerAs: 'userlistview',
         templateUrl : './views/event/userlist.html'
     })
-
-    // .when('/event/:eventURL/post/:postURL', {
-
-    // })
+    
     .when('/me/events', {
         controller  : 'eventMembershipCtrl',
         controllerAs: 'eventmembershipview',
@@ -601,9 +602,6 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
     var postListService = {};
     var lastQuery = {};
     var lastTime;
-    var deltaTime = function() {
-        return lastTime - Date.now();
-    };
     var queryChange = function() {
         //TODO: compare postListService.query and lastQuery
         return false;
