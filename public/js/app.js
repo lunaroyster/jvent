@@ -902,6 +902,15 @@ app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navServ
     $scope.view = function() {
         navService.posts(contextEvent.event.url);
     };
+    $scope.refresh = function() {
+        return contextEvent.getEvent($routeParams.eventURL)
+        .then(function(event) {
+            $scope.event = event;
+        })
+        .catch(function(error) {
+            Materialize.toast(error.status + ' ' + error.statusText, 4000);
+        });
+    };
 });
 
 app.controller('userListCtrl', function($scope, $routeParams, userMembershipService) {
