@@ -130,6 +130,17 @@ eventFindQuery.prototype = {
         this.find.ingress.data = ingress;
         return this;
     },
+    membership: function() {
+        var roles = Array.from(arguments);
+        //verify roles exist
+        this.find.membership = {
+            enabled: true,
+            data: {
+                roles: roles
+            }
+        };
+        return this;
+    },
     //  }
     
     //  Sort {
