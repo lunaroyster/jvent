@@ -33,7 +33,13 @@ var eventFindQuery = function(query) {
             // ingress: {
             //     enabled: false,
             //     data: "everyone"
-            // }
+            // },
+            membership: {
+                enabled: false,
+                data: {
+                    roles: []
+                }
+            }
         };
         this.sort = {
             enabled: false,
@@ -215,10 +221,9 @@ eventFindQuery.prototype = {
                         }
                     //  }
                     //  Query {
-                    
-                    // if(this.find.property.enabled) {
-                    //      
-                    // }
+                        if(this.find.membership.enabled) {
+                            // this.find.membership.data.roles
+                        }
                     //  }
                     query = query.find(findQuery);
                 }));
