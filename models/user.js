@@ -24,7 +24,7 @@ var userSchema = new Schema({
         passwordChange: {
             type: Date
         },
-        signup: {
+        creation: {
             type: Date
         }, //TODO: implement in code
         update: {
@@ -57,6 +57,14 @@ userSchema.methods.validPassword = function(password) {
     var hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
     return this.hash === hash;
 };
+
+userSchema.pre('save', function(next) {
+    if(this.isNew) {
+        this.time.creation = Date.now();
+        this.time.passwordChange = Date.now();
+    }
+    next();
+});
 
 userSchema.plugin(uniqueValidator);
 
