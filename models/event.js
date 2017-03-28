@@ -44,7 +44,15 @@ var eventSchema = new Schema({
         }
     },
     roles: [String],
-    timeOfCreation: Date,
+    timeOfCreation: Date, //TODO: Remove from code and model
+    time: {
+        update: {
+            type: Date
+        },
+        creation: {
+            type: Date
+        }
+    },
     organizer: {
         user: {
             type: Schema.Types.ObjectId, 
