@@ -24,9 +24,12 @@ var userSchema = new Schema({
         passwordChange: {
             type: Date
         },
-        creation: {
+        signup: {
             type: Date
-        } //TODO: implement in code
+        }, //TODO: implement in code
+        update: {
+            type: Date
+        }
     },
     posts: {
         type: Schema.Types.ObjectId,
