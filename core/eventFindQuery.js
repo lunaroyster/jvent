@@ -192,14 +192,14 @@ eventFindQuery.prototype = {
                 queryPromises.push(Q.fcall(function() {
                     var findQuery = {};
                     //  No query {
+                        if(this.find.organizer.enabled) {
+                            findQuery["organizer.name"] = this.find.organizer.data;
+                        }
                         if(this.find.time.enabled) {
                             findQuery["timeOfCreation"] = {
                                 $gte: this.find.time.data.start,
                                 $lt: this.find.time.data.end
                             };
-                        }
-                        if(this.find.organizer.enabled) {
-                            findQuery["organizer.name"] = this.find.organizer.data;
                         }
                         if(this.find.location.enabled) {
                             //TODO
@@ -207,8 +207,15 @@ eventFindQuery.prototype = {
                         if(this.find.genre.enabled) {
                             //TODO
                         }
+                        if(this.find.visibility.enabled) {
+                            findQuery["visibility"] = this.find.visibility.data;
+                        }
+                        if(this.find.ingress.enabled) {
+                            findQuery["ingress"] = this.find.ingress.data;
+                        }
                     //  }
                     //  Query {
+                    
                     // if(this.find.property.enabled) {
                     //      
                     // }
