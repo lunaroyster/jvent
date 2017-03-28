@@ -10,7 +10,12 @@ var eventMembershipSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Event'
     },
+    time: Date,
     role: String
+});
+
+eventMembershipSchema.pre('save', function(next) {
+    this.time = Date.now();
 });
 
 mongoose.model('EventMembership', eventMembershipSchema);

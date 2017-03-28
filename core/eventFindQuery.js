@@ -33,7 +33,13 @@ var eventFindQuery = function(query) {
             // ingress: {
             //     enabled: false,
             //     data: "everyone"
-            // }
+            // },
+            membership: {
+                enabled: false,
+                data: {
+                    roles: []
+                }
+            }
         };
         this.sort = {
             enabled: false,
@@ -124,6 +130,17 @@ eventFindQuery.prototype = {
         this.find.ingress.data = ingress;
         return this;
     },
+    membership: function() {
+        var roles = Array.from(arguments);
+        //verify roles exist
+        this.find.membership = {
+            enabled: true,
+            data: {
+                roles: roles
+            }
+        };
+        return this;
+    },
     //  }
     
     //  Sort {
@@ -192,14 +209,14 @@ eventFindQuery.prototype = {
                 queryPromises.push(Q.fcall(function() {
                     var findQuery = {};
                     //  No query {
+                        if(this.find.organizer.enabled) {
+                            findQuery["organizer.name"] = this.find.organizer.data;
+                        }
                         if(this.find.time.enabled) {
                             findQuery["timeOfCreation"] = {
                                 $gte: this.find.time.data.start,
                                 $lt: this.find.time.data.end
                             };
-                        }
-                        if(this.find.organizer.enabled) {
-                            findQuery["organizer.name"] = this.find.organizer.data;
                         }
                         if(this.find.location.enabled) {
                             //TODO
@@ -207,11 +224,17 @@ eventFindQuery.prototype = {
                         if(this.find.genre.enabled) {
                             //TODO
                         }
+                        if(this.find.visibility.enabled) {
+                            findQuery["visibility"] = this.find.visibility.data;
+                        }
+                        if(this.find.ingress.enabled) {
+                            findQuery["ingress"] = this.find.ingress.data;
+                        }
                     //  }
                     //  Query {
-                    // if(this.find.property.enabled) {
-                    //      
-                    // }
+                        if(this.find.membership.enabled) {
+                            // this.find.membership.data.roles
+                        }
                     //  }
                     query = query.find(findQuery);
                 }));
