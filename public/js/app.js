@@ -1,7 +1,11 @@
+//  JS Options {
+"use strict";
 /* global angular Materialize*/
+//  }
+//  {
 // ["$scope","$rootScope", "$routeParams", "userService","newObjectService","contextService","listService","skeletal service","angular library service"]
 // ["other", "user", "commentURL", "postURL", "eventURL", "comment", "post", "event"]
-"use strict";
+//  }
 var app = angular.module("jvent", ['ngRoute']);
 
 app.config(['$routeProvider', function($routeProvider) {
@@ -44,9 +48,9 @@ app.config(['$routeProvider', function($routeProvider) {
     })
 
     .when('/event/:eventURL/post/:postURL', {
-        // controller  : 'newPostCtrl',
-        // controllerAs: 'newPostView',
-        // templateUrl : './views/post/new.html'
+        controller  : 'postCtrl',
+        controllerAs: 'postview',
+        templateUrl : './views/post/page.html'
     })
 
     .when('/event/:eventURL/users', {
@@ -54,10 +58,7 @@ app.config(['$routeProvider', function($routeProvider) {
         controllerAs: 'userlistview',
         templateUrl : './views/event/userlist.html'
     })
-
-    // .when('/event/:eventURL/post/:postURL', {
-
-    // })
+    
     .when('/me/events', {
         controller  : 'eventMembershipCtrl',
         controllerAs: 'eventmembershipview',
@@ -96,7 +97,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
 }]);
 
-// Providers
+//  Location Services {
 app.service('urlService', function() {
     var apiURL = 'api/';
     var apiVersion = 'v0/';
@@ -190,6 +191,7 @@ app.service('navService', function($location) {
         $location.path('/signup');
     };
 });
+//  }
 
 app.factory('userService', function($rootScope, urlService, $http, $q) {
     var obj = {};
@@ -413,7 +415,7 @@ app.service('jventService', function(urlService, $http, $q) {
     };
 });
 
-// List Providers
+//  List Providers {
 app.factory('eventListService', function(jventService, $q) {
     var eventListService = {};
     var lastQuery = {};
@@ -600,9 +602,6 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
     var postListService = {};
     var lastQuery = {};
     var lastTime;
-    var deltaTime = function() {
-        return lastTime - Date.now();
-    };
     var queryChange = function() {
         //TODO: compare postListService.query and lastQuery
         return false;
@@ -633,8 +632,9 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
     };
     return postListService;
 });
+//  }
 
-// Context Providers
+//  Context Providers {
 app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
     var contextEvent = {};
     contextEvent.event = {};
@@ -695,8 +695,9 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
     };
     return contextPost;
 });
+//  }
 
-// New Providers
+//  New Providers {
 app.factory('newEventService', function(userService, jventService) {
     var newEventService = {};
     var event = {};
@@ -781,8 +782,9 @@ app.factory('newPostService', function(userService, contextEvent, jventService) 
     };
     return(newPostService);
 });
+//  }
 
-// Controllers
+//  Controllers {
 
 app.controller('homeController', function($scope, $rootScope, userService, eventMembershipService, navService, $location) {
     $scope.homeClick = function() {
@@ -819,10 +821,20 @@ app.controller('homeController', function($scope, $rootScope, userService, event
 
 //Event
 app.controller('eventListCtrl', function($scope, eventListService, navService) {
-    eventListService.getEventList()
-    .then(function(eventList) {
-        $scope.eventArray = eventList;
-    });
+    $scope.refresh = function() {
+        return eventListService.getEventList()
+        .then(function(eventList) {
+            $scope.eventArray = eventList;
+        });
+    };
+    $scope.refresh();
+    // $scope.query = {
+    //     find: {
+    //         time: {
+    //             enabled: false
+    //         }
+    //     }
+    // };
     $scope.eventClick = function(eventURL) {
         navService.event(eventURL);
     };
@@ -860,13 +872,16 @@ app.controller('newEventCtrl', function($scope, userService, newEventService, na
 });
 
 app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navService) {
-    contextEvent.getEvent($routeParams.eventURL)
-    .then(function(event) {
-        $scope.event = event;
-    })
-    .catch(function(error) {
-        Materialize.toast(error.status + ' ' + error.statusText, 4000);
-    });
+    $scope.refresh = function() {
+        return contextEvent.getEvent($routeParams.eventURL)
+        .then(function(event) {
+            $scope.event = event;
+        })
+        .catch(function(error) {
+            Materialize.toast(error.status + ' ' + error.statusText, 4000);
+        });
+    };
+    $scope.refresh();
     $scope.joinPending = false;
     $scope.join = function() {
         //Make sure request can be made
@@ -889,10 +904,13 @@ app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navServ
 
 app.controller('userListCtrl', function($scope, $routeParams, userMembershipService) {
     $scope.selectedList = {};
-    userMembershipService.initialize($routeParams.eventURL)
-    .then(function() {
-        $scope.roles = userMembershipService.roles;
-    });
+    $scope.refresh = function() {
+        return userMembershipService.initialize($routeParams.eventURL)
+        .then(function() {
+            $scope.roles = userMembershipService.roles;
+        });
+    };
+    $scope.refresh();
     $scope.getUserList = function(role) {
         userMembershipService.getUserList(role)
         .then(function(userList) {
@@ -904,23 +922,29 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 
 //Post
 app.controller('postListCtrl', function($scope, $routeParams, postListService, navService) {
-    postListService.getPostList($routeParams.eventURL)
-    .then(function(postList) {
-        $scope.postList = postList;
-    });
+    $scope.refresh = function() {
+        return postListService.getPostList($routeParams.eventURL)
+        .then(function(postList) {
+            $scope.postList = postList;
+        });
+    };
+    $scope.refresh();
     $scope.newPost = function() {
         navService.newPost(contextEvent.event.url);
     };
 });
 
 app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {
-    contextEvent.getEvent($routeParams.eventURL)
-    .then(function(event) {
-        $scope.event = event;
-    })
-    .catch(function(error) {
-        Materialize.toast(error.status + ' ' + error.statusText, 4000);
-    });
+    $scope.refresh = function() {
+        return contextEvent.getEvent($routeParams.eventURL)
+        .then(function(event) {
+            $scope.event = event;
+        })
+        .catch(function(error) {
+            Materialize.toast(error.status + ' ' + error.statusText, 4000);
+        });
+    };
+    $scope.refresh();
     $scope.newPost = newPostService.post;
     $scope.valid = newPostService.valid;
     $scope.newPostEnabled = function() {
@@ -944,6 +968,10 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
             });
         }
     };
+});
+
+app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, navService) {
+    
 });
 
 //User
@@ -1048,3 +1076,4 @@ app.controller('404Ctrl', function($scope, $location) {
     };
     setTimeout($scope.redirect, 5000);
 });
+//  }
