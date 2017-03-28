@@ -20,7 +20,14 @@ var userSchema = new Schema({
     },
     hash: String,
     salt: String,
-    passwordChangeDate: Date,
+    time: {
+        passwordChange: {
+            type: Date
+        },
+        creation: {
+            type: Date
+        } //TODO: implement in code
+    },
     posts: {
         type: Schema.Types.ObjectId,
         ref: 'Collection'
@@ -40,7 +47,7 @@ var userSchema = new Schema({
 userSchema.methods.setPassword = function(password) {
     this.salt = crypto.randomBytes(16).toString('hex');
     this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
-    this.passwordChangeDate = Date.now();
+    this.time.passwordChange = Date.now();
 };
 
 userSchema.methods.validPassword = function(password) {
