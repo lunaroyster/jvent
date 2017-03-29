@@ -58,7 +58,8 @@ var eventFindQuery = function(query) {
         };
         this.limit = {
             enabled: true,
-            count: 25
+            count: 25,
+            page: 0
         };
         this.field = {
             enabled: true,
@@ -276,8 +277,10 @@ eventFindQuery.prototype = {
             // }
             
             //  Limit  {
-                query = query.limit(this.limit.count);
-                query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
+                if(this.limit.enabled) {
+                    query = query.limit(this.limit.count);
+                    query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
+                }
             // }
             
             return Q.all(queryPromises);
