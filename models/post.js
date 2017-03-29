@@ -15,6 +15,14 @@ var postSchema = new Schema({
     },
     link: String,
     timeOfCreation: Date,
+    time: {
+        creation: {
+            type: Date
+        },
+        update: {
+            type: Date
+        }
+    },
     parentEvent: {
         type: Schema.Types.ObjectId,
         ref: 'Event'
@@ -46,5 +54,11 @@ var postSchema = new Schema({
 postSchema.methods.collectionCount = function() {
     return this.parentCollections.length;
 };
+
+postSchema.pre('save', function(next) {
+    if(this.isNew) {
+        this.time.creation = Date.now();
+    }
+});
 
 mongoose.model('Post', postSchema);

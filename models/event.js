@@ -46,10 +46,10 @@ var eventSchema = new Schema({
     roles: [String],
     timeOfCreation: Date, //TODO: Remove from code and model
     time: {
-        update: {
+        creation: {
             type: Date
         },
-        creation: {
+        update: {
             type: Date
         }
     },
@@ -94,6 +94,9 @@ eventSchema.methods.assignRoles = function() {
 };
 
 eventSchema.pre('save', function(next) {
+    if(this.isNew) {
+        this.time.creation = Date.now();
+    }
     this.assignRoles();
     next();
 });
