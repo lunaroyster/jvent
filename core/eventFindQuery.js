@@ -145,13 +145,19 @@ eventFindQuery.prototype = {
     
     //  Sort {
     byTime: function(direction) {
+        this.sort.enabled = true;
         //verify direction
         //Enable time sort and store provided direction
         return this;
     },
     byRank: function(rankType) {
         assert.include(["top", "new"], rankType, "Invalid rankType"); //TODO: More Ranks.
+        this.sort.enabled = true;
         //Enable rank sort and store provided rankType
+        return this;
+    },
+    noSort: function() {
+        this.sort.enabled = false;
         return this;
     },
     //  }
@@ -245,24 +251,28 @@ eventFindQuery.prototype = {
             // }
             
             //  Sort {
-                queryPromises.push(Q.fcall(function() {
-                    var sortQuery; //What object is this?
-                    var sortPromises = [];
-                    //  No Query {
-                        
-                    //  }
-                    //  Query {
-                        
-                    //  }
-                    return Q.all(sortPromises)
-                    .then(function() {
-                        
-                    });
-                }));
+                if(this.sort.enabled) {
+                    queryPromises.push(Q.fcall(function() {
+                        var sortQuery; //What object is this?
+                        var sortPromises = [];
+                        //  No Query {
+                            
+                        //  }
+                        //  Query {
+                            
+                        //  }
+                        return Q.all(sortPromises)
+                        .then(function() {
+                            
+                        });
+                    }));
+                }
             // } 
             
             //  Select {
-                query = query.select(this.field.fields);
+                if(this.field.enabled) {
+                    query = query.select(this.field.fields);
+                }
             // }
             
             //  Limit  {
