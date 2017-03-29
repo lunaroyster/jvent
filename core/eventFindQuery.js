@@ -208,6 +208,7 @@ eventFindQuery.prototype = {
             //  Find {
                 queryPromises.push(Q.fcall(function() {
                     var findQuery = {};
+                    var findPromises = [];
                     //  No query {
                         if(this.find.organizer.enabled) {
                             findQuery["organizer.name"] = this.find.organizer.data;
@@ -236,18 +237,27 @@ eventFindQuery.prototype = {
                             // this.find.membership.data.roles
                         }
                     //  }
-                    query = query.find(findQuery);
+                    return Q.all(findPromises)
+                    .then(function() {
+                        query = query.find(findQuery);
+                    });
                 }));
             // }
             
             //  Sort {
                 queryPromises.push(Q.fcall(function() {
+                    var sortQuery; //What object is this?
+                    var sortPromises = [];
                     //  No Query {
                         
                     //  }
                     //  Query {
                         
                     //  }
+                    return Q.all(sortPromises)
+                    .then(function() {
+                        
+                    });
                 }));
             // } 
             
