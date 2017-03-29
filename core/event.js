@@ -32,10 +32,11 @@ module.exports.createEvent = function(eventSettings, user) {
         return newEvent.save();
     })
     .then(function(event) {
+        //TODO: Rewrite this abomination of a code block
         //TODO: Remove promise array and simplify as needed
         var promises = [];
         promises.push(collectionCore.createSuperCollection(event));
-        promises.push(eventMembershipCore.addModerator(user, event));
+        // promises.push(eventMembershipCore.addModerator(user, event)); //TODO: Broken. Fix and uncomment
         // promises.push(userListCore.createDefaultUserLists(event));
         return Q.all(promises)
         .then(function(results) {

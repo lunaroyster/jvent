@@ -13,7 +13,7 @@ badAuthError.status = 404;
 module.exports.createEvent = function(req, res) {
     Q.fcall(function() {
         req.check(eventRequestSchema.postEvent);
-        req.getValidationResult()
+        return req.getValidationResult()
         .then(function(result) {
             if(!result.isEmpty()) {
                 result.throw();
@@ -53,6 +53,7 @@ module.exports.createEvent = function(req, res) {
             }
         };
         res.status(201).json(state);
+        return;
     })    //Send event creation success
     .catch(function(error) {
         var err;

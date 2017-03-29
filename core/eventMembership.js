@@ -4,6 +4,7 @@ var Q = require('q');
 var EventMembership = mongoose.model('EventMembership');
 
 var addAsRole = function(user, event, role) {
+    //TODO: Something's wrong
     return EventMembership.findOne({user: user._id, event: event._id, role: role})
     .then(function(eventMembership) {
         if(!eventMembership) {
