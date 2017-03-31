@@ -556,8 +556,6 @@ app.factory('eventMembershipService', function(userService, jventService, $q) {
             else {
                 resolve(false);
             }
-        })
-        .then(function() {
         });
     };
     userService.onLogout(function() {
