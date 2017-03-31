@@ -32,6 +32,7 @@ module.exports.createEvent = function(eventSettings, user) {
         return newEvent.save();
     })
     .then(function(event) {
+        //TODO: Rewrite this abomination of a code block
         //TODO: Remove promise array and simplify as needed
         var promises = [];
         promises.push(collectionCore.createSuperCollection(event));

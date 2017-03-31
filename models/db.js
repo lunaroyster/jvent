@@ -21,6 +21,7 @@ module.exports = function(db) {
     });
     
     mongoose.Promise = require('q').Promise;
+    mongoose.set("debug", true);
     
     // CAPTURE APP TERMINATION / RESTART EVENTS
     // To be called when process is restarted or terminated

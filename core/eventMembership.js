@@ -4,6 +4,7 @@ var Q = require('q');
 var EventMembership = mongoose.model('EventMembership');
 
 var addAsRole = function(user, event, role) {
+    //TODO: Something's wrong
     return EventMembership.findOne({user: user._id, event: event._id, role: role})
     .then(function(eventMembership) {
         if(!eventMembership) {
@@ -15,7 +16,7 @@ var addAsRole = function(user, event, role) {
             return newEventMembership.save();
         }
         else {
-            //TODO: Complete error with status and stuff.
+            // TODO: Complete error with status and stuff.
             throw new Error("");
         }
     });
@@ -29,7 +30,7 @@ module.exports.addViewer = function(user, event) {
 module.exports.addInvite = function(user, event) {
     //module.exports.invite breaks symmetry
     return addAsRole(user, event, "invite");
-};
+};  
 module.exports.addModerator = function(user, event) {
     return addAsRole(user, event, "moderator");
 };

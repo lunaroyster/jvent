@@ -58,7 +58,8 @@ var eventFindQuery = function(query) {
         };
         this.limit = {
             enabled: true,
-            count: 25
+            count: 25,
+            page: 0
         };
         this.field = {
             enabled: true,
@@ -145,13 +146,19 @@ eventFindQuery.prototype = {
     
     //  Sort {
     byTime: function(direction) {
+        this.sort.enabled = true;
         //verify direction
         //Enable time sort and store provided direction
         return this;
     },
     byRank: function(rankType) {
         assert.include(["top", "new"], rankType, "Invalid rankType"); //TODO: More Ranks.
+        this.sort.enabled = true;
         //Enable rank sort and store provided rankType
+        return this;
+    },
+    noSort: function() {
+        this.sort.enabled = false;
         return this;
     },
     //  }
@@ -208,6 +215,7 @@ eventFindQuery.prototype = {
             //  Find {
                 queryPromises.push(Q.fcall(function() {
                     var findQuery = {};
+                    var findPromises = [];
                     //  No query {
                         if(this.find.organizer.enabled) {
                             findQuery["organizer.name"] = this.find.organizer.data;
@@ -236,28 +244,43 @@ eventFindQuery.prototype = {
                             // this.find.membership.data.roles
                         }
                     //  }
-                    query = query.find(findQuery);
+                    return Q.all(findPromises)
+                    .then(function() {
+                        query = query.find(findQuery);
+                    });
                 }));
             // }
             
             //  Sort {
-                queryPromises.push(Q.fcall(function() {
-                    //  No Query {
-                        
-                    //  }
-                    //  Query {
-                        
-                    //  }
-                }));
+                if(this.sort.enabled) {
+                    queryPromises.push(Q.fcall(function() {
+                        var sortQuery; //What object is this?
+                        var sortPromises = [];
+                        //  No Query {
+                            
+                        //  }
+                        //  Query {
+                            
+                        //  }
+                        return Q.all(sortPromises)
+                        .then(function() {
+                            
+                        });
+                    }));
+                }
             // } 
             
             //  Select {
-                query = query.select(this.field.fields);
+                if(this.field.enabled) {
+                    query = query.select(this.field.fields);
+                }
             // }
             
             //  Limit  {
-                query = query.limit(this.limit.count);
-                query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
+                if(this.limit.enabled) {
+                    query = query.limit(this.limit.count);
+                    query = query.skip(this.limit.page*this.limit.count); //HACK: DOES NOT SCALE
+                }
             // }
             
             return Q.all(queryPromises);

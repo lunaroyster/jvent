@@ -16,6 +16,7 @@ var eventMembershipSchema = new Schema({
 
 eventMembershipSchema.pre('save', function(next) {
     this.time = Date.now();
+    next(); 
 });
 
 mongoose.model('EventMembership', eventMembershipSchema);
