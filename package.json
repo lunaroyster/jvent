@@ -23,6 +23,7 @@
     "helmet": "^3.4.0",
     "jade": "~1.11.0",
     "jsonwebtoken": "^7.1.9",
+    "less": "^2.7.2",
     "mongoose": "^4.6.5",
     "mongoose-unique-validator": "^1.0.3",
     "morgan": "~1.7.0",
