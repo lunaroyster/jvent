@@ -8,8 +8,9 @@ function toCSS(lessFileName) {
 }
 
 var render = function() {
-    var lessFolder = "./less/";
-    var outFolder = "./public/less/";
+    console.log("Compiling LESS files");
+    var lessFolder = __dirname + "/less/";
+    var outFolder = __dirname + "/public/less/";
     Q.fcall(function() {
         return fs.readdirSync(lessFolder);
     })

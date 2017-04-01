@@ -24,8 +24,14 @@ var server = http.createServer(app);
  * Initialize Database
  */
  
-require('../models/db')("test");
 //TODO: set up the correct DB here (production?)
+require('../models/db')("test");
+
+/**
+ * Generate CSS
+ */
+require('../frontend/compileless');
+
 /**
  * Listen on provided port, on all network interfaces.
  */
