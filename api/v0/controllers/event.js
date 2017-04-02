@@ -130,7 +130,6 @@ module.exports.updateEvent = function(req, res) {
     res.json(req);
     res.send();
 };
-
 module.exports.deleteEvent = function(req, res) {
     res.json(req);
     res.send();
@@ -229,7 +228,19 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         // console.log(error);
         next(error);
     });
+};
 
+module.exports.appendMemberships = function(req, res, next) {
+    eventMembershipCore.getUserEventMemberships(req.user, req.event)
+    .then(function(memberships) {
+        //append memberships to req
+    })
+    .then(function() {
+        next();
+    })
+    .catch(function(error) {
+        next(error);
+    });
 };
 
 var returnEventIfVisible = function(user, event) {

@@ -96,3 +96,9 @@ module.exports.getInvitedEvents = function(user) {
 module.exports.getModeratedEvents = function(user) {
     return getUserMemberships(user, "moderator");
 };
+
+var getUserEventMemberships = function(user, event) {
+    return EventMembership
+    .find({event: event._id, user: user._id})
+    .select('role -_id');
+};
