@@ -5,6 +5,14 @@
 
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
 
+.grey {
+    @base-color: #9e9e9e;
+    background-color: @base-color;
+    &.darken-4 {
+        background-color: darken(@base-color, 50%) !important;
+    }
+}
+
 body {
     background-color: @background;
     color: @text-light;
