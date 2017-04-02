@@ -1,0 +1,153 @@
+@text-light:    #ffffff;
+@background:    #232323;
+@highlight:     #26a69a;
+@background-dark:#0a0b0c;
+
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
+
+.grey {
+    @base-color: #9e9e9e;
+    background-color: @base-color;
+    &.darken-4 {
+        background-color: darken(@base-color, 50%) !important;
+    }
+}
+
+body {
+    background-color: @background;
+    color: @text-light;
+    margin:0;
+    font-family:'Open Sans', sans-serif;
+    font-weight:100;
+}
+nav {
+    opacity:0.9;
+    position:fixed;
+    background-color: @background-dark;
+    display:flex;
+    ul {
+        padding:0;
+        margin:0 auto 0 auto;
+        li {
+            cursor:pointer;
+            display:inline-block;
+            padding:0 2em 0 2em;
+            transition-duration:0.3s;
+        }
+        li:hover {
+            background-color:#1b1e21;
+        }
+    }
+}
+#userDropdown {
+    width:36em;
+    padding:none;
+    background-color: @background-dark;
+    > li {
+        padding-right:0;
+        padding-left:0;
+    }
+}
+#horizontal {
+    height:4em;
+    width:100%;
+    z-index:487;
+    transition-duration:0.3s;
+}
+#vertical {
+    height:100%;
+    width:4em;
+    z-index:486;
+    transition-duration:0.3s;
+}
+#mainbox {
+    left:4em;
+    top:4em;
+    right:0em;
+    bottom:0em;
+    position:fixed;
+    overflow-y:auto;
+}
+#secondary {
+}
+.organizer {
+    transition-duration:0.2s;
+}
+.organizer:hover {
+    color: @highlight;
+}
+#eventpage {
+    height:100%;
+    padding:1em 1em 0em 1em;
+    #content {
+        position:absolute;
+        right:0;
+        width:100%;
+        height:35%;
+        bottom:0;
+        margin-bottom:0;
+    }
+    #info {
+        background:#1e1e1e;
+        height:100%;
+        padding:2em;
+    }
+    #controls {
+        background:#171717;
+        height:100%;
+        padding:2em;
+        .fill {
+            width:100%;
+        }
+    }
+}
+#eventsview, #newEventView, #signUpView {
+    padding:1em 1em 0em 1em;
+}
+#newPostView #titleBox {
+    border:none;
+    background-color:#1c1c1c; //Something better
+    padding:1.5em;
+    font-size:1.25em;
+    height:initial;
+    resize:none;
+}
+#newPostView #titleBox:focus {
+    outline:none;
+    // Other visual changes
+}
+#newPostView #titleBox::-webkit-input-placeholder {
+    color:#aaaaaa;
+}
+.event {
+    background-color:#262626;
+    width:312px;
+    height:312px;
+    display:inline-flex;
+    margin:0 5px 5px 0;
+    background-size:cover;
+    background-position:center;
+    background-blend-mode:overlay;
+    .content {
+        width:100%;
+        // height: 100%;
+        position:relative;
+        margin:0.5em 0.5em 0.5em 0.5em;
+    }
+    h2 {
+        display:flex;
+        font-weight:100;
+    }
+    .bottom {
+        bottom:0;
+        position:absolute;
+        padding:0.5em;
+    }
+}
+::-webkit-scrollbar {
+    background-color:#232323;
+    width:0.5em;
+}
+::-webkit-scrollbar-thumb {
+    background-color:#141414;
+}
