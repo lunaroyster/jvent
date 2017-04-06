@@ -248,6 +248,18 @@ module.exports.appendMemberships = function(req, res, next) {
     });
 };
 
+module.exports.resolveEvent = function(req, res, next) {
+    return Q.fcall(function() {
+        return eventCore.getEventByURL(req.eventURL);
+    })
+    .then(function(event) {
+        return returnEventIfVisible(req.user, event)
+        .then(function(event) {
+            req.event = event;
+        });
+    });
+};
+
 var returnEventIfVisible = function(user, event) {
     return Q.fcall(function() {
         if(event.visibility=="public") {
