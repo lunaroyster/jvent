@@ -230,6 +230,11 @@ module.exports.appendEventIfVisible = function(req, res, next) {
     });
 };
 
+module.exports.appendEventURL = function(req, res, next) {
+    req.eventURL = req.params.eventURL;
+    next();
+};
+
 module.exports.appendMemberships = function(req, res, next) {
     eventMembershipCore.getUserEventMemberships(req.user, req.event)
     .then(function(memberships) {
