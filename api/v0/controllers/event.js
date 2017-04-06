@@ -260,6 +260,24 @@ module.exports.resolveEvent = function(req, res, next) {
     });
 };
 
+module.exports.appendPrivilegeGetter = function(req, res, next) {
+    req.getMembership = function(membership) {
+        return Q.fcall(function() {
+            if (!req.user || !req.event) {
+               return false; 
+            }
+        })
+        .then(function() {
+            //Query for memberships if none exist
+            //Return memberships[]
+        })
+        .then(function(memberships) {
+            //Return if membership is in memberships
+        });
+    };
+    next();
+};
+
 var returnEventIfVisible = function(user, event) {
     return Q.fcall(function() {
         if(event.visibility=="public") {
