@@ -1,4 +1,5 @@
 var Q = require('q');
+var _ = require('underscore')._;
 var eventCore = require('../../../core/event');
 var eventMembershipCore = require('../../../core/eventMembership');
 var eventRequestSchema = require('../requests/event');
@@ -268,11 +269,24 @@ module.exports.appendPrivilegeGetter = function(req, res, next) {
             }
         })
         .then(function() {
-            //Query for memberships if none exist
-            //Return memberships[]
+            if(req.memberships) {
+                return req.memberships;
+            }
+            else {
+                return eventMembershipCore.getUserEventMemberships(req.user, req.event)
+                .then(function(membershipObjects) {
+                    return _.map(membershipObjects, function(membershipObject) {
+                        return membershipObject.role;
+                    });
+                })
+                .then(function(membershipList) {
+                    req.memberships = membershipList;
+                    return req.memberships;
+                });
+            }
         })
         .then(function(memberships) {
-            //Return if membership is in memberships
+            return _.contains(memberships, membership);
         });
     };
     next();

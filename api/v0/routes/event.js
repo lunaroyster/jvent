@@ -9,7 +9,7 @@ var AuthOnly = authController.AuthOnly;
 router.post('/', AuthOnly, eventController.createEvent);
 router.get('/', eventController.getEvents);
 
-router.use('/:eventURL', eventController.appendEventURL, ceRouter);
+router.use('/:eventURL', eventController.appendEventURL, eventController.appendPrivilegeGetter, ceRouter);
 
 var ceRouter = express.Router(); //contextEventRouter
 
