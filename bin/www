@@ -30,7 +30,7 @@ require('../models/db')("test");
 /**
  * Generate CSS
  */
-require('../frontend/compileless');
+require('../frontend/index');
 
 /**
  * Listen on provided port, on all network interfaces.
