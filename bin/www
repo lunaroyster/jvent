@@ -28,7 +28,7 @@ var server = http.createServer(app);
 require('../models/db')("test");
 
 /**
- * Generate CSS
+ * Initialize Frontend
  */
 require('../frontend/index');
 
