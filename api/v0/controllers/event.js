@@ -261,7 +261,7 @@ module.exports.resolveEvent = function(req, res, next) {
     });
 };
 
-module.exports.appendPrivilegeGetter = function(req, res, next) {
+var appendMembershipGetter = function(req) {
     req.getMembership = function(membership) {
         return Q.fcall(function() {
             if (!req.user || !req.event) {
@@ -289,7 +289,12 @@ module.exports.appendPrivilegeGetter = function(req, res, next) {
             return _.contains(memberships, membership);
         });
     };
-    next();
+    return;
+};
+
+module.exports.appendGetters = function(req, res, next) {
+    appendMembershipGetter(req);
+    // More getters
 };
 
 var returnEventIfVisible = function(user, event) {
