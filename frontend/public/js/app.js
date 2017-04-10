@@ -193,6 +193,13 @@ app.service('navService', function($location) {
 });
 //  }
 
+app.service('markdownService', function() {
+    // TODO
+    this.toHTML = function(markdown) {
+        //Convert to HTML and/or Sanitize.
+    };
+});
+
 app.factory('userService', function($rootScope, urlService, $http, $q) {
     var obj = {};
     obj.authed = false;
