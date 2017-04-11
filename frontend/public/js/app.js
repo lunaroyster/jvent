@@ -397,19 +397,25 @@ app.service('jventService', function(urlService, $http, $q) {
         });
     };
     this.getPosts = function(eventURL) {
-        var req = {};
+        var req = {
+            method: 'GET',
+            url: urlService.post(eventURL),
+        };
         return $http(req)
         .then(function(data) {
             return data.data.posts;
         });
-    };   //TODO: Complete req
+    };
     this.getPost = function(postURL, eventURL) {
-        var req = {};
+        var req = {
+            method: 'GET',
+            url: urlService.postURL(eventURL, postURL)
+        };
         return $http(req)
         .then(function(data) {
             return data.data.post;
         });
-    }; //TODO: Complete req
+    };
     this.postVote = function(eventURL, postURL, direction) {
         var url = urlService.postURLVote(eventURL, postURL);
         var data = {
