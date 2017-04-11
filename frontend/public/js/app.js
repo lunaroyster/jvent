@@ -427,6 +427,7 @@ app.factory('eventListService', function(jventService, $q) {
     var eventListService = {};
     var lastQuery = {};
     var lastUpdate;
+    eventListService.loadedEventList = false;
     var fresh = function() {
         return (Date.now() - lastUpdate) < eventListService.cacheTime;
     };
@@ -437,13 +438,17 @@ app.factory('eventListService', function(jventService, $q) {
     eventListService.query = {};
     eventListService.eventList = [];
     eventListService.cacheTime = 60000;
+    var setEventList = function(eventList) {
+        eventListService.eventList = eventList;
+        lastUpdate = Date.now();
+        eventListService.loadedEventList = true;
+    };
     eventListService.getEventList = function() {
         return $q(function(resolve, reject) {
             if(queryChange() || !fresh()) {
                 return jventService.getEvents()
                 .then(function(eventList) {
-                    lastUpdate = Date.now();
-                    eventListService.eventList = eventList;
+                    setEventList(eventList);
                     return resolve(eventList);
                 });
             }
@@ -576,6 +581,7 @@ app.factory('userListService', function(contextEvent, jventService, $q) {
     var userListService = {};
     var lastQuery = {};
     var lastUpdate;
+    userListService.userList; //TYPE?
     var fresh = function() {
         return (Date.now() - lastUpdate) < userListService.cacheTime;
     };
@@ -586,12 +592,15 @@ app.factory('userListService', function(contextEvent, jventService, $q) {
     userListService.query = {};
     userListService.userListCollection = [];
     userListService.cacheTime = 60000;
+    var setUserList = function(userList) {
+        userListService.userList = userList;
+    };
     userListService.getUserList = function() {
         return $q(function(resolve, reject) {
             if(queryChange() || !fresh()) { // OR check if the query result has changed
                 return jventService.getUserList()
                 .then(function(userList) {
-                    userListService.userList = userList;
+                    setUserList(userList);
                     return resolve(userList);
                 });
             }
@@ -616,8 +625,14 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
     };
     postListService.query = {};
     postListService.postList = [];
-    postListService.cacheTime;
+    postListService.cacheTime = 60000;
+    postListService.loadedPostList = false;
     postListService.eventURL;
+    var setPostList = function(postList) {
+        postListService.postList = postList;
+        lastUpdate = Date.now();
+        postListService.loadedPostList = true;
+    };
     postListService.getPostList = function(eventURL) {
         return contextEvent.getEvent(eventURL)
         .then(function(event) {
@@ -625,8 +640,7 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
             if(queryChange() || !fresh()) {
                 return jventService.getPosts(eventURL)
                 .then(function(postList) {
-                    lastUpdate = Date.now();
-                    postListService.postList = postList;
+                    setPostList(postList);
                     return postList;
                 });
             }
@@ -644,6 +658,7 @@ app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
     var contextEvent = {};
     contextEvent.event = {};
     contextEvent.cacheTime = 60000;
+    contextEvent.loadedEvent = false;
     var lastUpdate;
     var fresh = function() {
         return (Date.now() - lastUpdate) < contextEvent.cacheTime;
@@ -652,11 +667,10 @@ app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
         return jventService.joinEvent(contextEvent.event.url);
     };
     //heart
-    contextEvent.loadEvent = function(eventURL) {
-        jventService.getEvent(eventURL, 0)
-        .then(function(event) {
-            contextEvent.event = event;
-        });
+    var setEvent = function(event) {
+        contextEvent.event = event;
+        lastUpdate = Date.now();
+        contextEvent.loadedEvent = true;
     };
     contextEvent.getEvent = function(eventURL) {
         return eventMembershipService.isEventRole("moderator", eventURL)
@@ -664,8 +678,7 @@ app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
             if(eventURL!=contextEvent.event.url||!fresh()) {
                 return jventService.getEvent(eventURL, result)
                 .then(function(event) {
-                    lastUpdate = Date.now();
-                    contextEvent.event = event;
+                    setEvent(event);
                     return event;
                 });
             }
