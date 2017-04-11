@@ -59,6 +59,7 @@ postSchema.pre('save', function(next) {
     if(this.isNew) {
         this.time.creation = Date.now();
     }
+    next();
 });
 
 mongoose.model('Post', postSchema);
