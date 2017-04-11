@@ -965,7 +965,7 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, $routeParams, postListService, navService) {
+app.controller('postListCtrl', function($scope, $routeParams, contextEvent, postListService, navService) {
     $scope.refresh = function() {
         return postListService.getPostList($routeParams.eventURL)
         .then(function(postList) {
