@@ -687,6 +687,14 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
         return (Date.now() - lastTime) < contextPost.cacheTime;
     };
     contextPost.cacheTime = 60000;
+    contextPost.getPost = function(postURL) {
+        return jventService.getPost(postURL, contextEvent.event.url)
+        .then(function(post) {
+            lastTime = Date.now();
+            contextPost.post = post;
+            return post;
+        });
+    };
     contextPost.vote = {
         up: function() {
             return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
