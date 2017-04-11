@@ -427,6 +427,9 @@ app.factory('eventListService', function(jventService, $q) {
     var eventListService = {};
     var lastQuery = {};
     var lastUpdate;
+    eventListService.query = {};
+    eventListService.eventList = [];
+    eventListService.cacheTime = 60000;
     eventListService.loadedEventList = false;
     var fresh = function() {
         return (Date.now() - lastUpdate) < eventListService.cacheTime;
@@ -435,9 +438,6 @@ app.factory('eventListService', function(jventService, $q) {
         //TODO: compare eventListService.query and lastQuery
         return false;
     };
-    eventListService.query = {};
-    eventListService.eventList = [];
-    eventListService.cacheTime = 60000;
     var setEventList = function(eventList) {
         eventListService.eventList = eventList;
         lastUpdate = Date.now();
@@ -582,6 +582,9 @@ app.factory('userListService', function(contextEvent, jventService, $q) {
     var lastQuery = {};
     var lastUpdate;
     userListService.userList; //TYPE?
+    userListService.query = {};
+    userListService.userListCollection = [];
+    userListService.cacheTime = 60000;
     var fresh = function() {
         return (Date.now() - lastUpdate) < userListService.cacheTime;
     };
@@ -589,9 +592,6 @@ app.factory('userListService', function(contextEvent, jventService, $q) {
         //TODO: compare eventListService.query and lastQuery
         return false;
     };
-    userListService.query = {};
-    userListService.userListCollection = [];
-    userListService.cacheTime = 60000;
     var setUserList = function(userList) {
         userListService.userList = userList;
     };
@@ -616,6 +616,11 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
     var postListService = {};
     var lastQuery = {};
     var lastUpdate;
+    postListService.query = {};
+    postListService.postList = [];
+    postListService.cacheTime = 60000;
+    postListService.loadedPostList = false;
+    postListService.eventURL;
     var queryChange = function() {
         //TODO: compare postListService.query and lastQuery
         return false;
@@ -623,11 +628,6 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
     var fresh = function() {
         return (Date.now() - lastUpdate) < postListService.cacheTime;
     };
-    postListService.query = {};
-    postListService.postList = [];
-    postListService.cacheTime = 60000;
-    postListService.loadedPostList = false;
-    postListService.eventURL;
     var setPostList = function(postList) {
         postListService.postList = postList;
         lastUpdate = Date.now();
@@ -663,9 +663,6 @@ app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
     var fresh = function() {
         return (Date.now() - lastUpdate) < contextEvent.cacheTime;
     };
-    contextEvent.join = function() {
-        return jventService.joinEvent(contextEvent.event.url);
-    };
     //heart
     var setEvent = function(event) {
         contextEvent.event = event;
@@ -686,6 +683,9 @@ app.factory('contextEvent', function(eventMembershipService, jventService, $q) {
                 return contextEvent.event;
             }
         });
+    };
+    contextEvent.join = function() {
+        return jventService.joinEvent(contextEvent.event.url);
     };
     return contextEvent;
 });
