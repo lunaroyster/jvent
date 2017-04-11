@@ -1016,12 +1016,16 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
 
 app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, navService) {
     $scope.refresh = function() {
-        return contextPost.getPost($routeParams.postURL) // Where is event resolved?
-        .then(function(post) {
-            $scope.post = post;
-        })
-        .catch(function(error) {
-            Materialize.toast(error.status + ' ' + error.statusText, 4000);
+        contextEvent.getEvent($routeParams.eventURL)
+        .then(function(event) {
+            $scope.event = event;
+            return contextPost.getPost($routeParams.postURL) // Where is event resolved?
+            .then(function(post) {
+                $scope.post = post;
+            })
+            .catch(function(error) {
+                Materialize.toast(error.status + ' ' + error.statusText, 4000);
+            });
         });
     };
     $scope.refresh();
