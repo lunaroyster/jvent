@@ -339,6 +339,20 @@ app.factory('userService', function($rootScope, urlService, $http, $q) {
 });
 
 app.service('jventService', function(urlService, $http, $q) {
+    this.createEvent = function(event) {
+        var url = urlService.event();
+        var data = {
+            event: event
+        };
+        return $http.post(url, data)
+        .then(function(response) {
+            var eventURL = response.data.event.url;
+            return eventURL;
+        },
+        function(response) {
+            throw response.data; //HACK: Does this even make sense?
+        });
+    };
     this.getEvents = function() {
         // $http.get('debugjson/events.json').then(function (data) {
         return $http.get(urlService.event())
@@ -360,6 +374,17 @@ app.service('jventService', function(urlService, $http, $q) {
             return data.data.event;
         });
     };
+    this.joinEvent = function(eventURL) {
+        var url = urlService.eventJoin(eventURL);
+        return $http.patch(url)
+        .then(function(response) {
+            //Response
+            return;
+        },
+        function(response) {
+            throw Error(); //TODO: Describe error
+        });
+    };
     this.createPost = function(post, eventURL) {
         var url = urlService.post(eventURL);
         var data = {
@@ -371,20 +396,20 @@ app.service('jventService', function(urlService, $http, $q) {
             return postURL;
         });
     };
-    this.createEvent = function(event) {
-        var url = urlService.event();
-        var data = {
-            event: event
-        };
-        return $http.post(url, data)
-        .then(function(response) {
-            var eventURL = response.data.event.url;
-            return eventURL;
-        },
-        function(response) {
-            throw response.data; //HACK: Does this even make sense?
+    this.getPosts = function(eventURL) {
+        var req = {};
+        return $http(req)
+        .then(function(data) {
+            return data.data.posts;
         });
-    };
+    };   //TODO: Complete req
+    this.getPost = function(postURL, eventURL) {
+        var req = {};
+        return $http(req)
+        .then(function(data) {
+            return data.data.post;
+        });
+    }; //TODO: Complete req
     this.postVote = function(eventURL, postURL, direction) {
         var url = urlService.postURLVote(eventURL, postURL);
         var data = {
@@ -393,17 +418,6 @@ app.service('jventService', function(urlService, $http, $q) {
         return $http.patch(url, data)
         .then(function(response) {
             // TODO
-        });
-    };
-    this.joinEvent = function(eventURL) {
-        var url = urlService.eventJoin(eventURL);
-        return $http.patch(url)
-        .then(function(response) {
-            //Response
-            return;
-        },
-        function(response) {
-            throw Error(); //TODO: Describe error
         });
     };
     this.getUserList = function(eventURL, role) {
