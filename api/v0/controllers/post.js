@@ -115,6 +115,14 @@ module.exports.appendPostID = function(req, res, next) {
     next();
 };
 
+module.exports.appendPost = function(req, res, next) {
+    postCore.getPostByURL(req.event, req.params.postURL)
+    .then(function(post) {
+        req.post = post;
+        next();
+    });
+};
+
 // /post/:postURL/vote
 
 module.exports.vote = function(req, res) {
