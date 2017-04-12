@@ -1,16 +1,20 @@
 <div id="postpage">
     <div id="post">
         <div id="bar">
-            <div id="votebox"></div>
-            <div id="title"></div>
+            <div id="votebox">
+                <div id="up"></div>
+                <div id="down"></div>
+            </div>
+            <div id="title" ng-bind="post.title"></div>
+            <div id="submitter" ng-bind="post.submitter.name"></div>
         </div>
-        <div id="desc"></div>
+        <div id="desc" ng-bind="post.content.text"></div>
         <div id="media"></div>
     </div>
     <div id="commentBox">
         
     </div>
     <div id="comments">
-         
+        
     </div>
 </div>
