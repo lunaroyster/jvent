@@ -35,7 +35,7 @@ module.exports.createPost = function(req, res) {
         });
     })         //Check if user is attendee
     .then(function(event) {
-        
+        return;
     })    //Create media
     .then(function(media) {
         var postSettings = {

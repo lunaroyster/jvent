@@ -39,6 +39,7 @@ module.exports.createPost = function(user, post, event) {
             });
             newPost.submitter.user = user._id;
             newPost.submitter.name = user.username;
+            console.log(newPost)
             return newPost.save()
             .then(function(post) {
                 sc.addPost(post);
@@ -46,7 +47,7 @@ module.exports.createPost = function(user, post, event) {
                 .then(function(sc) {
                     return post;
                 });
-            });
+            })
             //Regular Collections?
         });
     })
