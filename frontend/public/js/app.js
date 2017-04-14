@@ -714,16 +714,32 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
     var contextPost = {};
     contextPost.post = {};
     contextPost.cacheTime = 60000;
+    contextPost.loadedPost = false;
     var lastUpdate;
     var fresh = function() {
         return (Date.now() - lastUpdate) < contextPost.cacheTime;
     };
+    var setPost = function(post) {
+        contextPost.post = post;
+        lastUpdate = Date.now();
+        contextPost.loadedPost = true;
+    };
     contextPost.getPost = function(postURL) {
-        return jventService.getPost(postURL, contextEvent.event.url)
-        .then(function(post) {
-            lastUpdate = Date.now();
-            contextPost.post = post;
-            return post;
+        //Verify membership with contextEvent
+        return $q(function(resolve, reject) {
+            resolve();
+        })
+        .then(function() {
+            if(postURL!=contextPost.post.url||!fresh()) {
+                return jventService.getPost(postURL, contextEvent.event.url)
+                .then(function(post) {
+                    setPost(post);
+                    return post;
+                });
+            }
+            else {
+                return contextPost.post;
+            }
         });
     };
     // contextPost.vote = {
