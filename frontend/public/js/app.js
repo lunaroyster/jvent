@@ -976,6 +976,9 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
     $scope.newPost = function() {
         navService.newPost(contextEvent.event.url);
     };
+    $scope.postClick = function(postURL) {
+        navService.post(contextEvent.event.url, postURL);
+    };
 });
 
 app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {

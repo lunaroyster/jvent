@@ -1,5 +1,6 @@
 <div id="postslist">
-  <div class="post" ng-repeat="post in postList">
+  <!--<div class="post z-depth-1 hoverable waves-effect waves-dark" ng-repeat="post in postList">-->
+  <div class="post hoverable" ng-repeat="post in postList">
     <div class="content" ng-click="postClick(post.url)">
       <div class="title" ng-bind="post.title"></div>
       <!--<span ng-bind="content.text"></span> Handle this and media later-->
