@@ -1,20 +1,34 @@
 <div id="postpage">
-    <div id="post">
-        <div id="bar">
-            <div id="votebox">
-                <div id="up"></div>
-                <div id="down"></div>
+    <div class="row postcontainer">
+        <div class="col m2">
+            <div id="controls">
+                <div id="votebox">
+                    <div id="up"></div>
+                    <div id="down"></div>
+                </div>
             </div>
-            <div id="title" ng-bind="post.title"></div>
-            <div id="submitter" ng-bind="post.submitter.name"></div>
         </div>
-        <div id="desc" ng-bind="post.content.text"></div>
-        <div id="media"></div>
-    </div>
-    <div id="commentBox">
-        
-    </div>
-    <div id="comments">
-        
+        <div class="col m8">
+            <div id="post">
+                <div id="bar">
+                    <div id="title" ng-bind="post.title"></div>
+                </div>
+                <div id="desc" ng-bind="post.content.text"></div>
+                <div id="media"></div>
+            </div>
+            <div id="comment">
+                <div id="box">
+                    
+                </div>
+                <div id="list">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col m2">
+            <div id="info">
+                <div id="submitter" ng-bind="post.submitter.name"></div>
+            </div>
+        </div>
     </div>
 </div>
