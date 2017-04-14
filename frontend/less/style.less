@@ -129,18 +129,38 @@ nav {
         }
     }
 }
+
 #postpage {
+    .panel() {
+        background-color: darken(@background, 5%);
+        padding: 1em;
+    }
+    .margin-vertical() {
+        margin-bottom: 0.5em;
+    }
     .postcontainer {
         margin: 1em;
         #controls {
-            
+            width: 100%;
+            // .panel;
         }
         #post {
-            padding: 1em;
-            background-color: darken(@background, 5%);
+            .margin-vertical;
+            .panel;
+            #title {
+                font-size: x-large;
+                .margin-vertical
+            }
+            #desc {
+                padding: 1em;
+                background-color: darken(@background, 7%);
+                .margin-vertical
+            }
         }
         #comment {
-            #box {
+            .margin-vertical;
+            .panel;
+            #textbox {
                 
             }
             #list {
@@ -148,7 +168,7 @@ nav {
             }
         }
         #info {
-            
+            .panel;
         }
     }
 }
