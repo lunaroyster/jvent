@@ -1,8 +1,10 @@
 <div id="postslist">
   <div class="post" ng-repeat="post in postList">
-    <span ng-bind="post.title"></span>
-    <span ng-bind="content.text"></span>
-    <span ng-bind="submitter.name"></span>
+    <div class="content" ng-click="postClick(post.url)">
+      <div class="title" ng-bind="post.title"></div>
+      <!--<span ng-bind="content.text"></span> Handle this and media later-->
+      <span ng-bind="submitter.name"></span>
+    </div>
   </div>
   <div class="fixed-action-btn">
     <a class="btn-floating btn-large waves-effect waves-light grey darken-4" ng-click="newPost()"><i class="material-icons">add</i></a>
