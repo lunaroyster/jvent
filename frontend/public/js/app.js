@@ -726,17 +726,17 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
             return post;
         });
     };
-    contextPost.vote = {
-        up: function() {
-            return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
-        },
-        down: function() {
-            return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
-        },
-        un: function() {
-            return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
-        }
-    };
+    // contextPost.vote = {
+    //     up: function() {
+    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
+    //     },
+    //     down: function() {
+    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
+    //     },
+    //     un: function() {
+    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
+    //     }
+    // };
     return contextPost;
 });
 //  }
@@ -1021,12 +1021,38 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
             $scope.event = event;
             return contextPost.getPost($routeParams.postURL) // Where is event resolved?
             .then(function(post) {
+                post.vote = contextPost.vote;
                 $scope.post = post;
             })
             .catch(function(error) {
                 Materialize.toast(error.status + ' ' + error.statusText, 4000);
             });
         });
+    };
+    $scope.vote = {
+        isUp: function() {
+            return contextPost.vote.pos == 1;
+        },
+        isDown: function() {
+            return contextPost.vote.pos == -1;
+        }
+    };
+    // var unvoteIf = function(condition) {
+    //     if(condition) {
+    //         return contextPost
+    //     }
+    // }
+    $scope.vote.up = function() {
+        if($scope.vote.isUp()) {
+            return contextPost.vote.un();
+        }
+        return contextPost.vote.up();
+    };
+    $scope.vote.down = function() {
+        if($scope.vote.isDown()) {
+            return contextPost.vote.un();
+        }
+        return contextPost.vote.down();
     };
     $scope.refresh();
 });
