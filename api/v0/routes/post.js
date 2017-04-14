@@ -8,12 +8,12 @@ var AuthOnly = authController.AuthOnly;
 router.post('/', AuthOnly, postController.createPost);
 router.get('/', postController.getPosts);
 
-router.get('/:postURL', postController.getPost);
-router.patch('/:postURL', AuthOnly, postController.updatePost);
-router.delete('/:postURL', AuthOnly, postController.deletePost);
+router.get('/:postURL', postController.appendPost, postController.getPost);
+router.patch('/:postURL', AuthOnly, postController.appendPost, postController.updatePost);
+router.delete('/:postURL', AuthOnly, postController.appendPost, postController.deletePost);
 
-router.patch('/:postURL/vote', postController.vote);
+router.patch('/:postURL/vote', postController.appendPost, postController.vote);
 
-router.use('/:postURL/comment', postController.appendPostID, require('./comment'));
+router.use('/:postURL/comment', postController.appendPost, postController.appendPostID, require('./comment'));
 
 module.exports = router;
