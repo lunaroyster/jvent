@@ -1061,6 +1061,10 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     //         return contextPost
     //     }
     // }
+    $scope.getTime = function(timeType) {
+        var time = $scope.post.time[timeType];
+        return new Date(Date.parse(time)).toGMTString();
+    };
     $scope.vote.up = function() {
         if($scope.vote.isUp()) {
             return contextPost.vote.un();
