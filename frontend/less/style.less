@@ -142,7 +142,20 @@ nav {
         margin: 1em;
         #controls {
             width: 100%;
-            // .panel;
+            .panel;
+            #votebox {
+                text-align: center;
+                #votebuttons {
+                    display: inline-block;
+                    padding: 1em;
+                    background-color: darken(@background, 7%);
+                    .votebutton {
+                        .material-icons {
+                            font-size: 3em;
+                        }
+                    }
+                }
+            }
         }
         #post {
             .margin-vertical;
@@ -167,12 +180,17 @@ nav {
                 
             }
             .commentbox {
+                .margin-vertical;
                 background-color: darken(@background, 7%);
                 .commentTextBox {
                     width: 100%;
-                    height: 4em;
+                    height: 8em;
                     border-color: transparent;
                 }
+            }
+            .controls {
+                .margin-vertical;
+                text-align: right;
             }
         }
         #info {
