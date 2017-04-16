@@ -81,7 +81,45 @@ nav {
         color: @highlight;
     }
 }
-#eventpage {
+.event {
+    background-color:#262626;
+    width:312px;
+    height:312px;
+    display:inline-flex;
+    margin:0 5px 5px 0;
+    background-size:cover;
+    background-position:center;
+    background-blend-mode:overlay;
+    .content {
+        width:100%;
+        // height: 100%;
+        position:relative;
+        margin:0.5em 0.5em 0.5em 0.5em;
+    }
+    h2 {
+        display:flex;
+        font-weight:100;
+    }
+    .bottom {
+        bottom:0;
+        position:absolute;
+        padding:0.5em;
+    }
+}
+
+#eventsView, #newEventView, #eventView, #postsView, #newPostView, #postView, 
+#userlistView, #eventMembershipView, #changePasswordView, #loginView, #logoutView,
+#signUpView, #fourOFourView {
+    padding:1em 1em 0em 1em;
+}
+
+#eventsView {
+    
+}
+#newEventView {
+    
+}
+#eventView {
     height:100%;
     padding:1em 1em 0em 1em;
     #content {
@@ -106,8 +144,15 @@ nav {
         }
     }
 }
-#eventsview, #newEventView, #signUpView {
-    padding:1em 1em 0em 1em;
+#postsView {
+    .post {
+        margin: 0.5em;
+        padding: 1em;
+        background-color: darken(@background, 5%);
+        .content {
+            cursor: pointer;
+        }
+    }
 }
 #newPostView {
     #titleBox {
@@ -126,17 +171,7 @@ nav {
         }
     }
 }
-#postslist {
-    .post {
-        margin: 0.5em;
-        padding: 1em;
-        background-color: darken(@background, 5%);
-        .content {
-            cursor: pointer;
-        }
-    }
-}
-#postpage {
+#postView {
     .panel() {
         background-color: darken(@background, 5%);
         padding: 1em;
@@ -204,30 +239,26 @@ nav {
         }
     }
 }
-.event {
-    background-color:#262626;
-    width:312px;
-    height:312px;
-    display:inline-flex;
-    margin:0 5px 5px 0;
-    background-size:cover;
-    background-position:center;
-    background-blend-mode:overlay;
-    .content {
-        width:100%;
-        // height: 100%;
-        position:relative;
-        margin:0.5em 0.5em 0.5em 0.5em;
-    }
-    h2 {
-        display:flex;
-        font-weight:100;
-    }
-    .bottom {
-        bottom:0;
-        position:absolute;
-        padding:0.5em;
-    }
+#userlistView {
+    
+}
+#eventMembershipView {
+    
+}
+#changePasswordView {
+    
+}
+#loginView {
+    
+}
+#logoutView {
+    
+}
+#signUpView {
+    
+}
+#fourOFourView {
+    
 }
 
 ::-webkit-scrollbar {

@@ -13,13 +13,13 @@ app.config(['$routeProvider', function($routeProvider) {
 
     .when('/', {
         controller  : 'eventListCtrl',
-        controllerAs: 'eventsview',
+        controllerAs: 'eventsView',
         templateUrl : './views/event/list.html'
     })
 
     .when('/events', {
         controller  : 'eventListCtrl',
-        controllerAs: 'eventsview',
+        controllerAs: 'eventsView',
         templateUrl : './views/event/list.html'
     })
 
@@ -31,13 +31,13 @@ app.config(['$routeProvider', function($routeProvider) {
 
     .when('/event/:eventURL', {
         controller  : 'eventCtrl',
-        controllerAs: 'eventview',
+        controllerAs: 'eventView',
         templateUrl : './views/event/page.html'
     })
 
     .when('/event/:eventURL/posts', {
         controller  : 'postListCtrl',
-        controllerAs: 'postsview',
+        controllerAs: 'postsView',
         templateUrl : './views/post/list.html'
     })
 
@@ -49,37 +49,37 @@ app.config(['$routeProvider', function($routeProvider) {
 
     .when('/event/:eventURL/post/:postURL', {
         controller  : 'postCtrl',
-        controllerAs: 'postview',
+        controllerAs: 'postView',
         templateUrl : './views/post/page.html'
     })
 
     .when('/event/:eventURL/users', {
         controller  : 'userListCtrl',
-        controllerAs: 'userlistview',
+        controllerAs: 'userListView',
         templateUrl : './views/event/userlist.html'
     })
     
     .when('/me/events', {
         controller  : 'eventMembershipCtrl',
-        controllerAs: 'eventmembershipview',
+        controllerAs: 'eventMembershipView',
         templateUrl : './views/user/eventlist.html'
     })
     
     .when('/changepassword', {
         controller  : 'changePasswordCtrl',
-        controllerAs: 'changepasswordview',
+        controllerAs: 'changePasswordView',
         templateUrl : './views/user/changepassword.html'
     })
 
     .when('/login', {
         controller  : 'loginCtrl',
-        controllerAs: 'loginview',
+        controllerAs: 'loginView',
         templateUrl : './views/user/login.html'
     })
 
     .when('/logout', {
         controller  : 'logoutCtrl',
-        controllerAs: 'logoutscreen',
+        controllerAs: 'logoutView',
         templateUrl : './views/user/logout.html'
     })
 
@@ -91,7 +91,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
     .otherwise({
         controller  : '404Ctrl',
-        controllerAs: '404View',
+        controllerAs: 'fourOFourView',
         templateUrl : './views/misc/404.html'
     });
 
