@@ -995,6 +995,10 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
     $scope.postClick = function(postURL) {
         navService.post(contextEvent.event.url, postURL);
     };
+    $scope.submitterClick = function(post) {
+        //TODO: Either navigate to user's profile, or user's activity within the event
+        console.log(post);
+    };
 });
 
 app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {

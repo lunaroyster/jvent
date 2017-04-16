@@ -146,11 +146,23 @@ nav {
 }
 #postsView {
     .post {
+        @post-height: 8em; //Something's wrong. This should work.
         margin: 0.5em;
-        padding: 1em;
+        height: @post-height;
         background-color: darken(@background, 5%);
         .content {
             cursor: pointer;
+            display: flex;
+            .mediaContainer {
+                display: inline-block;
+                height: 100%;
+                width: @post-height;
+            }
+            .otherContainer {
+                display: inline-block;
+                flex-grow: 1;
+                padding: 0.5em;
+            }
         }
     }
 }

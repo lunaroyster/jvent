@@ -1,10 +1,17 @@
 <div id="postsView">
   <!--<div class="post z-depth-1 hoverable waves-effect waves-dark" ng-repeat="post in postList">-->
-  <div class="post hoverable" ng-repeat="post in postList">
-    <div class="content" ng-click="postClick(post.url)">
-      <div class="title" ng-bind="post.title"></div>
-      <!--<span ng-bind="content.text"></span> Handle this and media later-->
-      <span ng-bind="submitter.name"></span>
+  <div id="postList">
+    <div class="post hoverable" ng-repeat="post in postList">
+      <div class="content" ng-click="postClick(post.url)">
+        <div class="mediaContainer">
+          
+        </div>
+        <div class="otherContainer">
+          <div class="title" ng-bind="post.title"></div>
+          <div class="submitter" ng-bind="post.submitter.name" ng-click="submitterClick(post); $event.stopPropagation()"></div>
+          <!--<span ng-bind="content.text"></span> Handle this and media later-->
+        </div>
+      </div>
     </div>
   </div>
   <div class="fixed-action-btn">
