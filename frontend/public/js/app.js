@@ -999,6 +999,9 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
         //TODO: Either navigate to user's profile, or user's activity within the event
         console.log(post);
     };
+    $scope.resolveTime = function(time) {
+        return new Date(Date.parse(time)).toGMTString();
+    };
 });
 
 app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {
