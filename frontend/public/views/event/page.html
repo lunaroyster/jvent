@@ -16,7 +16,7 @@
         <div id="info" class="col s12 m8">
             <span ng-bind="event.byline"></span>
             <p>
-                <span ng-bind="event.description"></span>
+                <span ng-bind-html="descriptionAsHTML(event.description)"></span>
             </p>
         </div>
     </div>

@@ -193,11 +193,14 @@ app.service('navService', function($location) {
 });
 //  }
 
-app.service('markdownService', function() {
+app.service('markdownService', function($sce) {
     // TODO
-    this.toHTML = function(markdownText) {
-        //Convert to HTML and/or Sanitize.
+    var toHTML = function(markdownText) {
+        //Convert to HTML and/or Sanitize and/or process
         return markdown.toHTML(markdownText);
+    };
+    this.returnMarkdownAsTrustedHTML = function(markdown) {
+        return $sce.trustAsHtml(toHTML(markdown));
     };
 });
 
@@ -932,7 +935,7 @@ app.controller('newEventCtrl', function($scope, userService, newEventService, na
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navService) {
+app.controller('eventCtrl', function($scope, $routeParams, contextEvent, markdownService, navService) {
     $scope.refresh = function() {
         return contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
@@ -944,6 +947,7 @@ app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navServ
     };
     $scope.refresh();
     $scope.joinPending = false;
+    $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
     $scope.join = function() {
         //Make sure request can be made
         $scope.joinPending = true;
@@ -1069,9 +1073,7 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     //         return contextPost
     //     }
     // }
-    $scope.descriptionAsHTML = function(description) {
-        return $sce.trustAsHtml(markdownService.toHTML(description));
-    };
+    $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
     $scope.getTime = function(timeType) {
         var time = $scope.post.time[timeType];
         return new Date(Date.parse(time)).toGMTString();
