@@ -5,9 +5,14 @@
 
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:300");
 
+
+//implementing materialize colors again for finer control.
 .grey {
     @base-color: #9e9e9e;
     background-color: @base-color;
+    &.darken-1 {}
+    &.darken-2{}
+    &.darken-3 {}
     &.darken-4 {
         background-color: darken(@base-color, 50%) !important;
     }
@@ -72,52 +77,9 @@ nav {
 }
 .organizer {
     transition-duration:0.2s;
-}
-.organizer:hover {
-    color: @highlight;
-}
-#eventpage {
-    height:100%;
-    padding:1em 1em 0em 1em;
-    #content {
-        position:absolute;
-        right:0;
-        width:100%;
-        height:35%;
-        bottom:0;
-        margin-bottom:0;
+    &:hover {
+        color: @highlight;
     }
-    #info {
-        background:#1e1e1e;
-        height:100%;
-        padding:2em;
-    }
-    #controls {
-        background:#171717;
-        height:100%;
-        padding:2em;
-        .fill {
-            width:100%;
-        }
-    }
-}
-#eventsview, #newEventView, #signUpView {
-    padding:1em 1em 0em 1em;
-}
-#newPostView #titleBox {
-    border:none;
-    background-color:#1c1c1c; //Something better
-    padding:1.5em;
-    font-size:1.25em;
-    height:initial;
-    resize:none;
-}
-#newPostView #titleBox:focus {
-    outline:none;
-    // Other visual changes
-}
-#newPostView #titleBox::-webkit-input-placeholder {
-    color:#aaaaaa;
 }
 .event {
     background-color:#262626;
@@ -144,6 +106,173 @@ nav {
         padding:0.5em;
     }
 }
+
+#eventsView, #newEventView, #eventView, #postsView, #newPostView, #postView, 
+#userlistView, #eventMembershipView, #changePasswordView, #loginView, #logoutView,
+#signUpView, #fourOFourView {
+    padding:1em 1em 0em 1em;
+}
+
+#eventsView {
+    
+}
+#newEventView {
+    
+}
+#eventView {
+    height:100%;
+    padding:1em 1em 0em 1em;
+    #content {
+        position:absolute;
+        right:0;
+        width:100%;
+        height:35%;
+        bottom:0;
+        margin-bottom:0;
+    }
+    #info {
+        background:#1e1e1e;
+        height:100%;
+        padding:2em;
+    }
+    #controls {
+        background:#171717;
+        height:100%;
+        padding:2em;
+        .fill {
+            width:100%;
+        }
+    }
+}
+#postsView {
+    .post {
+        @post-height: 8em; //Something's wrong. This should work.
+        margin: 0.5em;
+        height: @post-height;
+        background-color: darken(@background, 5%);
+        .content {
+            cursor: pointer;
+            display: flex;
+            .mediaContainer {
+                display: inline-block;
+                height: 100%;
+                width: @post-height;
+            }
+            .otherContainer {
+                display: inline-block;
+                flex-grow: 1;
+                padding: 0.5em;
+            }
+        }
+    }
+}
+#newPostView {
+    #titleBox {
+        border:none;
+        background-color:#1c1c1c; //Something better
+        padding:1.5em;
+        font-size:1.25em;
+        height:initial;
+        resize:none;
+        &::-webkit-input-placeholder {
+            color:#aaaaaa;
+        }
+        &:focus {
+            outline:none;
+            // Other visual changes
+        }
+    }
+}
+#postView {
+    .panel() {
+        background-color: darken(@background, 5%);
+        padding: 1em;
+    }
+    .margin-vertical() {
+        margin-bottom: 0.5em;
+    }
+    .postcontainer {
+        margin: 1em;
+        #controls {
+            width: 100%;
+            .panel;
+            #votebox {
+                text-align: center;
+                #votebuttons {
+                    display: inline-block;
+                    padding: 1em;
+                    background-color: darken(@background, 7%);
+                    .votebutton {
+                        .material-icons {
+                            font-size: 3em;
+                        }
+                    }
+                }
+            }
+        }
+        #post {
+            .margin-vertical;
+            .panel;
+            #title {
+                font-size: x-large;
+                .margin-vertical
+            }
+            #desc {
+                padding: 1em;
+                background-color: darken(@background, 7%);
+                .margin-vertical
+            }
+        }
+        #comments {
+            .margin-vertical;
+            .panel;
+            #rootcommentbox {
+                
+            }
+            #commentlist {
+                
+            }
+            .commentbox {
+                .margin-vertical;
+                background-color: darken(@background, 7%);
+                .commentTextBox {
+                    width: 100%;
+                    height: 8em;
+                    border-color: transparent;
+                }
+            }
+            .controls {
+                .margin-vertical;
+                text-align: right;
+            }
+        }
+        #info {
+            .panel;
+        }
+    }
+}
+#userlistView {
+    
+}
+#eventMembershipView {
+    
+}
+#changePasswordView {
+    
+}
+#loginView {
+    
+}
+#logoutView {
+    
+}
+#signUpView {
+    
+}
+#fourOFourView {
+    
+}
+
 ::-webkit-scrollbar {
     background-color:#232323;
     width:0.5em;

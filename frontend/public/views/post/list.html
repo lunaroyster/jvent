@@ -1,8 +1,19 @@
-<div id="postslist">
-  <div class="post" ng-repeat="post in postList">
-    <span ng-bind="post.title"></span>
-    <span ng-bind="content.text"></span>
-    <span ng-bind="submitter.name"></span>
+<div id="postsView">
+  <!--<div class="post z-depth-1 hoverable waves-effect waves-dark" ng-repeat="post in postList">-->
+  <div id="postList">
+    <div class="post hoverable" ng-repeat="post in postList">
+      <div class="content" ng-click="postClick(post.url)">
+        <div class="mediaContainer">
+          
+        </div>
+        <div class="otherContainer">
+          <div class="title" ng-bind="post.title"></div>
+          <div class="submitter" ng-bind="post.submitter.name" ng-click="submitterClick(post); $event.stopPropagation()"></div>
+          <div class="time" ng-bind="resolveTime(post.time.creation)"></div>
+          <!--<span ng-bind="content.text"></span> Handle this and media later-->
+        </div>
+      </div>
+    </div>
   </div>
   <div class="fixed-action-btn">
     <a class="btn-floating btn-large waves-effect waves-light grey darken-4" ng-click="newPost()"><i class="material-icons">add</i></a>

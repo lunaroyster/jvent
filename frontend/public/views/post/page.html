@@ -1,20 +1,57 @@
-<div id="postpage">
-    <div id="post">
-        <div id="bar">
-            <div id="votebox">
-                <div id="up"></div>
-                <div id="down"></div>
+<div id="postView">
+    <div class="row postcontainer">
+        <div class="col m2">
+            <div id="controls">
+                <div id="votebox">
+                    <div id="votebuttons">
+                        <div id="up" class="votebutton"> 
+                            <i class="material-icons">keyboard_arrow_up</i>
+                        </div>
+                        <div id="down" class="votebutton">
+                            <i class="material-icons">keyboard_arrow_down</i>
+                        </div>
+                    </div>
+                </div>
+                <div id="report">
+                    
+                </div>
+                <div id="save">
+                    
+                </div>
             </div>
-            <div id="title" ng-bind="post.title"></div>
-            <div id="submitter" ng-bind="post.submitter.name"></div>
         </div>
-        <div id="desc" ng-bind="post.content.text"></div>
-        <div id="media"></div>
-    </div>
-    <div id="commentBox">
-        
-    </div>
-    <div id="comments">
-        
+        <div class="col m8">
+            <div id="post">
+                <div id="title" ng-bind="post.title"></div>
+                <div id="desc" ng-bind="post.content.text"></div>
+                <div id="media"></div>
+            </div>
+            <div id="comments">
+                <div id="rootcommentbox">
+                    <div class="commentbox">
+                        <textarea class="commentTextBox" />
+                    </div>
+                    <div class="controls">
+                          <button class="btn waves-effect waves-light">
+                            Comment
+                            <i class="material-icons right">send</i>
+                          </button>
+                    </div>
+                </div>
+                <div id="commentlist">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col m2">
+            <div id="info">
+                <div id="submitter">
+                    By: <span ng-bind="post.submitter.name"></span>
+                </div>
+                <div id="time">
+                    At: <span ng-bind="getTime('creation')"></span>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
