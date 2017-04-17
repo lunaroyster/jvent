@@ -656,22 +656,25 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
         //TODO: compare postListService.query and lastQuery
         return false;
     };
+    var eventChange = function(event) {
+        return postListService.eventURL != event.url;
+    };
     var fresh = function() {
         return (Date.now() - lastUpdate) < postListService.cacheTime;
     };
     var setPostList = function(postList) {
         postListService.postList = postList;
+        postListService.eventURL = event.url;
         lastUpdate = Date.now();
         postListService.loadedPostList = true;
     };
     postListService.getPostList = function(eventURL) {
         return contextEvent.getEvent(eventURL)
         .then(function(event) {
-            //use event
-            if(queryChange() || !fresh()) {
+            if(queryChange() || !fresh() || eventChange(event)) {
                 return jventService.getPosts(eventURL)
                 .then(function(postList) {
-                    setPostList(postList);
+                    setPostList(postList, event);
                     return postList;
                 });
             }
