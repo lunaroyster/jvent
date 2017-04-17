@@ -1,6 +1,6 @@
 //  JS Options {
 "use strict";
-/* global angular Materialize*/
+/* global angular Materialize markdown moment*/
 //  }
 //  {
 // ["$scope","$rootScope", "$routeParams", "userService","newObjectService","contextService","listService","skeletal service","angular library service"]
@@ -195,8 +195,9 @@ app.service('navService', function($location) {
 
 app.service('markdownService', function() {
     // TODO
-    this.toHTML = function(markdown) {
+    this.toHTML = function(markdownText) {
         //Convert to HTML and/or Sanitize.
+        return markdown.toHTML(markdownText);
     };
 });
 
@@ -1040,7 +1041,7 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
     };
 });
 
-app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, navService) {
+app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, markdownService, navService, $sce) {
     $scope.refresh = function() {
         contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
@@ -1068,6 +1069,9 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     //         return contextPost
     //     }
     // }
+    $scope.descriptionAsHTML = function(description) {
+        return $sce.trustAsHtml(markdownService.toHTML(description));
+    };
     $scope.getTime = function(timeType) {
         var time = $scope.post.time[timeType];
         return new Date(Date.parse(time)).toGMTString();
