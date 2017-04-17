@@ -75,10 +75,12 @@ module.exports.createPost = function(req, res) {
 module.exports.getPosts = function(req, res) {
     // get a promise
     // check req for querystring or parameters and format query
+    var responseObject = {};
     return postCore.getEventPosts(req.event)
     .then(function(posts) {
+        responseObject.posts = posts;
         res.status(200);
-        res.json(posts);
+        res.json(responseObject);
     });
 };
 
@@ -113,6 +115,14 @@ module.exports.deletePost = function(req, res) {
 module.exports.appendPostID = function(req, res, next) {
     req.postID = req.params.postID;
     next();
+};
+
+module.exports.appendPost = function(req, res, next) {
+    postCore.getPostByURL(req.event, req.params.postURL)
+    .then(function(post) {
+        req.post = post;
+        next();
+    });
 };
 
 // /post/:postURL/vote

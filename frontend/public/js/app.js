@@ -13,13 +13,13 @@ app.config(['$routeProvider', function($routeProvider) {
 
     .when('/', {
         controller  : 'eventListCtrl',
-        controllerAs: 'eventsview',
+        controllerAs: 'eventsView',
         templateUrl : './views/event/list.html'
     })
 
     .when('/events', {
         controller  : 'eventListCtrl',
-        controllerAs: 'eventsview',
+        controllerAs: 'eventsView',
         templateUrl : './views/event/list.html'
     })
 
@@ -31,13 +31,13 @@ app.config(['$routeProvider', function($routeProvider) {
 
     .when('/event/:eventURL', {
         controller  : 'eventCtrl',
-        controllerAs: 'eventview',
+        controllerAs: 'eventView',
         templateUrl : './views/event/page.html'
     })
 
     .when('/event/:eventURL/posts', {
         controller  : 'postListCtrl',
-        controllerAs: 'postsview',
+        controllerAs: 'postsView',
         templateUrl : './views/post/list.html'
     })
 
@@ -49,37 +49,37 @@ app.config(['$routeProvider', function($routeProvider) {
 
     .when('/event/:eventURL/post/:postURL', {
         controller  : 'postCtrl',
-        controllerAs: 'postview',
+        controllerAs: 'postView',
         templateUrl : './views/post/page.html'
     })
 
     .when('/event/:eventURL/users', {
         controller  : 'userListCtrl',
-        controllerAs: 'userlistview',
+        controllerAs: 'userListView',
         templateUrl : './views/event/userlist.html'
     })
     
     .when('/me/events', {
         controller  : 'eventMembershipCtrl',
-        controllerAs: 'eventmembershipview',
+        controllerAs: 'eventMembershipView',
         templateUrl : './views/user/eventlist.html'
     })
     
     .when('/changepassword', {
         controller  : 'changePasswordCtrl',
-        controllerAs: 'changepasswordview',
+        controllerAs: 'changePasswordView',
         templateUrl : './views/user/changepassword.html'
     })
 
     .when('/login', {
         controller  : 'loginCtrl',
-        controllerAs: 'loginview',
+        controllerAs: 'loginView',
         templateUrl : './views/user/login.html'
     })
 
     .when('/logout', {
         controller  : 'logoutCtrl',
-        controllerAs: 'logoutscreen',
+        controllerAs: 'logoutView',
         templateUrl : './views/user/logout.html'
     })
 
@@ -91,7 +91,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
     .otherwise({
         controller  : '404Ctrl',
-        controllerAs: '404View',
+        controllerAs: 'fourOFourView',
         templateUrl : './views/misc/404.html'
     });
 
@@ -714,29 +714,45 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
     var contextPost = {};
     contextPost.post = {};
     contextPost.cacheTime = 60000;
+    contextPost.loadedPost = false;
     var lastUpdate;
     var fresh = function() {
         return (Date.now() - lastUpdate) < contextPost.cacheTime;
     };
+    var setPost = function(post) {
+        contextPost.post = post;
+        lastUpdate = Date.now();
+        contextPost.loadedPost = true;
+    };
     contextPost.getPost = function(postURL) {
-        return jventService.getPost(postURL, contextEvent.event.url)
-        .then(function(post) {
-            lastUpdate = Date.now();
-            contextPost.post = post;
-            return post;
+        //Verify membership with contextEvent
+        return $q(function(resolve, reject) {
+            resolve();
+        })
+        .then(function() {
+            if(postURL!=contextPost.post.url||!fresh()) {
+                return jventService.getPost(postURL, contextEvent.event.url)
+                .then(function(post) {
+                    setPost(post);
+                    return post;
+                });
+            }
+            else {
+                return contextPost.post;
+            }
         });
     };
-    contextPost.vote = {
-        up: function() {
-            return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
-        },
-        down: function() {
-            return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
-        },
-        un: function() {
-            return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
-        }
-    };
+    // contextPost.vote = {
+    //     up: function() {
+    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
+    //     },
+    //     down: function() {
+    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
+    //     },
+    //     un: function() {
+    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
+    //     }
+    // };
     return contextPost;
 });
 //  }
@@ -976,6 +992,16 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
     $scope.newPost = function() {
         navService.newPost(contextEvent.event.url);
     };
+    $scope.postClick = function(postURL) {
+        navService.post(contextEvent.event.url, postURL);
+    };
+    $scope.submitterClick = function(post) {
+        //TODO: Either navigate to user's profile, or user's activity within the event
+        console.log(post);
+    };
+    $scope.resolveTime = function(time) {
+        return new Date(Date.parse(time)).toGMTString();
+    };
 });
 
 app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {
@@ -1021,12 +1047,42 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
             $scope.event = event;
             return contextPost.getPost($routeParams.postURL) // Where is event resolved?
             .then(function(post) {
+                post.vote = contextPost.vote;
                 $scope.post = post;
             })
             .catch(function(error) {
                 Materialize.toast(error.status + ' ' + error.statusText, 4000);
             });
         });
+    };
+    $scope.vote = {
+        isUp: function() {
+            return contextPost.vote.pos == 1;
+        },
+        isDown: function() {
+            return contextPost.vote.pos == -1;
+        }
+    };
+    // var unvoteIf = function(condition) {
+    //     if(condition) {
+    //         return contextPost
+    //     }
+    // }
+    $scope.getTime = function(timeType) {
+        var time = $scope.post.time[timeType];
+        return new Date(Date.parse(time)).toGMTString();
+    };
+    $scope.vote.up = function() {
+        if($scope.vote.isUp()) {
+            return contextPost.vote.un();
+        }
+        return contextPost.vote.up();
+    };
+    $scope.vote.down = function() {
+        if($scope.vote.isDown()) {
+            return contextPost.vote.un();
+        }
+        return contextPost.vote.down();
     };
     $scope.refresh();
 });
