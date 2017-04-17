@@ -23,7 +23,7 @@
         <div class="col m8">
             <div id="post">
                 <div id="title" ng-bind="post.title"></div>
-                <div id="desc" ng-bind-html="descriptionAsHTML(post.content.text)"></div>
+                <div id="desc" class="markdowned" ng-bind-html="descriptionAsHTML(post.content.text)"></div>
                 <div id="media"></div>
             </div>
             <div id="comments">
