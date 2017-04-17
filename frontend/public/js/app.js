@@ -204,6 +204,13 @@ app.service('markdownService', function($sce) {
     };
 });
 
+app.service('timeService', function() {
+    //MomentJS encapsulation happens here.
+    this.timeSinceString = function(time) {
+        return moment(time).fromNow();
+    };
+});
+
 app.factory('userService', function($rootScope, urlService, $http, $q) {
     var obj = {};
     obj.authed = false;
@@ -986,7 +993,7 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, $routeParams, contextEvent, postListService, navService) {
+app.controller('postListCtrl', function($scope, $routeParams, contextEvent, postListService, timeService, navService) {
     $scope.refresh = function() {
         return postListService.getPostList($routeParams.eventURL)
         .then(function(postList) {
@@ -1005,7 +1012,7 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
         console.log(post);
     };
     $scope.resolveTime = function(time) {
-        return new Date(Date.parse(time)).toGMTString();
+        return timeService.timeSinceString(time);
     };
 });
 
@@ -1045,7 +1052,7 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
     };
 });
 
-app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, markdownService, navService, $sce) {
+app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, markdownService, timeService, navService, $sce) {
     $scope.refresh = function() {
         contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
@@ -1076,7 +1083,7 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
     $scope.getTime = function(timeType) {
         var time = $scope.post.time[timeType];
-        return new Date(Date.parse(time)).toGMTString();
+        return timeService.timeSinceString(time);
     };
     $scope.vote.up = function() {
         if($scope.vote.isUp()) {
