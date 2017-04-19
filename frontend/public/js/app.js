@@ -1,6 +1,6 @@
 //  JS Options {
 "use strict";
-/* global angular Materialize*/
+/* global angular Materialize markdown moment*/
 //  }
 //  {
 // ["$scope","$rootScope", "$routeParams", "userService","newObjectService","contextService","listService","skeletal service","angular library service"]
@@ -193,10 +193,21 @@ app.service('navService', function($location) {
 });
 //  }
 
-app.service('markdownService', function() {
+app.service('markdownService', function($sce) {
     // TODO
-    this.toHTML = function(markdown) {
-        //Convert to HTML and/or Sanitize.
+    var toHTML = function(markdownText) {
+        //Convert to HTML and/or Sanitize and/or process
+        return markdown.toHTML(markdownText);
+    };
+    this.returnMarkdownAsTrustedHTML = function(markdown) {
+        return $sce.trustAsHtml(toHTML(markdown));
+    };
+});
+
+app.service('timeService', function() {
+    //MomentJS encapsulation happens here.
+    this.timeSinceString = function(time) {
+        return moment(time).fromNow();
     };
 });
 
@@ -645,22 +656,25 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
         //TODO: compare postListService.query and lastQuery
         return false;
     };
+    var eventChange = function(event) {
+        return postListService.eventURL != event.url;
+    };
     var fresh = function() {
         return (Date.now() - lastUpdate) < postListService.cacheTime;
     };
     var setPostList = function(postList) {
         postListService.postList = postList;
+        postListService.eventURL = event.url;
         lastUpdate = Date.now();
         postListService.loadedPostList = true;
     };
     postListService.getPostList = function(eventURL) {
         return contextEvent.getEvent(eventURL)
         .then(function(event) {
-            //use event
-            if(queryChange() || !fresh()) {
+            if(queryChange() || !fresh() || eventChange(event)) {
                 return jventService.getPosts(eventURL)
                 .then(function(postList) {
-                    setPostList(postList);
+                    setPostList(postList, event);
                     return postList;
                 });
             }
@@ -931,7 +945,7 @@ app.controller('newEventCtrl', function($scope, userService, newEventService, na
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navService) {
+app.controller('eventCtrl', function($scope, $routeParams, contextEvent, markdownService, navService) {
     $scope.refresh = function() {
         return contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
@@ -943,6 +957,7 @@ app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navServ
     };
     $scope.refresh();
     $scope.joinPending = false;
+    $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
     $scope.join = function() {
         //Make sure request can be made
         $scope.joinPending = true;
@@ -981,7 +996,7 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, $routeParams, contextEvent, postListService, navService) {
+app.controller('postListCtrl', function($scope, $routeParams, contextEvent, postListService, timeService, navService) {
     $scope.refresh = function() {
         return postListService.getPostList($routeParams.eventURL)
         .then(function(postList) {
@@ -1000,7 +1015,7 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
         console.log(post);
     };
     $scope.resolveTime = function(time) {
-        return new Date(Date.parse(time)).toGMTString();
+        return timeService.timeSinceString(time);
     };
 });
 
@@ -1040,7 +1055,7 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
     };
 });
 
-app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, navService) {
+app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, markdownService, timeService, navService, $sce) {
     $scope.refresh = function() {
         contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
@@ -1068,9 +1083,10 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     //         return contextPost
     //     }
     // }
+    $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
     $scope.getTime = function(timeType) {
         var time = $scope.post.time[timeType];
-        return new Date(Date.parse(time)).toGMTString();
+        return timeService.timeSinceString(time);
     };
     $scope.vote.up = function() {
         if($scope.vote.isUp()) {

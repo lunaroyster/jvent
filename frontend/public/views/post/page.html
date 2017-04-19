@@ -23,7 +23,7 @@
         <div class="col m8">
             <div id="post">
                 <div id="title" ng-bind="post.title"></div>
-                <div id="desc" ng-bind="post.content.text"></div>
+                <div id="desc" class="markdowned" ng-bind-html="descriptionAsHTML(post.content.text)"></div>
                 <div id="media"></div>
             </div>
             <div id="comments">
@@ -49,7 +49,7 @@
                     By: <span ng-bind="post.submitter.name"></span>
                 </div>
                 <div id="time">
-                    At: <span ng-bind="getTime('creation')"></span>
+                    <span ng-bind="getTime('creation')"></span>
                 </div>
             </div>
         </div>
