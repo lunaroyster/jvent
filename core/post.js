@@ -9,48 +9,53 @@ var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
 
-// module.exports.createPost = function(postSettings, event, superCollection) {
-//     var newPost = new Post({
-//         title: postSettings.title,
-//         parentEvent: event._id,
-//         superCollection: superCollection._id,
-//         content: {
-//             text: postSettings.contentText
-//         },
-//         timeOfCreation: Date.now()
-//     });
-//     return newPost.save();
-// };
-
 module.exports.createPost = function(user, post, event) {
     return getUniquePostURL(6, event)
     .then(function(newPostUrl) {
         return collectionCore.getSuperCollectionByID(event.superCollection)
         .then(function(sc) {
-            var newPost = new Post({
-                title: post.title,
-                parentEvent: event._id,
-                url: newPostUrl,
-                superCollection: sc._id,
-                content: {
-                    text: post.contentText
-                },
-                timeOfCreation: Date.now()
-            });
-            newPost.submitter.user = user._id;
-            newPost.submitter.name = user.username;
-            console.log(newPost)
-            return newPost.save()
+            var newPost = createPost(user, post, event);
+            newPost.sc = sc;
+            savePost(newPost)
             .then(function(post) {
                 sc.addPost(post);
                 return sc.save()
                 .then(function(sc) {
                     return post;
                 });
-            })
+            });
             //Regular Collections?
         });
-    })
+    });
+};
+
+var createPost = function(user, post, event) {
+    var newPost = new Post({
+        title: post.title,
+        parentEvent: event._id,
+        url: post.url,
+        content: {
+            text: post.contentText
+        },
+        timeOfCreation: Date.now()
+    });
+    newPost.submitter.user = user._id;
+    newPost.submitter.name = user.username;
+    return newPost;
+};
+
+var savePost = function(post) {
+    return post.save()
+    .then(returnPostOrError);
+};
+
+var returnPostOrError = function(post) {
+    if(!post) {
+        var err = Error("Can't find post");
+        err.status = 404;
+        throw err;
+    }
+    return post;
 };
 
 var getUniquePostURL = function(length, event) {
@@ -81,14 +86,6 @@ var postFindQuery = function() {
 
 module.exports.postFindQuery = postFindQuery;
 
-var returnPostOrError = function(post) {
-    if(!post) {
-        var err = Error("Can't find post");
-        err.status = 404;
-        throw err;
-    }
-    return post;
-};
 
 module.exports.vote = function(user, post, direction) {
     return Q.fcall(function() {
