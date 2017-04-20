@@ -35,7 +35,8 @@ var createPost = function(user, post, event) {
         parentEvent: event._id,
         url: post.url,
         content: {
-            text: post.contentText
+            text: post.contentText,
+            link: post.link
         },
         timeOfCreation: Date.now()
     });

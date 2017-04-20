@@ -7,13 +7,13 @@ var postSchema = new Schema({
         required: true
     },
     content: {
-        text: {type: String}
+        text: {type: String},
+        link: {type: String}
     },
     media: {
         type: Schema.Types.ObjectId,
         ref: 'Media'
     },
-    link: String,
     timeOfCreation: Date,
     time: {
         creation: {
