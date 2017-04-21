@@ -28,4 +28,18 @@ var mediaSchema = new Schema({
     }
 });
 
+mediaSchema.methods.assignEvent = function(event) {
+    this.event = event._id;
+};
+mediaSchema.methods.assignUser = function(user) {
+    this.user = user._id;
+};
+
+mediaSchema.pre('save', function(next) {
+    if(this.isNew) {
+        this.time.creation = Date.now();
+    }
+    next();
+});
+
 mongoose.model('Media', mediaSchema);
