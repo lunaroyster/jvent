@@ -32,7 +32,6 @@ module.exports.createPost = function(user, post, event) {
 var createPost = function(user, post, event) {
     var newPost = new Post({
         title: post.title,
-        parentEvent: event._id,
         url: post.url,
         content: {
             text: post.contentText,
@@ -40,8 +39,8 @@ var createPost = function(user, post, event) {
         },
         timeOfCreation: Date.now()
     });
-    newPost.submitter.user = user._id;
-    newPost.submitter.name = user.username;
+    newPost.setEvent(event);
+    newPost.setSubmitter(user);
     return newPost;
 };
 
