@@ -19,4 +19,12 @@ eventMembershipSchema.pre('save', function(next) {
     next(); 
 });
 
+eventMembershipSchema.methods.setUser = function(user) {
+    this.user = user._id;
+};
+
+eventMembershipSchema.methods.setEvent = function(event) {
+    this.event = event._id;
+};
+
 mongoose.model('EventMembership', eventMembershipSchema);

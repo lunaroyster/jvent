@@ -25,10 +25,7 @@ module.exports.createEvent = function(eventSettings, user) {
         if(eventSettings.ingress=="link") {
             newEvent.joinUrl = urlCore.generateRandomUrl(11);
         }
-        newEvent.organizer = {
-            user: user._id,
-            name: user.username
-        };
+        newEvent.assignOrganizer(user);
         return newEvent.save();
     })
     .then(function(event) {
