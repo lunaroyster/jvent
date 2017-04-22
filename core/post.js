@@ -5,19 +5,29 @@ var Q = require('q');
 var eventCore = require('./event');
 var urlCore = require('./url');
 var collectionCore = require('./collection');
+var mediaCore = require('./media');
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
 
-module.exports.createPost = function(user, postConfig, event) {
+module.exports.createPostWithMedia = function(user, postConfig, event, mediaConfig) {
+    return Q.fcall(function() {
+        return mediaCore.createMedia(mediaConfig, user, event);
+    })
+    .then(function(mediaDelegate) {
+        return createPost(user, postConfig, event, mediaDelegate);
+    });
+};
+
+var createPost = function(user, postConfig, event, media) {
     return getUniquePostURL(6, event)
     .then(function(newPostUrl) {
         postConfig.url = newPostUrl;
         return collectionCore.getSuperCollectionByID(event.superCollection)
         .then(function(sc) {
-            var newPost = createPost(user, postConfig, event);
+            var newPost = createPostDocument(user, postConfig, event, media);
             newPost.sc = sc;
-            savePost(newPost)
+            return savePost(newPost)
             .then(function(post) {
                 sc.addPost(post);
                 return sc.save()
@@ -30,7 +40,9 @@ module.exports.createPost = function(user, postConfig, event) {
     });
 };
 
-var createPost = function(user, postConfig, event) {
+module.exports.createPost = createPost;
+
+var createPostDocument = function(user, postConfig, event, media) {
     var newPost = new Post({
         title: postConfig.title,
         url: postConfig.url,
@@ -41,6 +53,7 @@ var createPost = function(user, postConfig, event) {
         timeOfCreation: Date.now()
     });
     newPost.setEvent(event);
+    newPost.setMedia(media);
     newPost.setSubmitter(user);
     return newPost;
 };

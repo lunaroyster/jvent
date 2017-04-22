@@ -42,7 +42,10 @@ module.exports.createPost = function(req, res) {
             title: req.body.post.title,
             contentText: req.body.post.content.text
         };
-        return postCore.createPost(req.user, postSettings, req.event);
+        var media = {
+            link: req.body.post.link        //TEMP
+        };
+        return postCore.createPostWithMedia(req.user, postSettings, req.event, media);
         // .then(function(post) {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
         //     .then(function(collection) {
@@ -61,6 +64,7 @@ module.exports.createPost = function(req, res) {
     })     //Send post creation success
     .catch(function(error) {
         var err;
+        console.log(error.stack);
         try {
             err = error.array();
         } catch (e) {
