@@ -9,12 +9,13 @@ var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
 
-module.exports.createPost = function(user, post, event) {
+module.exports.createPost = function(user, postConfig, event) {
     return getUniquePostURL(6, event)
     .then(function(newPostUrl) {
+        postConfig.url = newPostUrl;
         return collectionCore.getSuperCollectionByID(event.superCollection)
         .then(function(sc) {
-            var newPost = createPost(user, post, event);
+            var newPost = createPost(user, postConfig, event);
             newPost.sc = sc;
             savePost(newPost)
             .then(function(post) {
@@ -29,13 +30,13 @@ module.exports.createPost = function(user, post, event) {
     });
 };
 
-var createPost = function(user, post, event) {
+var createPost = function(user, postConfig, event) {
     var newPost = new Post({
-        title: post.title,
-        url: post.url,
+        title: postConfig.title,
+        url: postConfig.url,
         content: {
-            text: post.contentText,
-            link: post.link
+            text: postConfig.contentText,
+            link: postConfig.link
         },
         timeOfCreation: Date.now()
     });
