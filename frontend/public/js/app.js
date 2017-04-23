@@ -200,6 +200,7 @@ app.service('markdownService', function($sce) {
         return markdown.toHTML(markdownText);
     };
     this.returnMarkdownAsTrustedHTML = function(markdown) {
+        if(!markdown) return;
         return $sce.trustAsHtml(toHTML(markdown));
     };
 });
@@ -946,18 +947,22 @@ app.controller('newEventCtrl', function($scope, userService, newEventService, na
 });
 
 app.controller('eventCtrl', function($scope, $routeParams, contextEvent, markdownService, navService) {
+    $scope.loaded = false;
+    $scope.loadEvent = function(event) {
+        $scope.event = event;
+        $scope.loaded = true;
+    };
     $scope.refresh = function() {
         return contextEvent.getEvent($routeParams.eventURL)
-        .then(function(event) {
-            $scope.event = event;
-        })
+        .then($scope.loadEvent)
         .catch(function(error) {
             Materialize.toast(error.status + ' ' + error.statusText, 4000);
         });
     };
     $scope.refresh();
-    $scope.joinPending = false;
     $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
+    
+    $scope.joinPending = false;
     $scope.join = function() {
         //Make sure request can be made
         $scope.joinPending = true;
@@ -1056,20 +1061,25 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
 });
 
 app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, markdownService, timeService, navService, $sce, $window) {
+    $scope.loaded = false;
+    $scope.loadPost = function(post) {
+        post.vote = contextPost.vote;
+        $scope.post = post;
+        $scope.loaded = true;
+    };
     $scope.refresh = function() {
         contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
             $scope.event = event;
             return contextPost.getPost($routeParams.postURL) // Where is event resolved?
-            .then(function(post) {
-                post.vote = contextPost.vote;
-                $scope.post = post;
-            })
+            .then($scope.loadPost)
             .catch(function(error) {
                 Materialize.toast(error.status + ' ' + error.statusText, 4000);
             });
         });
     };
+    $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
+    
     $scope.vote = {
         isUp: function() {
             return contextPost.vote.pos == 1;
@@ -1086,8 +1096,8 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     $scope.titleClick = function() {
         $window.open(contextPost.post.link, "_self");
     };
-    $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
     $scope.getTime = function(timeType) {
+        if(!$scope.loaded) return "Somewhere back in time... or not.";
         var time = $scope.post.time[timeType];
         return timeService.timeSinceString(time);
     };
