@@ -35,15 +35,18 @@ module.exports.createPost = function(req, res) {
         });
     })         //Check if user is attendee
     .then(function(event) {
-        return;
+        var media = {
+            link: req.body.post.link        //TEMP
+        };
+        return media;
     })    //Create media
     .then(function(media) {
         var postSettings = {
             title: req.body.post.title,
-            contentText: req.body.post.content.text
-        };
-        var media = {
-            link: req.body.post.link        //TEMP
+            content: {
+               text: req.body.post.content.text,
+               link: req.body.post.content.link
+            }
         };
         return postCore.createPostWithMedia(req.user, postSettings, req.event, media);
         // .then(function(post) {

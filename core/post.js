@@ -47,14 +47,15 @@ var createPostDocument = function(user, postConfig, event, media) {
         title: postConfig.title,
         url: postConfig.url,
         content: {
-            text: postConfig.contentText,
-            link: postConfig.link
+            text: postConfig.content.text,
+            link: postConfig.content.link
         },
         timeOfCreation: Date.now()
     });
     newPost.setEvent(event);
     newPost.setMedia(media);
     newPost.setSubmitter(user);
+    console.log(newPost);
     return newPost;
 };
 
