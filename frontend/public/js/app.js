@@ -662,7 +662,7 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
     var fresh = function() {
         return (Date.now() - lastUpdate) < postListService.cacheTime;
     };
-    var setPostList = function(postList) {
+    var setPostList = function(postList, event) {
         postListService.postList = postList;
         postListService.eventURL = event.url;
         lastUpdate = Date.now();
@@ -1055,7 +1055,7 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
     };
 });
 
-app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, markdownService, timeService, navService, $sce) {
+app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, markdownService, timeService, navService, $sce, $window) {
     $scope.refresh = function() {
         contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
@@ -1083,6 +1083,9 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     //         return contextPost
     //     }
     // }
+    $scope.titleClick = function() {
+        $window.open(contextPost.post.link, "_self");
+    };
     $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
     $scope.getTime = function(timeType) {
         var time = $scope.post.time[timeType];
