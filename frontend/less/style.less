@@ -199,7 +199,7 @@ nav {
     .margin-vertical() {
         margin-bottom: 0.5em;
     }
-    .postcontainer {
+    #postcontainer {
         margin: 1em;
         #controls {
             width: 100%;
@@ -211,8 +211,20 @@ nav {
                     padding: 1em;
                     background-color: darken(@background, 7%);
                     .votebutton {
+                        transition: all 0.2s ease;
+                        cursor: pointer;
                         .material-icons {
                             font-size: 3em;
+                        }
+                        &.up {
+                            .activated(teal);
+                        }
+                        &.down {
+                            .activated(teal);
+                        }
+                        .activated(@color) {
+                            color: @color;
+                            background-color: fadeout(@color, 85%);
                         }
                     }
                 }

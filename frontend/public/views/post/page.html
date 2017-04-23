@@ -1,13 +1,13 @@
 <div id="postView">
-    <div class="row postcontainer">
+    <div id="postContainer" class="row">
         <div class="col m2">
             <div id="controls">
                 <div id="votebox">
                     <div id="votebuttons">
-                        <div id="up" class="votebutton"> 
+                        <div id="up" class="votebutton" ng-class="{'up':voteDirection()==1}" ng-click="voteClick(1)"> 
                             <i class="material-icons">keyboard_arrow_up</i>
                         </div>
-                        <div id="down" class="votebutton">
+                        <div id="down" class="votebutton" ng-class="{'down':voteDirection()==-1}" ng-click="voteClick(-1)">
                             <i class="material-icons">keyboard_arrow_down</i>
                         </div>
                     </div>

@@ -1080,19 +1080,6 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     };
     $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
     
-    $scope.vote = {
-        isUp: function() {
-            return contextPost.vote.pos == 1;
-        },
-        isDown: function() {
-            return contextPost.vote.pos == -1;
-        }
-    };
-    // var unvoteIf = function(condition) {
-    //     if(condition) {
-    //         return contextPost
-    //     }
-    // }
     $scope.titleClick = function() {
         $window.open(contextPost.post.link, "_self");
     };
@@ -1101,17 +1088,13 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
         var time = $scope.post.time[timeType];
         return timeService.timeSinceString(time);
     };
-    $scope.vote.up = function() {
-        if($scope.vote.isUp()) {
-            return contextPost.vote.un();
-        }
-        return contextPost.vote.up();
+    $scope.tempVote = 0; //HACK
+    $scope.voteDirection = function() {
+        // return $scope.post.vote;
+        return $scope.tempVote; //HACK: Test value
     };
-    $scope.vote.down = function() {
-        if($scope.vote.isDown()) {
-            return contextPost.vote.un();
-        }
-        return contextPost.vote.down();
+    $scope.voteClick = function(direction) {
+        $scope.tempVote = direction; //HACK
     };
     $scope.refresh();
 });
