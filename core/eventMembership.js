@@ -9,10 +9,10 @@ var addAsRole = function(user, event, role) {
     .then(function(eventMembership) {
         if(!eventMembership) {
             var newEventMembership = new EventMembership({
-                user: user._id,
-                event: event._id,
                 role: role
             });
+            newEventMembership.setUser(user);
+            newEventMembership.setEvent(event);
             return newEventMembership.save();
         }
         else {

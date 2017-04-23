@@ -6,12 +6,17 @@ var User = mongoose.model('User');
 
 
 module.exports.createUser = function(userObj) {
+    var newUser = createUser(userObj);
+    return newUser.save();
+};
+
+var createUser = function(userObj) {
     var newUser = new User({
         email: userObj.email,
         username: userObj.username
     });
     newUser.setPassword(userObj.password);
-    return newUser.save();
+    return newUser;
 };
 
 var returnUserOrError = function(user) {

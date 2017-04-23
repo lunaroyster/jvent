@@ -35,14 +35,20 @@ module.exports.createPost = function(req, res) {
         });
     })         //Check if user is attendee
     .then(function(event) {
-        return;
+        var media = {
+            link: req.body.post.link        //TEMP
+        };
+        return media;
     })    //Create media
     .then(function(media) {
         var postSettings = {
             title: req.body.post.title,
-            contentText: req.body.post.content.text
+            content: {
+               text: req.body.post.content.text,
+               link: req.body.post.content.link
+            }
         };
-        return postCore.createPost(req.user, postSettings, req.event);
+        return postCore.createPostWithMedia(req.user, postSettings, req.event, media);
         // .then(function(post) {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
         //     .then(function(collection) {
@@ -61,6 +67,7 @@ module.exports.createPost = function(req, res) {
     })     //Send post creation success
     .catch(function(error) {
         var err;
+        console.log(error.stack);
         try {
             err = error.array();
         } catch (e) {

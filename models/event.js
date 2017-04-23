@@ -93,6 +93,11 @@ eventSchema.methods.assignRoles = function() {
     this.roles = roles;
 };
 
+eventSchema.methods.assignOrganizer = function(user) {
+    this.organizer.user = user._id;
+    this.organizer.name = user.username;
+};
+
 eventSchema.pre('save', function(next) {
     if(this.isNew) {
         this.time.creation = Date.now();
