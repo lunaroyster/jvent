@@ -326,7 +326,7 @@ app.factory('userService', function($rootScope, urlService, $http, $q) {
     };
     obj.changePassword = function(oldpassword, newpassword) {
         var req = {
-            method: 'POST', 
+            method: 'POST',
             url: urlService.userChangePassword(),
             headers: {
                 'oldpassword': oldpassword,
@@ -757,6 +757,7 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
             }
         });
     };
+    contextPost.vote;
     // contextPost.vote = {
     //     up: function() {
     //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
@@ -768,6 +769,9 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
     //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
     //     }
     // };
+    contextPost.enterVote = function(direction) {
+        //requests as required
+    }
     return contextPost;
 });
 //  }
@@ -1088,13 +1092,19 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
         var time = $scope.post.time[timeType];
         return timeService.timeSinceString(time);
     };
-    $scope.tempVote = 0; //HACK
+    $scope.currentVote = 0;
     $scope.voteDirection = function() {
         // return $scope.post.vote;
-        return $scope.tempVote; //HACK: Test value
+        return $scope.currentVote;
     };
     $scope.voteClick = function(direction) {
-        $scope.tempVote = direction; //HACK
+        // $scope.tempVote = direction; //HACK
+        if(direction==$scope.voteDirection()) {
+            contextPost.enterVote(0);
+        }
+        else {
+            contextPost.enterVote(direction);
+        }
     };
     $scope.refresh();
 });
