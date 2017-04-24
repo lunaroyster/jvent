@@ -757,21 +757,28 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
             }
         });
     };
-    contextPost.vote;
-    // contextPost.vote = {
-    //     up: function() {
-    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
-    //     },
-    //     down: function() {
-    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
-    //     },
-    //     un: function() {
-    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
-    //     }
-    // };
-    contextPost.enterVote = function(direction) {
-        //requests as required
+    var currentVote = 0;
+    var getCurrentVote = function() {
+        return currentVote;
+    };
+    var castVote = function(direction) {
+        if(direction==getCurrentVote()) return false;
+        jventService.postVote(contextEvent.event.url, contextPost.post.url, direction);
+        return;
     }
+    contextPost.getCurrentVote = getCurrentVote;
+    contextPost.castVote = castVote;
+    contextPost.vote = {
+        up: function() {
+            castVote(1);
+        },
+        down: function() {
+            castVote(-1);
+        },
+        un: function() {
+            castVote(0);
+        }
+    };
     return contextPost;
 });
 //  }
@@ -1095,15 +1102,15 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     $scope.currentVote = 0;
     $scope.voteDirection = function() {
         // return $scope.post.vote;
-        return $scope.currentVote;
+        return $scope.getCurrentVote();
     };
     $scope.voteClick = function(direction) {
         // $scope.tempVote = direction; //HACK
         if(direction==$scope.voteDirection()) {
-            contextPost.enterVote(0);
+            contextPost.castVote(0);
         }
         else {
-            contextPost.enterVote(direction);
+            contextPost.castVote(direction);
         }
     };
     $scope.refresh();
