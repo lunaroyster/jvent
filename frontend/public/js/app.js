@@ -129,7 +129,7 @@ app.service('urlService', function() {
         return(this.post(eventURL) + postURL + '/');
     };
     this.postURLVote = function(eventURL, postURL) {
-        return(this.postURL(eventURL, postURL) + '/vote');
+        return(this.postURL(eventURL, postURL) + 'vote/');
     };
 
     this.comment = function(eventURL, postURL) {
@@ -764,8 +764,9 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
     var castVote = function(direction) {
         if(direction==getCurrentVote()) return false;
         jventService.postVote(contextEvent.event.url, contextPost.post.url, direction);
+        currentVote = direction; //Only if jventService.postVote is successful
         return;
-    }
+    };
     contextPost.getCurrentVote = getCurrentVote;
     contextPost.castVote = castVote;
     contextPost.vote = {
@@ -781,7 +782,7 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
     };
     return contextPost;
 });
-//  }
+//  }q
 
 //  New Providers {
 app.factory('newEventService', function(userService, jventService) {
@@ -1102,7 +1103,7 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     $scope.currentVote = 0;
     $scope.voteDirection = function() {
         // return $scope.post.vote;
-        return $scope.getCurrentVote();
+        return contextPost.getCurrentVote();
     };
     $scope.voteClick = function(direction) {
         // $scope.tempVote = direction; //HACK
