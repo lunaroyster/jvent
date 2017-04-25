@@ -210,6 +210,9 @@ app.service('timeService', function() {
     this.timeSinceString = function(time) {
         return moment(time).fromNow();
     };
+    this.timeAsUTC = function(time) {
+        return moment(time).toString();
+    };
 });
 
 app.factory('userService', function($rootScope, urlService, $http, $q) {
@@ -1095,11 +1098,24 @@ app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEv
     $scope.titleClick = function() {
         $window.open(contextPost.post.link, "_self");
     };
-    $scope.getTime = function(timeType) {
+    
+    // OLD
+    $scope.getTimeString = function(timeType) {
         if(!$scope.loaded) return "Somewhere back in time... or not.";
         var time = $scope.post.time[timeType];
         return timeService.timeSinceString(time);
     };
+    $scope.getTime = function(timeType) {
+        if(!$scope.loaded) return "Somewhere back in time... or not.";
+        var time = $scope.post.time[timeType];
+        return timeService.timeAsUTC(time);
+    };
+    
+    // NEW
+    /**
+     * Implement as a separate time directive
+     */
+    
     $scope.currentVote = 0;
     $scope.voteDirection = function() {
         // return $scope.post.vote;
