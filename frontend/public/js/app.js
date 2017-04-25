@@ -687,6 +687,18 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
             }
         });
     };
+    var getCurrentVote;
+    var getCurrentVote = function(post) {
+
+    }
+    var castVote = function(direction, post) {
+        if(direction==getCurrentVote(post)) return false;
+        jventService.postVote(contextEvent.event.url, post.url, direction);
+        post.vote = direction;
+        return;
+    };
+    postListService.getCurrentVote = getCurrentVote;
+    postListService.castVote = castVote;
     return postListService;
 });
 //  }
@@ -1049,10 +1061,10 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
     };
     $scope.voteClick = function(direction, post) {
         if(direction==$scope.voteDirection(post)) {
-            postListService.castVote(0);
+            postListService.castVote(0, post);
         }
         else {
-            postListService.castVote(direction);
+            postListService.castVote(direction, post);
         }
     };
     
