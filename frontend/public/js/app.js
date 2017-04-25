@@ -935,6 +935,9 @@ app.controller('eventListCtrl', function($scope, eventListService, navService) {
 });
 
 app.controller('newEventCtrl', function($scope, userService, newEventService, navService) {
+    if(!userService.authed) {
+        navService.login();
+    }
     $scope.newEvent = newEventService.event;
     $scope.valid = newEventService.valid;
     $scope.newEventEnabled = function() {
@@ -1034,12 +1037,18 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
         //TODO: Either navigate to user's profile, or user's activity within the event
         console.log(post);
     };
-    $scope.resolveTime = function(time) {
+    $scope.resolveTimeString = function(time) {
         return timeService.timeSinceString(time);
+    };
+    $scope.resolveTime = function(time) {
+        return timeService.timeAsUTC(time);
     };
 });
 
-app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {
+app.controller('newPostCtrl', function($scope, $routeParams, userService, newPostService, contextEvent, navService) {
+    if(!userService.authed) {
+        navService.login();
+    }
     $scope.refresh = function() {
         return contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {

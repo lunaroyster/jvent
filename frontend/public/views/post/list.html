@@ -9,7 +9,7 @@
         <div class="otherContainer">
           <div class="title" ng-bind="post.title"></div>
           <div class="submitter" ng-bind="post.submitter.name" ng-click="submitterClick(post); $event.stopPropagation()"></div>
-          <div class="time" ng-bind="resolveTime(post.time.creation)"></div>
+          <div class="time" ng-bind="resolveTimeString(post.time.creation)" title="{{resolveTime(post.time.creation)}}"></div>
           <!--<span ng-bind="content.text"></span> Handle this and media later-->
         </div>
       </div>
