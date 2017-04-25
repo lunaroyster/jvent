@@ -110,10 +110,9 @@ module.exports.vote = function(user, post, direction) {
                 return vote;
             }
             else {
-                var newVote = new Vote({
-                    user: user._id,
-                    post: post._id
-                });
+                var newVote = new Vote({});
+                newVote.setUser(req.user);
+                newVote.setPost(req.post);
                 return newVote;
             }
         });
