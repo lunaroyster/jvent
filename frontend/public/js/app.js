@@ -1026,7 +1026,6 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
             $scope.postList = postList;
         });
     };
-    $scope.refresh();
     $scope.newPost = function() {
         navService.newPost(contextEvent.event.url);
     };
@@ -1037,12 +1036,27 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
         //TODO: Either navigate to user's profile, or user's activity within the event
         console.log(post);
     };
+    
     $scope.resolveTimeString = function(time) {
         return timeService.timeSinceString(time);
     };
     $scope.resolveTime = function(time) {
         return timeService.timeAsUTC(time);
     };
+    
+    $scope.voteDirection = function(post) {
+        postListService.getCurrentVote(post);
+    };
+    $scope.voteClick = function(direction, post) {
+        if(direction==$scope.voteDirection(post)) {
+            postListService.castVote(0);
+        }
+        else {
+            postListService.castVote(direction);
+        }
+    };
+    
+    $scope.refresh();
 });
 
 app.controller('newPostCtrl', function($scope, $routeParams, userService, newPostService, contextEvent, navService) {
