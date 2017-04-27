@@ -148,12 +148,12 @@ module.exports.vote = function(req, res) {
     .then(function() {
         return postCore.vote(req.user, req.post, req.body.direction);
     })
-    .then(function(success) {
-        if(success) {
-            res.status(200).send();
+    .then(function(response) {
+        if(response.change) {
+            res.status(200).json(response);
         }
         else {
-            res.status(400).send();
+            res.status(400).json(response);
         }
     });
 };

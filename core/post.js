@@ -101,7 +101,6 @@ var postFindQuery = function() {
 
 module.exports.postFindQuery = postFindQuery;
 
-
 module.exports.vote = function(user, post, direction) {
     return Q.fcall(function() {
         return Vote.findOne({user: user._id, post: post._id})
@@ -110,10 +109,9 @@ module.exports.vote = function(user, post, direction) {
                 return vote;
             }
             else {
-                var newVote = new Vote({
-                    user: user._id,
-                    post: post._id
-                });
+                var newVote = new Vote({});
+                newVote.setUser(user);
+                newVote.setPost(post);
                 return newVote;
             }
         });
@@ -135,7 +133,10 @@ module.exports.vote = function(user, post, direction) {
                 return vote.save()
                 .then(function(vote) {
                     if(vote) {
-                        return true;
+                        return {
+                            change: change,
+                            direction: vote.direction
+                        };
                     }
                 });
             }
