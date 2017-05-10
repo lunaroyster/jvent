@@ -1,0 +1,7 @@
+<div id="mediaView">
+  <div class="media z-depth-1 hoverable waves-effect waves-dark" ng-repeat="media in mediaArray">
+    <div class="content" ng-click="mediaClick(media.url)">
+      <span class="submitter"  ng-click="submitterClick(media); $event.stopPropagation();" ng-bind="media.submitter.name"></span>
+    </div>
+  </div>
+</div>
