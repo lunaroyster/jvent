@@ -5,52 +5,72 @@ var Q = require('q');
 var eventCore = require('./event');
 var urlCore = require('./url');
 var collectionCore = require('./collection');
+var mediaCore = require('./media');
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
 
-// module.exports.createPost = function(postSettings, event, superCollection) {
-//     var newPost = new Post({
-//         title: postSettings.title,
-//         parentEvent: event._id,
-//         superCollection: superCollection._id,
-//         content: {
-//             text: postSettings.contentText
-//         },
-//         timeOfCreation: Date.now()
-//     });
-//     return newPost.save();
-// };
+module.exports.createPostWithMedia = function(user, postConfig, event, mediaConfig) {
+    return Q.fcall(function() {
+        return mediaCore.createMedia(mediaConfig, user, event);
+    })
+    .then(function(mediaDelegate) {
+        return createPost(user, postConfig, event, mediaDelegate);
+    });
+};
 
-module.exports.createPost = function(user, post, event) {
+var createPost = function(user, postConfig, event, media) {
     return getUniquePostURL(6, event)
     .then(function(newPostUrl) {
+        postConfig.url = newPostUrl;
         return collectionCore.getSuperCollectionByID(event.superCollection)
         .then(function(sc) {
-            var newPost = new Post({
-                title: post.title,
-                parentEvent: event._id,
-                url: newPostUrl,
-                superCollection: sc._id,
-                content: {
-                    text: post.contentText
-                },
-                timeOfCreation: Date.now()
-            });
-            newPost.submitter.user = user._id;
-            newPost.submitter.name = user.username;
-            console.log(newPost)
-            return newPost.save()
+            var newPost = createPostDocument(user, postConfig, event, media);
+            newPost.sc = sc;
+            return savePost(newPost)
             .then(function(post) {
                 sc.addPost(post);
                 return sc.save()
                 .then(function(sc) {
                     return post;
                 });
-            })
+            });
             //Regular Collections?
         });
-    })
+    });
+};
+
+module.exports.createPost = createPost;
+
+var createPostDocument = function(user, postConfig, event, media) {
+    var newPost = new Post({
+        title: postConfig.title,
+        url: postConfig.url,
+        content: {
+            text: postConfig.content.text,
+            link: postConfig.content.link
+        },
+        timeOfCreation: Date.now()
+    });
+    newPost.setEvent(event);
+    newPost.setMedia(media);
+    newPost.setSubmitter(user);
+    console.log(newPost);
+    return newPost;
+};
+
+var savePost = function(post) {
+    return post.save()
+    .then(returnPostOrError);
+};
+
+var returnPostOrError = function(post) {
+    if(!post) {
+        var err = Error("Can't find post");
+        err.status = 404;
+        throw err;
+    }
+    return post;
 };
 
 var getUniquePostURL = function(length, event) {
@@ -81,15 +101,6 @@ var postFindQuery = function() {
 
 module.exports.postFindQuery = postFindQuery;
 
-var returnPostOrError = function(post) {
-    if(!post) {
-        var err = Error("Can't find post");
-        err.status = 404;
-        throw err;
-    }
-    return post;
-};
-
 module.exports.vote = function(user, post, direction) {
     return Q.fcall(function() {
         return Vote.findOne({user: user._id, post: post._id})
@@ -98,10 +109,9 @@ module.exports.vote = function(user, post, direction) {
                 return vote;
             }
             else {
-                var newVote = new Vote({
-                    user: user._id,
-                    post: post._id
-                });
+                var newVote = new Vote({});
+                newVote.setUser(user);
+                newVote.setPost(post);
                 return newVote;
             }
         });
@@ -123,7 +133,10 @@ module.exports.vote = function(user, post, direction) {
                 return vote.save()
                 .then(function(vote) {
                     if(vote) {
-                        return true;
+                        return {
+                            change: change,
+                            direction: vote.direction
+                        };
                     }
                 });
             }

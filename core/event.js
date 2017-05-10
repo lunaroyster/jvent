@@ -9,26 +9,11 @@ var eventFindQuery = require('./eventFindQuery');
 
 var Event = mongoose.model('Event');
 
-module.exports.createEvent = function(eventSettings, user) {
+module.exports.createEvent = function(eventConfig, user) {
     return getUniqueEventURL(6)
     .then(function(newEventURL) {
-        var newEvent = new Event({
-            name: eventSettings.name,
-            byline: eventSettings.byline,
-            description: eventSettings.description,
-            visibility: eventSettings.visibility,
-            ingress: eventSettings.ingress,
-            comment: eventSettings.comment,
-            url: newEventURL,
-            timeOfCreation: Date.now()
-        });
-        if(eventSettings.ingress=="link") {
-            newEvent.joinUrl = urlCore.generateRandomUrl(11);
-        }
-        newEvent.organizer = {
-            user: user._id,
-            name: user.username
-        };
+        eventConfig.url = newEventURL;
+        var newEvent = createEvent(eventConfig, user);
         return newEvent.save();
     })
     .then(function(event) {
@@ -48,6 +33,24 @@ module.exports.createEvent = function(eventSettings, user) {
         });
         // TODO: Remove unnecessary event save if possible.
     });
+};
+
+var createEvent = function(eventConfig, user) {
+    var newEvent = new Event({
+        name: eventConfig.name,
+        byline: eventConfig.byline,
+        description: eventConfig.description,
+        visibility: eventConfig.visibility,
+        ingress: eventConfig.ingress,
+        comment: eventConfig.comment,
+        url: eventConfig.url,
+        timeOfCreation: Date.now()
+    });
+    if(eventConfig.ingress=="link") {
+        newEvent.joinUrl = urlCore.generateRandomUrl(11);
+    }
+    newEvent.assignOrganizer(user);
+    return newEvent;
 };
 
 module.exports.getPublicEvents = function() {

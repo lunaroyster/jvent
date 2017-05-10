@@ -1,6 +1,6 @@
 //  JS Options {
 "use strict";
-/* global angular Materialize*/
+/* global angular Materialize markdown moment*/
 //  }
 //  {
 // ["$scope","$rootScope", "$routeParams", "userService","newObjectService","contextService","listService","skeletal service","angular library service"]
@@ -129,7 +129,7 @@ app.service('urlService', function() {
         return(this.post(eventURL) + postURL + '/');
     };
     this.postURLVote = function(eventURL, postURL) {
-        return(this.postURL(eventURL, postURL) + '/vote');
+        return(this.postURL(eventURL, postURL) + 'vote/');
     };
 
     this.comment = function(eventURL, postURL) {
@@ -193,10 +193,25 @@ app.service('navService', function($location) {
 });
 //  }
 
-app.service('markdownService', function() {
+app.service('markdownService', function($sce) {
     // TODO
-    this.toHTML = function(markdown) {
-        //Convert to HTML and/or Sanitize.
+    var toHTML = function(markdownText) {
+        //Convert to HTML and/or Sanitize and/or process
+        return markdown.toHTML(markdownText);
+    };
+    this.returnMarkdownAsTrustedHTML = function(markdown) {
+        if(!markdown) return;
+        return $sce.trustAsHtml(toHTML(markdown));
+    };
+});
+
+app.service('timeService', function() {
+    //MomentJS encapsulation happens here.
+    this.timeSinceString = function(time) {
+        return moment(time).fromNow();
+    };
+    this.timeAsUTC = function(time) {
+        return moment(time).toString();
     };
 });
 
@@ -314,7 +329,7 @@ app.factory('userService', function($rootScope, urlService, $http, $q) {
     };
     obj.changePassword = function(oldpassword, newpassword) {
         var req = {
-            method: 'POST', 
+            method: 'POST',
             url: urlService.userChangePassword(),
             headers: {
                 'oldpassword': oldpassword,
@@ -645,22 +660,25 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
         //TODO: compare postListService.query and lastQuery
         return false;
     };
+    var eventChange = function(event) {
+        return postListService.eventURL != event.url;
+    };
     var fresh = function() {
         return (Date.now() - lastUpdate) < postListService.cacheTime;
     };
-    var setPostList = function(postList) {
+    var setPostList = function(postList, event) {
         postListService.postList = postList;
+        postListService.eventURL = event.url;
         lastUpdate = Date.now();
         postListService.loadedPostList = true;
     };
     postListService.getPostList = function(eventURL) {
         return contextEvent.getEvent(eventURL)
         .then(function(event) {
-            //use event
-            if(queryChange() || !fresh()) {
+            if(queryChange() || !fresh() || eventChange(event)) {
                 return jventService.getPosts(eventURL)
                 .then(function(postList) {
-                    setPostList(postList);
+                    setPostList(postList, event);
                     return postList;
                 });
             }
@@ -669,6 +687,18 @@ app.factory('postListService', function(contextEvent, jventService, $q) {
             }
         });
     };
+    var getCurrentVote;
+    var getCurrentVote = function(post) {
+
+    }
+    var castVote = function(direction, post) {
+        if(direction==getCurrentVote(post)) return false;
+        jventService.postVote(contextEvent.event.url, post.url, direction);
+        post.vote = direction;
+        return;
+    };
+    postListService.getCurrentVote = getCurrentVote;
+    postListService.castVote = castVote;
     return postListService;
 });
 //  }
@@ -742,20 +772,32 @@ app.factory('contextPost', function(contextEvent, jventService, $q) {
             }
         });
     };
-    // contextPost.vote = {
-    //     up: function() {
-    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 1);
-    //     },
-    //     down: function() {
-    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, -1);
-    //     },
-    //     un: function() {
-    //         return jventService.postVote(contextEvent.event.url, contextPost.post.url, 0);
-    //     }
-    // };
+    var currentVote = 0;
+    var getCurrentVote = function() {
+        return currentVote;
+    };
+    var castVote = function(direction) {
+        if(direction==getCurrentVote()) return false;
+        jventService.postVote(contextEvent.event.url, contextPost.post.url, direction);
+        currentVote = direction; //Only if jventService.postVote is successful
+        return;
+    };
+    contextPost.getCurrentVote = getCurrentVote;
+    contextPost.castVote = castVote;
+    contextPost.vote = {
+        up: function() {
+            castVote(1);
+        },
+        down: function() {
+            castVote(-1);
+        },
+        un: function() {
+            castVote(0);
+        }
+    };
     return contextPost;
 });
-//  }
+//  }q
 
 //  New Providers {
 app.factory('newEventService', function(userService, jventService) {
@@ -905,6 +947,9 @@ app.controller('eventListCtrl', function($scope, eventListService, navService) {
 });
 
 app.controller('newEventCtrl', function($scope, userService, newEventService, navService) {
+    if(!userService.authed) {
+        navService.login();
+    }
     $scope.newEvent = newEventService.event;
     $scope.valid = newEventService.valid;
     $scope.newEventEnabled = function() {
@@ -931,17 +976,22 @@ app.controller('newEventCtrl', function($scope, userService, newEventService, na
     //TODO: Migrate more functionality to eventCreate. Get rid of jventService from here
 });
 
-app.controller('eventCtrl', function($scope, $routeParams, contextEvent, navService) {
+app.controller('eventCtrl', function($scope, $routeParams, contextEvent, markdownService, navService) {
+    $scope.loaded = false;
+    $scope.loadEvent = function(event) {
+        $scope.event = event;
+        $scope.loaded = true;
+    };
     $scope.refresh = function() {
         return contextEvent.getEvent($routeParams.eventURL)
-        .then(function(event) {
-            $scope.event = event;
-        })
+        .then($scope.loadEvent)
         .catch(function(error) {
             Materialize.toast(error.status + ' ' + error.statusText, 4000);
         });
     };
     $scope.refresh();
+    $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
+    
     $scope.joinPending = false;
     $scope.join = function() {
         //Make sure request can be made
@@ -981,14 +1031,13 @@ app.controller('userListCtrl', function($scope, $routeParams, userMembershipServ
 });
 
 //Post
-app.controller('postListCtrl', function($scope, $routeParams, contextEvent, postListService, navService) {
+app.controller('postListCtrl', function($scope, $routeParams, contextEvent, postListService, timeService, navService) {
     $scope.refresh = function() {
         return postListService.getPostList($routeParams.eventURL)
         .then(function(postList) {
             $scope.postList = postList;
         });
     };
-    $scope.refresh();
     $scope.newPost = function() {
         navService.newPost(contextEvent.event.url);
     };
@@ -999,12 +1048,33 @@ app.controller('postListCtrl', function($scope, $routeParams, contextEvent, post
         //TODO: Either navigate to user's profile, or user's activity within the event
         console.log(post);
     };
-    $scope.resolveTime = function(time) {
-        return new Date(Date.parse(time)).toGMTString();
+    
+    $scope.resolveTimeString = function(time) {
+        return timeService.timeSinceString(time);
     };
+    $scope.resolveTime = function(time) {
+        return timeService.timeAsUTC(time);
+    };
+    
+    $scope.voteDirection = function(post) {
+        postListService.getCurrentVote(post);
+    };
+    $scope.voteClick = function(direction, post) {
+        if(direction==$scope.voteDirection(post)) {
+            postListService.castVote(0, post);
+        }
+        else {
+            postListService.castVote(direction, post);
+        }
+    };
+    
+    $scope.refresh();
 });
 
-app.controller('newPostCtrl', function($scope, $routeParams, newPostService, contextEvent, navService) {
+app.controller('newPostCtrl', function($scope, $routeParams, userService, newPostService, contextEvent, navService) {
+    if(!userService.authed) {
+        navService.login();
+    }
     $scope.refresh = function() {
         return contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
@@ -1040,49 +1110,60 @@ app.controller('newPostCtrl', function($scope, $routeParams, newPostService, con
     };
 });
 
-app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, navService) {
+app.controller('postCtrl', function($scope, $routeParams, contextPost, contextEvent, markdownService, timeService, navService, $sce, $window) {
+    $scope.loaded = false;
+    $scope.loadPost = function(post) {
+        post.vote = contextPost.vote;
+        $scope.post = post;
+        $scope.loaded = true;
+    };
     $scope.refresh = function() {
         contextEvent.getEvent($routeParams.eventURL)
         .then(function(event) {
             $scope.event = event;
             return contextPost.getPost($routeParams.postURL) // Where is event resolved?
-            .then(function(post) {
-                post.vote = contextPost.vote;
-                $scope.post = post;
-            })
+            .then($scope.loadPost)
             .catch(function(error) {
                 Materialize.toast(error.status + ' ' + error.statusText, 4000);
             });
         });
     };
-    $scope.vote = {
-        isUp: function() {
-            return contextPost.vote.pos == 1;
-        },
-        isDown: function() {
-            return contextPost.vote.pos == -1;
-        }
+    $scope.descriptionAsHTML = markdownService.returnMarkdownAsTrustedHTML;
+    
+    $scope.titleClick = function() {
+        $window.open(contextPost.post.link, "_self");
     };
-    // var unvoteIf = function(condition) {
-    //     if(condition) {
-    //         return contextPost
-    //     }
-    // }
-    $scope.getTime = function(timeType) {
+    
+    // OLD
+    $scope.getTimeString = function(timeType) {
+        if(!$scope.loaded) return "Somewhere back in time... or not.";
         var time = $scope.post.time[timeType];
-        return new Date(Date.parse(time)).toGMTString();
+        return timeService.timeSinceString(time);
     };
-    $scope.vote.up = function() {
-        if($scope.vote.isUp()) {
-            return contextPost.vote.un();
-        }
-        return contextPost.vote.up();
+    $scope.getTime = function(timeType) {
+        if(!$scope.loaded) return "Somewhere back in time... or not.";
+        var time = $scope.post.time[timeType];
+        return timeService.timeAsUTC(time);
     };
-    $scope.vote.down = function() {
-        if($scope.vote.isDown()) {
-            return contextPost.vote.un();
+    
+    // NEW
+    /**
+     * Implement as a separate time directive
+     */
+    
+    $scope.currentVote = 0;
+    $scope.voteDirection = function() {
+        // return $scope.post.vote;
+        return contextPost.getCurrentVote();
+    };
+    $scope.voteClick = function(direction) {
+        // $scope.tempVote = direction; //HACK
+        if(direction==$scope.voteDirection()) {
+            contextPost.castVote(0);
         }
-        return contextPost.vote.down();
+        else {
+            contextPost.castVote(direction);
+        }
     };
     $scope.refresh();
 });

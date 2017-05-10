@@ -7,13 +7,13 @@ var postSchema = new Schema({
         required: true
     },
     content: {
-        text: {type: String}
+        text: {type: String},
+        link: {type: String}
     },
     media: {
         type: Schema.Types.ObjectId,
         ref: 'Media'
     },
-    link: String,
     timeOfCreation: Date,
     time: {
         creation: {
@@ -53,6 +53,19 @@ var postSchema = new Schema({
 
 postSchema.methods.collectionCount = function() {
     return this.parentCollections.length;
+};
+
+postSchema.methods.setMedia = function(media) {
+    this.media = media._id;
+};
+
+postSchema.methods.setSubmitter = function(user) {
+    this.submitter.user = user._id;
+    this.submitter.name = user.username;
+};
+
+postSchema.methods.setEvent = function(event) {
+    this.parentEvent = event._id;
 };
 
 postSchema.pre('save', function(next) {

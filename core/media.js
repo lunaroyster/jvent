@@ -3,11 +3,18 @@ var Q = require('q');
 
 var Media = mongoose.model('Media');
 
-module.exports.createMedia = function() {
-    Q.fcall(function() {
-        var newMedia = new Media({
-            timeOfCreation: Date.now()
-        });
+module.exports.createMedia = function(mediaConfig, user, event) {
+    return Q.fcall(function() {
+        var newMedia = createMediaDocument(mediaConfig, user, event);
         return newMedia.save();
-    })
-}
+    });
+};
+
+var createMediaDocument = function(mediaConfig, user, event) {
+    var newMedia = new Media({
+        link: mediaConfig.link,
+    });
+    newMedia.assignEvent(event);
+    newMedia.assignUser(user);
+    return newMedia;
+};

@@ -1,13 +1,13 @@
 <div id="postView">
-    <div class="row postcontainer">
+    <div id="postContainer" class="row">
         <div class="col m2">
             <div id="controls">
                 <div id="votebox">
                     <div id="votebuttons">
-                        <div id="up" class="votebutton"> 
+                        <div id="up" class="votebutton" ng-class="{'up':voteDirection()==1}" ng-click="voteClick(1)"> 
                             <i class="material-icons">keyboard_arrow_up</i>
                         </div>
-                        <div id="down" class="votebutton">
+                        <div id="down" class="votebutton" ng-class="{'down':voteDirection()==-1}" ng-click="voteClick(-1)">
                             <i class="material-icons">keyboard_arrow_down</i>
                         </div>
                     </div>
@@ -22,8 +22,8 @@
         </div>
         <div class="col m8">
             <div id="post">
-                <div id="title" ng-bind="post.title"></div>
-                <div id="desc" ng-bind="post.content.text"></div>
+                <div id="title" ng-bind="post.title" ng-click="titleClick()"></div>
+                <div id="desc" class="markdowned" ng-bind-html="descriptionAsHTML(post.content.text)"></div>
                 <div id="media"></div>
             </div>
             <div id="comments">
@@ -48,8 +48,8 @@
                 <div id="submitter">
                     By: <span ng-bind="post.submitter.name"></span>
                 </div>
-                <div id="time">
-                    At: <span ng-bind="getTime('creation')"></span>
+                <div id="time" title="{{getTime('creation')}}">
+                    <span ng-bind="getTimeString('creation')"></span>
                 </div>
             </div>
         </div>

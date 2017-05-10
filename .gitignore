@@ -29,6 +29,8 @@ build/Release
 # Compiled less files
 frontend/public/less
 
+frontend/public/misc
+
 # Dependency directories
 node_modules
 jspm_packages

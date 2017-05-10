@@ -35,14 +35,20 @@ module.exports.createPost = function(req, res) {
         });
     })         //Check if user is attendee
     .then(function(event) {
-        return;
+        var media = {
+            link: req.body.post.link        //TEMP
+        };
+        return media;
     })    //Create media
     .then(function(media) {
         var postSettings = {
             title: req.body.post.title,
-            contentText: req.body.post.content.text
+            content: {
+               text: req.body.post.content.text,
+               link: req.body.post.content.link
+            }
         };
-        return postCore.createPost(req.user, postSettings, req.event);
+        return postCore.createPostWithMedia(req.user, postSettings, req.event, media);
         // .then(function(post) {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
         //     .then(function(collection) {
@@ -61,6 +67,7 @@ module.exports.createPost = function(req, res) {
     })     //Send post creation success
     .catch(function(error) {
         var err;
+        console.log(error.stack);
         try {
             err = error.array();
         } catch (e) {
@@ -141,12 +148,12 @@ module.exports.vote = function(req, res) {
     .then(function() {
         return postCore.vote(req.user, req.post, req.body.direction);
     })
-    .then(function(success) {
-        if(success) {
-            res.status(200).send();
+    .then(function(response) {
+        if(response.change) {
+            res.status(200).json(response);
         }
         else {
-            res.status(400).send();
+            res.status(400).json(response);
         }
     });
 };
