@@ -1,0 +1,3 @@
+[submodule "jvent-frontend"]
+	path = jvent-frontend
+	url = git@github.com:lunaroyster/jvent-frontend.git
