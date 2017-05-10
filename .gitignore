@@ -27,8 +27,10 @@ coverage
 build/Release
 
 # Compiled less files
+jvent-frontend/public/less
 frontend/public/less
 
+jvent-frontend/public/misc
 frontend/public/misc
 
 # Dependency directories

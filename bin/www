@@ -23,14 +23,14 @@ var server = http.createServer(app);
 /**
  * Initialize Database
  */
- 
+
 //TODO: set up the correct DB here (production?)
 require('../models/db')("test");
 
 /**
  * Initialize Frontend
  */
-require('../frontend/index');
+require('../jvent-frontend/index');
 
 /**
  * Listen on provided port, on all network interfaces.

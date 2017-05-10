@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 app.use(expressValidator(require('./core/requestOptions')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'frontend/public')));
+app.use(express.static(path.join(__dirname, 'jvent-frontend/public')));
 
 app.use('/api', apiRoute);
 // app.use('/users', users);
