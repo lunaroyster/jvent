@@ -2,9 +2,14 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var commentSchema = new Schema({
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
+    submitter: {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        name: {
+            type: String
+        }
     },
     event: {
         type: Schema.Types.ObjectId,
@@ -14,14 +19,53 @@ var commentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Post'
     },
-    isPrimary: Boolean,
+    isRoot: Boolean,
     parent: {
         type: Schema.Types.ObjectId,
         ref: 'Comment'
     },
     degree: Number,
     body: String,
-    time: Date
+    time: {
+        creation: {
+            type: Date
+        }
+        edits: [{
+            type: Date
+        }]
+    }
+});
+
+commentSchema.methods.attachToParent = function(parentComment) {
+    this.degree = parentComment.degree + 1;
+    this.isRoot = true;
+    this.parent = parentComment._id;
+};
+
+commentSchema.methods.setBody = function(body) {
+    this.body = body;
+    if(this.isNew) return;
+    this.time.edits.push(new Date());
+}
+
+commentSchema.methods.setSubmitter = function(user) {
+    this.submitter.user = user._id;
+    this.submitter.name = user.username;
+};
+
+commentSchema.methods.setEvent = function(event) {
+    this.event = event._id;
+};
+
+commentSchema.methods.setPost = function(post) {
+    this.post = post._id;
+};
+
+commentSchema.pre('save', function(next) {
+    if(this.isNew) {
+        this.time.creation = Date.now();
+    }
+    next();
 });
 
 mongoose.model('Comment', commentSchema);
