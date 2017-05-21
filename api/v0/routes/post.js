@@ -9,8 +9,8 @@ router.post('/', AuthOnly, postController.createPost);
 router.get('/', postController.getPosts);
 
 router.get('/:postURL', postController.appendPost, postController.getPost);
-router.patch('/:postURL', AuthOnly, postController.appendPost, postController.updatePost);
-router.delete('/:postURL', AuthOnly, postController.appendPost, postController.deletePost);
+// router.patch('/:postURL', AuthOnly, postController.appendPost, postController.updatePost);
+// router.delete('/:postURL', AuthOnly, postController.appendPost, postController.deletePost);
 
 router.patch('/:postURL/vote', postController.appendPost, postController.vote);
 

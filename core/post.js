@@ -10,6 +10,7 @@ var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
 
+// Post Creation
 module.exports.createPostWithMedia = function(user, postConfig, event, mediaConfig) {
     return Q.fcall(function() {
         return mediaCore.createMedia(mediaConfig, user, event);
@@ -18,7 +19,6 @@ module.exports.createPostWithMedia = function(user, postConfig, event, mediaConf
         return createPost(user, postConfig, event, mediaDelegate);
     });
 };
-
 var createPost = function(user, postConfig, event, media) {
     return getUniquePostURL(6, event)
     .then(function(newPostUrl) {
@@ -39,9 +39,7 @@ var createPost = function(user, postConfig, event, media) {
         });
     });
 };
-
 module.exports.createPost = createPost;
-
 var createPostDocument = function(user, postConfig, event, media) {
     var newPost = new Post({
         title: postConfig.title,
@@ -58,21 +56,10 @@ var createPostDocument = function(user, postConfig, event, media) {
     console.log(newPost);
     return newPost;
 };
-
 var savePost = function(post) {
     return post.save()
     .then(returnPostOrError);
 };
-
-var returnPostOrError = function(post) {
-    if(!post) {
-        var err = Error("Can't find post");
-        err.status = 404;
-        throw err;
-    }
-    return post;
-};
-
 var getUniquePostURL = function(length, event) {
     return Q.fcall(function() {
         var url = urlCore.generateRandomUrl(length);
@@ -88,19 +75,40 @@ var getUniquePostURL = function(length, event) {
     });
 };
 
+var returnPostOrError = function(post) {
+    if(!post) {
+        var err = Error("Can't find post");
+        err.status = 404;
+        throw err;
+    }
+    return post;
+};
+
+// Post Retrieval
 module.exports.getEventPosts = function(event) {
     //TODO: Queries
     // Can use either supercollection or direct. Change this implementation if required.
     var postQuery = Post.find({parentEvent: event._id});
     return postQuery.exec();
 };
-
-var postFindQuery = function() {
-    
+module.exports.getPostByID = function(event, postID) {
+    var postQuery = Post.findOne({parentEvent: event._id, _id: postID});
+    return postQuery.exec()
+    .then(returnPostOrError);
+};
+module.exports.getPostByURL = function(event, postURL) {
+    var postQuery = Post.findOne({parentEvent: event._id, url: postURL});
+    return postQuery.exec()
+    .then(returnPostOrError);
 };
 
+// Post Find Query
+var postFindQuery = function() {
+    //TODO
+};
 module.exports.postFindQuery = postFindQuery;
 
+// Post Vote
 module.exports.vote = function(user, post, direction) {
     return Q.fcall(function() {
         return Vote.findOne({user: user._id, post: post._id})
@@ -145,16 +153,4 @@ module.exports.vote = function(user, post, direction) {
             }
         });
     });
-};
-
-module.exports.getPostByID = function(event, postID) {
-    var postQuery = Post.findOne({parentEvent: event._id, _id: postID});
-    return postQuery.exec()
-    .then(returnPostOrError);
-};
-
-module.exports.getPostByURL = function(event, postURL) {
-    var postQuery = Post.findOne({parentEvent: event._id, url: postURL});
-    return postQuery.exec()
-    .then(returnPostOrError);
 };
