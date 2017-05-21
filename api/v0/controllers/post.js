@@ -7,11 +7,9 @@ var mediaCore = require('../../../core/media');
 var eventMembershipCore = require('../../../core/eventMembership');
 var postRequestSchema = require('../requests/post');
 
-// /post/
-
-module.exports.createPost = function(req, res) {
-    Q.fcall(function() {
-        req.check(postRequestSchema.createPost);
+var validateRequest = function(req, schema) {
+    return Q.fcall(function() {
+        req.check(schema);
         req.getValidationResult()
         .then(function(result) {
             if(!result.isEmpty()) {
@@ -19,21 +17,43 @@ module.exports.createPost = function(req, res) {
             }
             return;
         });
-    })       //Request Validation
-    .then(function() {
+    });
+}
+
+// /post/
+var checkCreatePostPrivilege = function(req) {
+    return Q.fcall(function() {
         if(req.user.privileges.createPost) {
             return;
         }
         else {
             throw new Error("Bad privileges");
         }
-    })         //Check user privileges
+    })
     .then(function() {
         return eventMembershipCore.isUserAttendee(req.user, req.event)
         .then(function() {
-            return req.event; //TODO: return only if user has post privileges within the event
+            return; //TODO: return only if user has post privileges within the event
         });
-    })         //Check if user is attendee
+    })
+};
+var createPostTemplateFromRequest = function(req) {
+    return {
+        title: req.body.post.title,
+        content: {
+           text: req.body.post.content.text,
+           link: req.body.post.content.link
+        }
+    };
+};
+module.exports.createPost = function(req, res) {
+    return validateRequest(req, postRequestSchema.createPost)
+    .then(function() {
+        return checkCreatePostPrivilege(req)
+        .then(function() {
+            return req.event;
+        });
+    }) // Checks create post privilege.
     .then(function(event) {
         var media = {
             link: req.body.post.link        //TEMP
@@ -41,14 +61,7 @@ module.exports.createPost = function(req, res) {
         return media;
     })    //Create media
     .then(function(media) {
-        var postSettings = {
-            title: req.body.post.title,
-            content: {
-               text: req.body.post.content.text,
-               link: req.body.post.content.link
-            }
-        };
-        return postCore.createPostWithMedia(req.user, postSettings, req.event, media);
+        return postCore.createPostWithMedia(req.user, createPostTemplateFromRequest(req), req.event, media);
         // .then(function(post) {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
         //     .then(function(collection) {
@@ -133,16 +146,7 @@ module.exports.appendPost = function(req, res, next) {
 // /post/:postURL/vote
 
 module.exports.vote = function(req, res) {
-    return Q.fcall(function() {
-        req.check(postRequestSchema.vote);
-        return req.getValidationResult()
-        .then(function(result) {
-            if(!result.isEmpty()) {
-                result.throw();
-            }
-            return;
-        });
-    })
+    return validateRequest(req, postRequestSchema.vote)
     .then(function() {
         return postCore.vote(req.user, req.post, req.body.direction);
     })

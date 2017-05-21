@@ -9,8 +9,8 @@ var badAuthError = Error("Bad Auth");
 badAuthError.status = 404;
 
 // /event/
-module.exports.createEvent = function(req, res) {
-    Q.fcall(function() {
+var validateCreateEventRequest = function(req) {
+    return Q.fcall(function() {
         req.check(eventRequestSchema.postEvent);
         return req.getValidationResult()
         .then(function(result) {
@@ -19,30 +19,37 @@ module.exports.createEvent = function(req, res) {
             }
             return;
         });
-    })       //Validate request
+    });
+}
+var checkCreateEventPrivilege = function(req) {
+    if(req.user.privileges.createEvent) {
+        return;
+    }
+    else {
+        throw new Error("Bad privileges");
+    }
+}
+var createEventTemplateFromRequest = function(req) {
+    return {
+        name: req.body.event.name,
+        byline: req.body.event.byline,
+        description: req.body.event.description,
+        visibility: req.body.event.visibility,
+        ingress: req.body.event.ingress,
+        comment: req.body.event.comment
+    };
+}
+module.exports.createEvent = function(req, res) {
+    return validateCreateEventRequest(req)
     .then(function() {
-        if(req.user.privileges.createEvent) {
-            return;
-        }
-        else {
-            throw new Error("Bad privileges");
-        }
+        return checkCreateEventPrivilege(req);
     })         //Check user privileges
     .then(function() {
-        var eventSettings = {
-            name: req.body.event.name,
-            byline: req.body.event.byline,
-            description: req.body.event.description,
-            visibility: req.body.event.visibility,
-            ingress: req.body.event.ingress,
-            comment: req.body.event.comment,
-            user: req.user
-        };
-        return eventCore.createEvent(eventSettings, req.user);
+        return eventCore.createEvent(createEventTemplateFromRequest(req), req.user);
     })         //Create event (using authenticated user)
-    .then(function(event) {
-        return event;
-    })
+    // .then(function(event) {
+    //     return event; // Something happens here. Oops.
+    // })
     .then(function(event) {
         var state = {
             status: "Created",
