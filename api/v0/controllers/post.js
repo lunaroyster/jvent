@@ -18,7 +18,7 @@ module.exports.createPost = function(req, res) {
                 result.throw();
             }
             return;
-        });   
+        });
     })       //Request Validation
     .then(function() {
         if(req.user.privileges.createPost) {
@@ -102,28 +102,26 @@ module.exports.getPostByID = function(req, res) {
         res.json(post);
     });
 };
-
 module.exports.getPost = function(req, res) {
     var responseObject = {};
     responseObject.post = req.post;
     res.status(200).json(responseObject);
 };
 
-module.exports.updatePost = function(req, res) {
-    res.json(req);
-    res.send();
-};
+// module.exports.updatePost = function(req, res) {
+//     res.json(req);
+//     res.send();
+// };
 
-module.exports.deletePost = function(req, res) {
-    res.json(req);
-    res.send();
-};
+// module.exports.deletePost = function(req, res) {
+//     res.json(req);
+//     res.send();
+// };
 
 module.exports.appendPostID = function(req, res, next) {
     req.postID = req.params.postID;
     next();
 };
-
 module.exports.appendPost = function(req, res, next) {
     postCore.getPostByURL(req.event, req.params.postURL)
     .then(function(post) {

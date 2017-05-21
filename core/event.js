@@ -9,6 +9,7 @@ var eventFindQuery = require('./eventFindQuery');
 
 var Event = mongoose.model('Event');
 
+// Create Event
 module.exports.createEvent = function(eventConfig, user) {
     return getUniqueEventURL(6)
     .then(function(newEventURL) {
@@ -34,7 +35,6 @@ module.exports.createEvent = function(eventConfig, user) {
         // TODO: Remove unnecessary event save if possible.
     });
 };
-
 var createEvent = function(eventConfig, user) {
     var newEvent = new Event({
         name: eventConfig.name,
@@ -52,19 +52,6 @@ var createEvent = function(eventConfig, user) {
     newEvent.assignOrganizer(user);
     return newEvent;
 };
-
-module.exports.getPublicEvents = function() {
-    // TODO: query to select events based on time/location/rating/uploader etc
-    var eventQuery = Event
-    .find({visibility: "public"})
-    .select('-_id name description byline url organizer.name ingress');
-    return eventQuery.exec();
-};
-
-module.exports.queryEvents = function(query) {
-    
-};
-
 var getUniqueEventURL = function(length) {
     return Q.fcall(function() {
         var url = urlCore.generateRandomUrl(length);
@@ -80,6 +67,38 @@ var getUniqueEventURL = function(length) {
     });
 };
 
+// Get Events
+module.exports.getPublicEvents = function() {
+    // TODO: query to select events based on time/location/rating/uploader etc
+    var eventQuery = Event
+    .find({visibility: "public"})
+    .select('-_id name description byline url organizer.name ingress');
+    return eventQuery.exec();
+};
+module.exports.queryEvents = function(query) {
+    //TODO
+};
+
+// Get Event
+module.exports.getEventByID = function(eventID) {
+    return Event.findOne({_id: eventID})
+    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation superCollection')
+    .then(returnEventOrError);
+};
+module.exports.getEventByURL = function(url) {
+    return Event.findOne({url: url})
+    .select('name byline description url organizer.name ingress visibility timeOfCreation superCollection')
+    .then(returnEventOrError);
+};
+module.exports.getEventByURLAsModerator = function(url) {
+    return Event.findOne({url: url})
+    .select('name byline description url organizer.name ingress visibility timeOfCreation roles')
+    .then(returnEventOrError);
+};
+module.exports.getEventIfAttendee = function(user, eventID) {
+
+};
+
 var returnEventOrError = function(event) {
     if(!event) {
         var err = Error("Can't find event");
@@ -88,26 +107,3 @@ var returnEventOrError = function(event) {
     }
     return event;
 };
-
-module.exports.getEventByID = function(eventID) {
-    return Event.findOne({_id: eventID})
-    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation superCollection')
-    .then(returnEventOrError);
-};
-
-module.exports.getEventByURL = function(url) {
-    return Event.findOne({url: url})
-    .select('name byline description url organizer.name ingress visibility timeOfCreation superCollection')
-    .then(returnEventOrError);
-};
-
-module.exports.getEventByURLAsModerator = function(url) {
-    return Event.findOne({url: url})
-    .select('name byline description url organizer.name ingress visibility timeOfCreation roles')
-    .then(returnEventOrError);
-};
-
-module.exports.getEventIfAttendee = function(user, eventID) {
-    
-};
-
