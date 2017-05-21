@@ -9,7 +9,6 @@ var badAuthError = Error("Bad Auth");
 badAuthError.status = 404;
 
 // /event/
-
 module.exports.createEvent = function(req, res) {
     Q.fcall(function() {
         req.check(eventRequestSchema.postEvent);
@@ -20,7 +19,7 @@ module.exports.createEvent = function(req, res) {
             }
             return;
         });
-    })       //Validate request   
+    })       //Validate request
     .then(function() {
         if(req.user.privileges.createEvent) {
             return;
@@ -126,14 +125,14 @@ module.exports.getEvent = function(req, res) {
     }
 };
 
-module.exports.updateEvent = function(req, res) {
-    res.json(req);
-    res.send();
-};
-module.exports.deleteEvent = function(req, res) {
-    res.json(req);
-    res.send();
-};
+// module.exports.updateEvent = function(req, res) {
+//     res.json(req);
+//     res.send();
+// };
+// module.exports.deleteEvent = function(req, res) {
+//     res.json(req);
+//     res.send();
+// };
 
 // /event/:eventID/users/[role]
 

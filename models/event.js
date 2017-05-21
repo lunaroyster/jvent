@@ -22,7 +22,7 @@ var eventSchema = new Schema({
         ref: 'Collection'
     }],
     superCollection: {
-        type: Schema.Types.ObjectId, 
+        type: Schema.Types.ObjectId,
         ref: 'SuperCollection'
     },
     userLists: {
@@ -55,7 +55,7 @@ var eventSchema = new Schema({
     },
     organizer: {
         user: {
-            type: Schema.Types.ObjectId, 
+            type: Schema.Types.ObjectId,
             ref: 'User'
         },
         name: {
@@ -81,7 +81,6 @@ eventSchema.methods.assignUserLists = function(userLists) {
     if (userLists.viewer) { this.userLists.viewer.list = userLists.viewer; }
     if (userLists.invite) { this.userLists.invite.list = userLists.invite; }
 };
-
 eventSchema.methods.assignRoles = function() {
     var roles = ["attendee", "moderator"];
     if(this.ingress=="invite") {
@@ -92,7 +91,6 @@ eventSchema.methods.assignRoles = function() {
     }
     this.roles = roles;
 };
-
 eventSchema.methods.assignOrganizer = function(user) {
     this.organizer.user = user._id;
     this.organizer.name = user.username;
