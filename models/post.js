@@ -21,7 +21,10 @@ var postSchema = new Schema({
         },
         update: {
             type: Date
-        }
+        },
+        edits: [{
+            type: Date
+        }]
     },
     parentEvent: {
         type: Schema.Types.ObjectId,
@@ -37,7 +40,7 @@ var postSchema = new Schema({
     },
     submitter: {
         user: {
-            type: Schema.Types.ObjectId, 
+            type: Schema.Types.ObjectId,
             ref: 'User'
         },
         name: {
@@ -67,6 +70,13 @@ postSchema.methods.setSubmitter = function(user) {
 postSchema.methods.setEvent = function(event) {
     this.parentEvent = event._id;
 };
+
+postSchema.methods.setText = function(text) {
+    this.content.text = text;
+    if(this.isNew) return;
+    this.time.edits.push(new Date());
+    //TODO: Use in post initialization.
+}
 
 postSchema.pre('save', function(next) {
     if(this.isNew) {
