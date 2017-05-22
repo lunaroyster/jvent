@@ -4,23 +4,15 @@ var eventMembershipCore = require('../../../core/eventMembership');
 var eventRequestSchema = require('../requests/event');
 var assert = require('chai').assert;
 
+var common = require('./common');
+var validateRequest = common.validateRequest;
+var packError = common.packError;
+
 // Errors
 var badAuthError = Error("Bad Auth");
 badAuthError.status = 404;
 
 // /event/
-var validateCreateEventRequest = function(req) {
-    return Q.fcall(function() {
-        req.check(eventRequestSchema.postEvent);
-        return req.getValidationResult()
-        .then(function(result) {
-            if(!result.isEmpty()) {
-                result.throw();
-            }
-            return;
-        });
-    });
-}
 var checkCreateEventPrivilege = function(req) {
     if(req.user.privileges.createEvent) {
         return;
@@ -40,7 +32,9 @@ var createEventTemplateFromRequest = function(req) {
     };
 }
 module.exports.createEvent = function(req, res) {
-    return validateCreateEventRequest(req)
+    Q.fcall(function() {
+        return validateRequest(req, eventRequestSchema.createEvent)
+    })
     .then(function() {
         return checkCreateEventPrivilege(req);
     })         //Check user privileges
@@ -62,16 +56,7 @@ module.exports.createEvent = function(req, res) {
         return;
     })    //Send event creation success
     .catch(function(error) {
-        var err;
-        try {
-            err = error.array();
-        } catch (e) {
-            // console.log(e);
-            if(e.name=="TypeError") {
-                err = [{param:error.name, msg: error.message}];
-            }
-        }
-        // console.log(err);
+        var err = packError(error);
         res.status(400).json(err);
     });
 };

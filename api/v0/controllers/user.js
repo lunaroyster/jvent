@@ -4,18 +4,9 @@ var userCore = require('../../../core/user');
 var eventMembershipCore = require('../../../core/eventMembership');
 var userRequestSchema = require('../requests/user');
 
-var validateRequest = function(req, schema) {
-    return Q.fcall(function() {
-        req.check(schema);
-        return req.getValidationResult()
-        .then(function(result) {
-            if(!result.isEmpty()) {
-                result.throw();
-            }
-            return;
-        });
-    });
-}
+var common = require('./common');
+var validateRequest = common.validateRequest;
+var packError = common.packError;
 
 module.exports.authenticate = function(req, res) {
     userCore.generateToken(req.user)
@@ -26,7 +17,9 @@ module.exports.authenticate = function(req, res) {
 };
 
 module.exports.signup = function(req, res) {
-    return validateRequest(req, userRequestSchema.signup)
+    Q.fcall(function() {
+        return validateRequest(req, userRequestSchema.signup);
+    })
     .then(function() {
         console.log("creating userobj")
         var userObj = {
@@ -45,23 +38,14 @@ module.exports.signup = function(req, res) {
         res.json(response);
     })
     .catch(function(error) {
-        var err;
-        try {
-            err = error.array();
-        } catch (e) {
-            // console.log(e);
-            if(e.name=="TypeError") {
-                err = [{param:error.name, msg: error.message}];
-            }
-        }
-        // console.log(err);
+        var err = packError(error);
         res.status(400).json(err);
     });
 };
 
 module.exports.changePassword = function(req, res) {
     Q.fcall(function() {
-        //Sanitize/Validate request
+        return validateRequest(req, userRequestSchema.changePassword);
     })
     .then(function() {
         if(req.user.validPassword(req.header('oldpassword'))) {
@@ -80,8 +64,8 @@ module.exports.changePassword = function(req, res) {
         res.send();
     })
     .fail(function(error) {
-        res.status(400);
-        res.json(error);
+        var err = packError(error);
+        res.json(err);
     });
 };
 

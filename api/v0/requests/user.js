@@ -19,3 +19,13 @@ module.exports.signup = {
         notEmpty: true,
     }
 };
+module.exports.changePassword = {
+    'newpassword': {
+        optional: false,
+        notEmpty: true,
+    },
+    'oldpassword': {
+        optional: false,
+        notEmpty: true,
+    }
+}

@@ -7,18 +7,9 @@ var mediaCore = require('../../../core/media');
 var eventMembershipCore = require('../../../core/eventMembership');
 var postRequestSchema = require('../requests/post');
 
-var validateRequest = function(req, schema) {
-    return Q.fcall(function() {
-        req.check(schema);
-        return req.getValidationResult()
-        .then(function(result) {
-            if(!result.isEmpty()) {
-                result.throw();
-            }
-            return;
-        });
-    });
-}
+var common = require('./common');
+var validateRequest = common.validateRequest;
+var packError = common.packError;
 
 // /post/
 var checkCreatePostPrivilege = function(req) {
@@ -47,7 +38,9 @@ var createPostTemplateFromRequest = function(req) {
     };
 };
 module.exports.createPost = function(req, res) {
-    return validateRequest(req, postRequestSchema.createPost)
+    Q.fcall(function() {
+        return validateRequest(req, postRequestSchema.createPost);
+    })
     .then(function() {
         return checkCreatePostPrivilege(req)
         .then(function() {
@@ -79,15 +72,7 @@ module.exports.createPost = function(req, res) {
         res.status(201).json(state);
     })     //Send post creation success
     .catch(function(error) {
-        var err;
-        console.log(error.stack);
-        try {
-            err = error.array();
-        } catch (e) {
-            if(e.name=="TypeError") {
-                err = [{param:error.name, msg: error.message}];
-            }
-        }
+        var err = packError(error);
         res.status(400).json(err);
     });
 };
@@ -146,7 +131,9 @@ module.exports.appendPost = function(req, res, next) {
 // /post/:postURL/vote
 
 module.exports.vote = function(req, res) {
-    return validateRequest(req, postRequestSchema.vote)
+    Q.fcall(function() {
+        return validateRequest(req, postRequestSchema.vote);
+    })
     .then(function() {
         return postCore.vote(req.user, req.post, req.body.direction);
     })
@@ -157,5 +144,9 @@ module.exports.vote = function(req, res) {
         else {
             res.status(400).json(response);
         }
+    })
+    .catch(function(error) {
+        var err = packError(error);
+        res.status(400).json(err);
     });
 };

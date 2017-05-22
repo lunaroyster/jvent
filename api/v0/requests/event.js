@@ -1,4 +1,4 @@
-module.exports.postEvent = {
+module.exports.createEvent = {
     'event.name': {
         notEmpty: true,
         isLength: {
