@@ -12,11 +12,12 @@ module.exports.authenticate = function(req, res) {
 };
 
 module.exports.signup = function(req, res) {
+    //TODO: Validate. Write Schema
     Q.fcall(function() {
         var userObj = {
-            email: req.body.email,
-            username: req.body.username,
-            password: req.body.password
+            email: req.body.user.email,
+            username: req.body.user.username,
+            password: req.body.user.password
         };
         return userCore.createUser(userObj);
     })
