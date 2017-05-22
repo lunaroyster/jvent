@@ -1,7 +1,7 @@
 var Q = require('q');
 var eventCore = require('../../../core/event');
 var eventMembershipCore = require('../../../core/eventMembership');
-var eventRequestSchema = require('../requests/event');
+var eventRequestSchema = require('../requests').event;
 var assert = require('chai').assert;
 
 var common = require('./common');

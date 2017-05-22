@@ -5,7 +5,7 @@ var userListCore = require('../../../core/userList');
 var collectionCore = require('../../../core/collection');
 var mediaCore = require('../../../core/media');
 var eventMembershipCore = require('../../../core/eventMembership');
-var postRequestSchema = require('../requests/post');
+var postRequestSchema = require('../requests').post;
 
 var common = require('./common');
 var validateRequest = common.validateRequest;

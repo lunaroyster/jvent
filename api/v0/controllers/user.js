@@ -2,7 +2,7 @@ var Q = require('q');
 var _ = require('underscore')._;
 var userCore = require('../../../core/user');
 var eventMembershipCore = require('../../../core/eventMembership');
-var userRequestSchema = require('../requests/user');
+var userRequestSchema = require('../requests').user;
 
 var common = require('./common');
 var validateRequest = common.validateRequest;
