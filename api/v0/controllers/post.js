@@ -10,7 +10,7 @@ var postRequestSchema = require('../requests/post');
 var validateRequest = function(req, schema) {
     return Q.fcall(function() {
         req.check(schema);
-        req.getValidationResult()
+        return req.getValidationResult()
         .then(function(result) {
             if(!result.isEmpty()) {
                 result.throw();

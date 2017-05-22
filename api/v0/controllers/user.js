@@ -2,6 +2,20 @@ var Q = require('q');
 var _ = require('underscore')._;
 var userCore = require('../../../core/user');
 var eventMembershipCore = require('../../../core/eventMembership');
+var userRequestSchema = require('../requests/user');
+
+var validateRequest = function(req, schema) {
+    return Q.fcall(function() {
+        req.check(schema);
+        return req.getValidationResult()
+        .then(function(result) {
+            if(!result.isEmpty()) {
+                result.throw();
+            }
+            return;
+        });
+    });
+}
 
 module.exports.authenticate = function(req, res) {
     userCore.generateToken(req.user)
@@ -12,8 +26,9 @@ module.exports.authenticate = function(req, res) {
 };
 
 module.exports.signup = function(req, res) {
-    //TODO: Validate. Write Schema
-    Q.fcall(function() {
+    return validateRequest(req, userRequestSchema.signup)
+    .then(function() {
+        console.log("creating userobj")
         var userObj = {
             email: req.body.user.email,
             username: req.body.user.username,
@@ -21,14 +36,26 @@ module.exports.signup = function(req, res) {
         };
         return userCore.createUser(userObj);
     })
-    .then(function(status) {
-        // Change status to user; figure out status by reading user object
+    .then(function(user) {
+        var response = {
+            username: user.username,
+            timeOfCreation: user.time.creation
+        }
         res.status(201);
-        res.json(status);
+        res.json(response);
     })
     .catch(function(error) {
-        res.status(400);
-        res.json(error);
+        var err;
+        try {
+            err = error.array();
+        } catch (e) {
+            // console.log(e);
+            if(e.name=="TypeError") {
+                err = [{param:error.name, msg: error.message}];
+            }
+        }
+        // console.log(err);
+        res.status(400).json(err);
     });
 };
 

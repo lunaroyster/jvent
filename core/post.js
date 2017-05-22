@@ -75,15 +75,6 @@ var getUniquePostURL = function(length, event) {
     });
 };
 
-var returnPostOrError = function(post) {
-    if(!post) {
-        var err = Error("Can't find post");
-        err.status = 404;
-        throw err;
-    }
-    return post;
-};
-
 // Post Retrieval
 module.exports.getEventPosts = function(event) {
     //TODO: Queries
@@ -100,6 +91,14 @@ module.exports.getPostByURL = function(event, postURL) {
     var postQuery = Post.findOne({parentEvent: event._id, url: postURL});
     return postQuery.exec()
     .then(returnPostOrError);
+};
+var returnPostOrError = function(post) {
+    if(!post) {
+        var err = Error("Can't find post");
+        err.status = 404;
+        throw err;
+    }
+    return post;
 };
 
 // Post Find Query
