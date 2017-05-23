@@ -94,7 +94,7 @@ module.exports.getPosts = function(req, res) {
 module.exports.getPostByID = function(req, res) {
     // Check user privilege
     // Perhaps check querystring (for comment sorting maybe?)
-    return postCore.getPostByID(req.event._id, req.params.postID)
+    return postCore.getPostByID(req.event._id, req.params.postURL)
     .then(function(post) {
         res.status(200);
         res.json(post);
@@ -110,18 +110,17 @@ module.exports.getPost = function(req, res) {
 //     res.json(req);
 //     res.send();
 // };
-
 // module.exports.deletePost = function(req, res) {
 //     res.json(req);
 //     res.send();
 // };
 
-module.exports.appendPostID = function(req, res, next) {
-    req.postID = req.params.postID;
+module.exports.appendPostURL = function(req, res, next) {
+    req.postURL = req.params.postURL;
     next();
 };
 module.exports.appendPost = function(req, res, next) {
-    postCore.getPostByURL(req.event, req.params.postURL)
+    postCore.getPostByURL(req.event, req.postURL)
     .then(function(post) {
         req.post = post;
         next();

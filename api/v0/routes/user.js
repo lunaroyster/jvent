@@ -13,11 +13,10 @@ router.get('/', AuthOnly, userController.returnAuthenticatedUser);
 router.get('/me', AuthOnly, userController.returnAuthenticatedUser);
 
 var eventsRouter = express.Router();
-eventsRouter.get('/viewer', userController.getVisibleEvents);
-eventsRouter.get('/attendee', userController.getAttendedEvents);
-eventsRouter.get('/invite', userController.getInvitedEvents);
-eventsRouter.get('/moderator', userController.getModeratedEvents);
-
+    eventsRouter.get('/viewer', userController.getVisibleEvents);
+    eventsRouter.get('/attendee', userController.getAttendedEvents);
+    eventsRouter.get('/invite', userController.getInvitedEvents);
+    eventsRouter.get('/moderator', userController.getModeratedEvents);
 router.use('/events', AuthOnly, eventsRouter);
 
 module.exports = router;

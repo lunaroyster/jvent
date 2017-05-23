@@ -78,7 +78,7 @@ module.exports.getEvents = function(req, res) {
 // /event/:eventID
 
 var getEventAsModerator = function(req, res) {
-    eventCore.getEventByURLAsModerator(req.params.eventURL)
+    eventCore.getEventByURLAsModerator(req.eventURL)
     .then(function(event) {
         return eventMembershipCore.isUserModerator(req.user, event)
         .then(function(result) {
@@ -94,7 +94,7 @@ var getEventAsModerator = function(req, res) {
     });
 };
 var getEventAsRegular = function(req, res) {
-    eventCore.getEventByURL(req.params.eventURL)
+    eventCore.getEventByURL(req.eventURL)
     .then(function(event) {
         return returnEventIfVisible(req.user, event);
     })
@@ -187,7 +187,7 @@ module.exports.joinEvent = function(req, res) {
 };
 
 module.exports.appendEventIfVisible = function(req, res, next) {
-    eventCore.getEventByURL(req.params.eventURL)
+    eventCore.getEventByURL(req.eventURL || req.params.eventURL)
     .then(function(event) {
         if(event.visibility=="public") {
             return event;
@@ -220,6 +220,11 @@ module.exports.appendEventIfVisible = function(req, res, next) {
         next(error);
     });
 };
+
+module.exports.appendEventURL = function(req, res, next) {
+    req.eventURL = req.params.eventURL;
+    next();
+}
 
 module.exports.appendMemberships = function(req, res, next) {
     eventMembershipCore.getUserEventMemberships(req.user, req.event)

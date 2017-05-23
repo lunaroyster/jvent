@@ -8,12 +8,11 @@ var AuthOnly = authController.AuthOnly;
 router.post('/', AuthOnly, postController.createPost);
 router.get('/', postController.getPosts);
 
-router.get('/:postURL', postController.appendPost, postController.getPost);
-// router.patch('/:postURL', AuthOnly, postController.appendPost, postController.updatePost);
-// router.delete('/:postURL', AuthOnly, postController.appendPost, postController.deletePost);
+var cpRouter = express.Router();
+    cpRouter.get('/', postController.appendPost, postController.getPost);
+    cpRouter.patch('/vote', postController.appendPost, postController.vote);
 
-router.patch('/:postURL/vote', postController.appendPost, postController.vote);
-
-router.use('/:postURL/comment', postController.appendPost, postController.appendPostID, require('./comment'));
+    cpRouter.use('/comment', postController.appendPost, require('./comment'));
+router.use('/:postURL', postController.appendPostURL, cpRouter);
 
 module.exports = router;
