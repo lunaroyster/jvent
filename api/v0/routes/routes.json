@@ -1,0 +1,73 @@
+{
+    "api": [
+        {
+            "event": {
+                "methods": "CR",
+                ":eventURL": {
+                    "methods": "RUD",
+                    "post": {
+                        "methods": "CR",
+                        ":postURL": {
+                            "methods": "RUD",
+                            "comment": {
+                                "methods": "CR",
+                                ":commentURL": {
+                                    "methods": "RUD",
+                                }
+                            }
+                        }
+                    },
+                    "media": {
+                        "methods": "CR",
+                        ":mediaURL":{
+                            "methods": "RUD",
+                        }
+                    },
+                    "users": {
+                        "viewer": {
+                            "methods": "R"
+                        },
+                        "attendee": {
+                            "methods": "R"
+                        },
+                        "invite": {
+                            "methods": "R"
+                        },
+                        "moderator": {
+                            "methods": "R"
+                        }
+                    }
+                }
+            },
+            "user": {
+                "methods": "R",
+                "me": {
+                    "methods": "R"
+                },
+                "signup": {
+                    "methods": "C"
+                },
+                "authenticate": {
+                    "methods": "C"
+                },
+                "changepassword": {
+                    "methods": "C"
+                },
+                "events": {
+                    "viewer": {
+                        "methods": "R"
+                    },
+                    "attendee": {
+                        "methods": "R"
+                    },
+                    "invite": {
+                        "methods": "R"
+                    },
+                    "moderator": {
+                        "methods": "R"
+                    }
+                }
+            }
+        }
+    ]
+}
