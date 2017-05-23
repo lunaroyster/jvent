@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var eventController = require('../controllers/event');
+var mediaController = require('../controllers/media');
 var authController = require('../controllers/auth');
 var AuthOnly = authController.AuthOnly;
 
@@ -20,8 +21,17 @@ var ceRouter = express.Router(); //contextEvent Router
         usersRouter.get('/moderator', eventController.getEventModerators);
     ceRouter.use('/users', AuthOnly, eventController.appendEventIfVisible, usersRouter);
 
-    ceRouter.use('/post', eventController.appendEventIfVisible, require('./post'));
+    var mediaRouter = express.Router();
+        mediaRouter.post('/', mediaController.createEventMedia);
+        mediaRouter.get('/', mediaController.getEventMedia);
     
+        var cmRouter = express.Router(); //contextEvent/media Router
+            cmRouter.get('/', mediaController.getEventMediaByURL);
+        mediaRouter.use('/:mediaURL', mediaController.appendMediaURL, cmRouter);
+    ceRouter.use('/media', eventController.appendEventIfVisible, mediaRouter);
+
+    ceRouter.use('/post', eventController.appendEventIfVisible, require('./post'));
+
 router.use('/:eventURL', eventController.appendEventURL, ceRouter);
 
 module.exports = router;
