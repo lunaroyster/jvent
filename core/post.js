@@ -136,20 +136,21 @@ module.exports.vote = function(user, post, direction) {
             }
         })
         .then(function(change) {
-            if(change) {
-                return vote.save()
-                .then(function(vote) {
-                    if(vote) {
-                        return {
-                            change: change,
-                            direction: vote.direction
-                        };
-                    }
-                });
-            }
-            else {
-                return false;
-            }
+            return Q.fcall(function() {
+                if(change) {
+                    return vote.save()
+                    .then(function(vote) {
+                        if(!vote) throw Error("Failed to vote.");
+                        return;
+                    });
+                }
+            })
+            .then(function() {
+                return {
+                    change: change,
+                    direction: vote.direction
+                };
+            })
         });
     });
 };
