@@ -3,22 +3,47 @@ var Q = require('q');
 
 var Media = mongoose.model('Media');
 
+var urlCore = require("./url");
+
 // Media Creation
-module.exports.createMedia = function(mediaConfig, user, event) {
-    return Q.fcall(function() {
-        var newMedia = createMediaDocument(mediaConfig, user, event);
+module.exports.createMedia = function(mediaConfig) {
+    return getUniqueMediaURL(6, mediaConfig.event)
+    .then(function(newMediaURL) {
+        mediaConfig.url = newMediaURL;
+        var newMedia = createMediaDocument(mediaConfig);
+        return newMedia;
+    })
+    .then(function(newMedia) {
         return newMedia.save();
     });
 };
-var createMediaDocument = function(mediaConfig, user, event) {
+var createMediaDocument = function(mediaConfig) {
     var newMedia = new Media({
         link: mediaConfig.link,
+        url: mediaConfig.url
     });
-    newMedia.assignEvent(event);
-    newMedia.assignUser(user);
+    newMedia.assignEvent(mediaConfig.event);
+    newMedia.assignUser(mediaConfig.user);
     return newMedia;
 };
+var getUniqueMediaURL = function(length, event) {
+    return Q.fcall(function() {
+        var url = urlCore.generateRandomUrl(length);
+        return Media.findOne({url: url, event: event._id})
+        .then(function(media) {
+            if(!media) {
+                return url;
+            }
+            else {
+                return getUniqueMediaURL(length, event);
+            }
+        });
+    });
+};
 
+module.exports.createEventMedia = function(mediaConfig) {
+
+};
 // Media Retrieval
 var returnMediaOrError = function(media) {
     if(!media) {

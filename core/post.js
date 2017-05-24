@@ -11,48 +11,32 @@ var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
 
 // Post Creation
-module.exports.createPostWithMedia = function(user, postConfig, event, mediaConfig) {
+module.exports.createPostWithMedia = function(postConfig, mediaConfig) {
     return Q.fcall(function() {
-        return mediaCore.createMedia(mediaConfig, user, event);
+        return mediaCore.createMedia(mediaConfig);
     })
     .then(function(mediaDelegate) {
-        return createPost(user, postConfig, event, mediaDelegate);
+        return createPost(postConfig, mediaDelegate);
     });
 };
-var createPost = function(user, postConfig, event, media) {
-    return getUniquePostURL(6, event)
-    .then(function(newPostUrl) {
-        postConfig.url = newPostUrl;
-        return collectionCore.getSuperCollectionByID(event.superCollection)
-        .then(function(sc) {
-            var newPost = createPostDocument(user, postConfig, event, media);
-            newPost.sc = sc;
-            return savePost(newPost)
-            .then(function(post) {
-                sc.addPost(post);
-                return sc.save()
-                .then(function(sc) {
-                    return post;
-                });
-            });
-            //Regular Collections?
-        });
+module.exports.createPostWithoutMedia = function(postConfig) {
+    return Q.fcall(function() {
+        return createPost(postConfig);
     });
 };
-module.exports.createPost = createPost;
-var createPostDocument = function(user, postConfig, event, media) {
+
+var createPostDocument = function(postConfig, mediaDelegate) {
     var newPost = new Post({
         title: postConfig.title,
         url: postConfig.url,
         content: {
-            text: postConfig.content.text,
-            link: postConfig.content.link
+            text: postConfig.content.text
         },
         timeOfCreation: Date.now()
     });
-    newPost.setEvent(event);
-    newPost.setMedia(media);
-    newPost.setSubmitter(user);
+    newPost.setEvent(postConfig.event);
+    newPost.setSubmitter(postConfig.user);
+    if(mediaDelegate) newPost.setMedia(mediaDelegate);
     console.log(newPost);
     return newPost;
 };
@@ -74,6 +58,27 @@ var getUniquePostURL = function(length, event) {
         });
     });
 };
+var createPost = function(postConfig, mediaDelegate) {
+    return getUniquePostURL(6, postConfig.event)
+    .then(function(newPostUrl) {
+        postConfig.url = newPostUrl;
+        return collectionCore.getSuperCollectionByID(postConfig.event.superCollection)
+        .then(function(sc) {
+            var newPost = createPostDocument(postConfig, mediaDelegate);
+            newPost.sc = sc;
+            return savePost(newPost)
+            .then(function(post) {
+                sc.addPost(post);
+                return sc.save()
+                .then(function(sc) {
+                    return post;
+                });
+            });
+            //Regular Collections?
+        });
+    });
+};
+module.exports.createPost = createPost;
 
 // Post Retrieval
 module.exports.getEventPosts = function(event) {
