@@ -24,3 +24,13 @@ module.exports.packError = function(error) {
     }
     return err;
 };
+
+module.exports.createMediaTemplateFromRequest = function(req) {
+    if(!req.body.media) return;
+    var mediaObj = {
+        user: req.user,
+        event: req.event,
+        link: req.body.media.link
+    };
+    return mediaObj;
+};

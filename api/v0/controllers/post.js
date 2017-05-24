@@ -10,6 +10,7 @@ var postRequestSchema = require('../requests').post;
 var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
+var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
 
 // /post/
 var checkCreatePostPrivilege = function(req) {
@@ -29,12 +30,15 @@ var checkCreatePostPrivilege = function(req) {
     })
 };
 var createPostTemplateFromRequest = function(req) {
+    if(!req.body.post) return;
     return {
         title: req.body.post.title,
         content: {
            text: req.body.post.content.text,
            link: req.body.post.content.link
-        }
+       },
+       user: req.user,
+       event: req.event
     };
 };
 module.exports.createPost = function(req, res) {
@@ -47,14 +51,13 @@ module.exports.createPost = function(req, res) {
             return req.event;
         });
     }) // Checks create post privilege.
-    .then(function(event) {
-        var media = {
-            link: req.body.post.link        //TEMP
-        };
-        return media;
-    })    //Create media
-    .then(function(media) {
-        return postCore.createPostWithMedia(req.user, createPostTemplateFromRequest(req), req.event, media);
+    .then(function() {
+        if(req.body.media) {
+            return postCore.createPostWithMedia(createPostTemplateFromRequest(req), createMediaTemplateFromRequest(req));
+        }
+        else {
+            return postCore.createPostWithoutMedia(createPostTemplateFromRequest(req));
+        }
         // .then(function(post) {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
         //     .then(function(collection) {
@@ -70,9 +73,11 @@ module.exports.createPost = function(req, res) {
             }
         };
         res.status(201).json(state);
+        return;
     })     //Send post creation success
     .catch(function(error) {
         var err = packError(error);
+        console.log(error.stack);
         res.status(400).json(err);
     });
 };
