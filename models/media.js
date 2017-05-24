@@ -12,12 +12,17 @@ var mediaSchema = new Schema({
     type: String, //image/video/gif/link
     strategy: String, //jvent/imgur/other
     access: {
-        type: Schema.Types.Mixed //Whatever required to access the resource 
+        type: Schema.Types.Mixed //Whatever required to access the resource
     },
     // }
     // Temporary implementation {
-    link: String,    
+    link: String,
     // }
+    url: {
+        type: String,
+        index: true,
+        unique: true
+    },
     event: {
         type: Schema.Types.ObjectId,
         ref: 'Event'

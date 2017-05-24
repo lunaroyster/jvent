@@ -60,6 +60,7 @@ postSchema.methods.collectionCount = function() {
 
 postSchema.methods.setMedia = function(media) {
     this.media = media._id;
+    this.content.link = media.link;
 };
 
 postSchema.methods.setSubmitter = function(user) {

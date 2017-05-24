@@ -43,6 +43,10 @@ var userSchema = new Schema({
         createPost: {
             type: Boolean,
             default: true
+        },
+        createMedia: {
+            type: Boolean,
+            default: true
         }
     }
 });
