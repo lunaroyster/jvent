@@ -11,8 +11,13 @@ var postSchema = new Schema({
         link: {type: String}
     },
     media: {
-        type: Schema.Types.ObjectId,
-        ref: 'Media'
+        media: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        url: {
+            type: String
+        }
     },
     timeOfCreation: Date,
     time: {
@@ -59,7 +64,8 @@ postSchema.methods.collectionCount = function() {
 };
 
 postSchema.methods.setMedia = function(media) {
-    this.media = media._id;
+    this.media.media = media._id;
+    this.media.url = media.url;
     this.content.link = media.link;
 };
 

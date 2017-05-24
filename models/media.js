@@ -27,17 +27,23 @@ var mediaSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Event'
     },
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }
+    submitter: {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        },
+        name: {
+            type: String
+        }
+    },
 });
 
 mediaSchema.methods.assignEvent = function(event) {
     this.event = event._id;
 };
 mediaSchema.methods.assignUser = function(user) {
-    this.user = user._id;
+    this.submitter.user = user._id;
+    this.submitter.name = user.username;
 };
 
 mediaSchema.pre('save', function(next) {
