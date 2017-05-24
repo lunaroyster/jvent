@@ -65,13 +65,19 @@ module.exports.createPost = function(req, res) {
         //     });
         // }); //TODO: secondary collections
     })    //Create post and add to collections
-    .then(function(post) {
+    .spread(function(post, media) {
+        console.log([post,media])
         var state = {
             status: "Created",
             post: {
                 url: post.url
             }
         };
+        if(media) {
+            state.media = {
+                url: media.url
+            };
+        }
         res.status(201).json(state);
         return;
     })     //Send post creation success

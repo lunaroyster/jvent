@@ -16,12 +16,12 @@ module.exports.createPostWithMedia = function(postConfig, mediaConfig) {
         return mediaCore.createMedia(mediaConfig);
     })
     .then(function(mediaDelegate) {
-        return createPost(postConfig, mediaDelegate);
+        return [createPost(postConfig, mediaDelegate), mediaDelegate];
     });
 };
 module.exports.createPostWithoutMedia = function(postConfig) {
     return Q.fcall(function() {
-        return createPost(postConfig);
+        return [createPost(postConfig), undefined];
     });
 };
 
