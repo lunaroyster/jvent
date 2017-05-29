@@ -88,12 +88,12 @@ module.exports.getEventPosts = function(event) {
     return postQuery.exec();
 };
 module.exports.getPostByID = function(event, postID) {
-    var postQuery = Post.findOne({parentEvent: event._id, _id: postID});
+    var postQuery = Post.findOne({parentEvent: event._id, _id: postID}).populate('media.media');
     return postQuery.exec()
     .then(returnPostOrError);
 };
 module.exports.getPostByURL = function(event, postURL) {
-    var postQuery = Post.findOne({parentEvent: event._id, url: postURL});
+    var postQuery = Post.findOne({parentEvent: event._id, url: postURL}).populate('media.media');
     return postQuery.exec()
     .then(returnPostOrError);
 };

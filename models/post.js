@@ -13,7 +13,7 @@ var postSchema = new Schema({
     media: {
         media: {
             type: Schema.Types.ObjectId,
-            ref: 'User'
+            ref: 'Media'
         },
         url: {
             type: String
