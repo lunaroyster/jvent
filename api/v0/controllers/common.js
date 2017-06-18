@@ -25,12 +25,12 @@ module.exports.packError = function(error) {
     return err;
 };
 
-module.exports.createMediaTemplateFromRequest = function(req) {
-    if(!req.body.media) return;
+module.exports.createMediaTemplateFromRequest = function(req, media) {
+    if(!media) return;
     var mediaObj = {
         user: req.user,
         event: req.event,
-        link: req.body.media.link
+        link: media.link
     };
     return mediaObj;
 };

@@ -29,13 +29,13 @@ var checkCreatePostPrivilege = function(req) {
         });
     })
 };
-var createPostTemplateFromRequest = function(req) {
-    if(!req.body.post) return;
+var createPostTemplateFromRequest = function(req, post) {
+    if(!post) return;
     return {
-        title: req.body.post.title,
+        title: post.title,
         content: {
-           text: req.body.post.content.text,
-           link: req.body.post.content.link
+           text: post.content.text,
+           link: post.content.link
        },
        user: req.user,
        event: req.event
@@ -53,10 +53,10 @@ module.exports.createPost = function(req, res) {
     }) // Checks create post privilege.
     .then(function() {
         if(req.body.media) {
-            return postCore.createPostWithMedia(createPostTemplateFromRequest(req), createMediaTemplateFromRequest(req));
+            return postCore.createPostWithMedia(createPostTemplateFromRequest(req, req.body.post), createMediaTemplateFromRequest(req, req.body.media));
         }
         else {
-            return postCore.createPostWithoutMedia(createPostTemplateFromRequest(req));
+            return postCore.createPostWithoutMedia(createPostTemplateFromRequest(req, req.body.post));
         }
         // .then(function(post) {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
