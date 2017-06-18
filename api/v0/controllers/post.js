@@ -52,12 +52,12 @@ module.exports.createPost = function(req, res) {
         });
     }) // Checks create post privilege.
     .then(function() {
+        var postTemplate = createPostTemplateFromRequest(req, req.body.post);
+        var mediaTemplate = undefined;
         if(req.body.media) {
-            return postCore.createPostWithMedia(createPostTemplateFromRequest(req, req.body.post), createMediaTemplateFromRequest(req, req.body.media));
+            mediaTemplate = createMediaTemplateFromRequest(req, req.body.media);
         }
-        else {
-            return postCore.createPostWithoutMedia(createPostTemplateFromRequest(req, req.body.post));
-        }
+        return postCore.createPost(postTemplate, mediaTemplate);
         // .then(function(post) {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
         //     .then(function(collection) {

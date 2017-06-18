@@ -11,20 +11,6 @@ var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
 
 // Post Creation
-module.exports.createPostWithMedia = function(postConfig, mediaConfig) {
-    return Q.fcall(function() {
-        return mediaCore.createMedia(mediaConfig);
-    })
-    .then(function(mediaDelegate) {
-        return [createPost(postConfig, mediaDelegate), mediaDelegate];
-    });
-};
-module.exports.createPostWithoutMedia = function(postConfig) {
-    return Q.fcall(function() {
-        return [createPost(postConfig), undefined];
-    });
-};
-
 var createPostDocument = function(postConfig, mediaDelegate) {
     var newPost = new Post({
         title: postConfig.title,
@@ -78,7 +64,16 @@ var createPost = function(postConfig, mediaDelegate) {
         });
     });
 };
-module.exports.createPost = createPost;
+module.exports.createPost = function(postConfig, mediaConfig) {
+    return Q.fcall(function() {
+        if(mediaConfig) {
+            return mediaCore.createMedia(mediaConfig);
+        }
+    })
+    .then(function(mediaDelegate) {
+        return [createPost(postConfig, mediaDelegate), mediaDelegate];
+    });
+}
 
 // Post Retrieval
 module.exports.getEventPosts = function(event) {
