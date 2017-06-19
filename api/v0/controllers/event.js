@@ -29,7 +29,8 @@ var createEventTemplateFromRequest = function(req, event) {
         description: event.description,
         visibility: event.visibility,
         ingress: event.ingress,
-        comment: event.comment
+        comment: event.comment,
+        user: req.user
     };
 }
 module.exports.createEvent = function(req, res) {
@@ -40,7 +41,12 @@ module.exports.createEvent = function(req, res) {
         return checkCreateEventPrivilege(req);
     })         //Check user privileges
     .then(function() {
-        return eventCore.createEvent(createEventTemplateFromRequest(req, req.body.event), req.user);
+        var eventTemplate = createEventTemplateFromRequest(req, req.body.event);
+        var mediaTemplate = undefined;
+        if(req.body.media) {
+            mediaTemplate = createMediaTemplateFromRequest(req, req.body.media)
+        }
+        return eventCore.createEvent(eventTemplate, mediaTemplate);
     })         //Create event (using authenticated user)
     // .then(function(event) {
     //     return event; // Something happens here. Oops.
