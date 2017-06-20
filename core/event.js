@@ -100,21 +100,37 @@ module.exports.queryEvents = function(query) {
 // Get Event
 module.exports.getEventByID = function(eventID) {
     return Event.findOne({_id: eventID})
-    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation superCollection')
+    .populate('backgroundImage')
+    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation superCollection backgroundImage')
     .then(returnEventOrError);
 };
 module.exports.getEventByURL = function(url) {
     return Event.findOne({url: url})
-    .select('name byline description url organizer.name ingress visibility timeOfCreation superCollection')
+    .populate('backgroundImage')
+    .select('name byline description url organizer.name ingress visibility timeOfCreation superCollection backgroundImage')
     .then(returnEventOrError);
 };
 module.exports.getEventByURLAsModerator = function(url) {
     return Event.findOne({url: url})
-    .select('name byline description url organizer.name ingress visibility timeOfCreation roles')
+    .populate('backgroundImage')
+    .select('name byline description url organizer.name ingress visibility timeOfCreation roles backgroundImage')
     .then(returnEventOrError);
 };
 module.exports.getEventIfAttendee = function(user, eventID) {
 
+};
+
+module.exports.setEventBackground = function(event, mediaConfig) {
+    return Q.fcall(function() {
+        return mediaCore.createMedia(mediaConfig);
+    })
+    .then(function(media) {
+        event.setBackgroundImage(media);
+        return event.save()
+        .then(function(event) {
+            return media;
+        });
+    });
 };
 
 var returnEventOrError = function(event) {
