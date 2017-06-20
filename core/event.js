@@ -46,7 +46,7 @@ var saveEvent = function(event) {
     return event.save()
     .then(returnEventOrError);
 };
-var createEvent = function(eventConfig, mediaConfig) {
+var createEvent = function(eventConfig) {
     var user = eventConfig.user;
     return getUniqueEventURL(6)
     .then(function(newEventURL) {
@@ -73,15 +73,16 @@ var createEvent = function(eventConfig, mediaConfig) {
     });
 };
 module.exports.createEvent = function(eventConfig, mediaConfig) {
-    return Q.fcall(function() {
-        if(mediaConfig) {
-            return mediaCore.createMedia(mediaConfig);
-        }
-    })
-    .then(function(mediaDelegate) {
-        // return [createEvent(eventConfig, mediaDelegate), mediaDelegate];
-        return createEvent(eventConfig, mediaDelegate);
-    })
+    // return Q.fcall(function() {
+    //     if(mediaConfig) {
+    //         return mediaCore.createMedia(mediaConfig);
+    //     }
+    // })
+    // .then(function(mediaDelegate) {
+    //     // return [createEvent(eventConfig, mediaDelegate), mediaDelegate];
+    //     return createEvent(eventConfig, mediaDelegate);
+    // })
+    return createEvent(eventConfig);
 }
 
 // Get Events

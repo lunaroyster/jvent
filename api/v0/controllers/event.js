@@ -42,11 +42,11 @@ module.exports.createEvent = function(req, res) {
     })         //Check user privileges
     .then(function() {
         var eventTemplate = createEventTemplateFromRequest(req, req.body.event);
-        var mediaTemplate = undefined;
-        if(req.body.media) {
-            mediaTemplate = createMediaTemplateFromRequest(req, req.body.media)
-        }
-        return eventCore.createEvent(eventTemplate, mediaTemplate);
+        // var mediaTemplate = undefined;
+        // if(req.body.media) {
+        //     mediaTemplate = createMediaTemplateFromRequest(req, req.body.media)
+        // }
+        return eventCore.createEvent(eventTemplate);
     })         //Create event (using authenticated user)
     // .then(function(event) {
     //     return event; // Something happens here. Oops.
