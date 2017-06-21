@@ -90,7 +90,8 @@ module.exports.getPublicEvents = function() {
     // TODO: query to select events based on time/location/rating/uploader etc
     var eventQuery = Event
     .find({visibility: "public"})
-    .select('-_id name description byline url organizer.name ingress');
+    .populate('backgroundImage')
+    .select('-_id name description byline url organizer.name ingress backgroundImage');
     return eventQuery.exec();
 };
 module.exports.queryEvents = function(query) {
