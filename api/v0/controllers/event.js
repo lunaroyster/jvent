@@ -7,6 +7,7 @@ var assert = require('chai').assert;
 var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
+var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
 
 // Errors
 var badAuthError = Error("Bad Auth");
@@ -21,14 +22,15 @@ var checkCreateEventPrivilege = function(req) {
         throw new Error("Bad privileges");
     }
 }
-var createEventTemplateFromRequest = function(req) {
+var createEventTemplateFromRequest = function(req, event) {
     return {
-        name: req.body.event.name,
-        byline: req.body.event.byline,
-        description: req.body.event.description,
-        visibility: req.body.event.visibility,
-        ingress: req.body.event.ingress,
-        comment: req.body.event.comment
+        name: event.name,
+        byline: event.byline,
+        description: event.description,
+        visibility: event.visibility,
+        ingress: event.ingress,
+        comment: event.comment,
+        user: req.user
     };
 }
 module.exports.createEvent = function(req, res) {
@@ -39,7 +41,12 @@ module.exports.createEvent = function(req, res) {
         return checkCreateEventPrivilege(req);
     })         //Check user privileges
     .then(function() {
-        return eventCore.createEvent(createEventTemplateFromRequest(req), req.user);
+        var eventTemplate = createEventTemplateFromRequest(req, req.body.event);
+        // var mediaTemplate = undefined;
+        // if(req.body.media) {
+        //     mediaTemplate = createMediaTemplateFromRequest(req, req.body.media)
+        // }
+        return eventCore.createEvent(eventTemplate);
     })         //Create event (using authenticated user)
     // .then(function(event) {
     //     return event; // Something happens here. Oops.

@@ -70,8 +70,13 @@ var eventSchema = new Schema({
     joinUrl: {
         type: String,
         index: true
-    }
+    },
     // event images
+    // TEMP
+    backgroundImage: {
+        type: Schema.Types.ObjectId,
+        ref: 'Media'
+    }
     // moderators
 });
 
@@ -94,6 +99,11 @@ eventSchema.methods.assignRoles = function() {
 eventSchema.methods.assignOrganizer = function(user) {
     this.organizer.user = user._id;
     this.organizer.name = user.username;
+};
+
+// TEMP
+eventSchema.methods.setBackgroundImage = function(media) {
+    this.backgroundImage = media._id;
 };
 
 eventSchema.pre('save', function(next) {

@@ -6,15 +6,14 @@ var Media = mongoose.model('Media');
 var urlCore = require("./url");
 
 // Media Creation
-module.exports.createMedia = function(mediaConfig) {
-    return getUniqueMediaURL(6, mediaConfig.event)
-    .then(function(newMediaURL) {
-        mediaConfig.url = newMediaURL;
-        var newMedia = createMediaDocument(mediaConfig);
-        return newMedia;
-    })
-    .then(function(newMedia) {
-        return newMedia.save();
+var getUniqueMediaURLinEvent = function(length, event) {
+    return Q.fcall(function() {
+        var url = urlCore.generateRandomUrl(length);
+        return Media.findOne({url: url, event: event._id})
+        .then(function(media) {
+            if(!media) return url;
+            return getUniqueMediaURL(length, event);
+        });
     });
 };
 var createMediaDocument = function(mediaConfig) {
@@ -26,19 +25,20 @@ var createMediaDocument = function(mediaConfig) {
     newMedia.assignUser(mediaConfig.user);
     return newMedia;
 };
-var getUniqueMediaURL = function(length, event) {
+var saveMedia = function(media) {
+    return media.save()
+    .then(returnMediaOrError);
+};
+module.exports.createMedia = function(mediaConfig) {
     return Q.fcall(function() {
-        var url = urlCore.generateRandomUrl(length);
-        return Media.findOne({url: url, event: event._id})
-        .then(function(media) {
-            if(!media) {
-                return url;
-            }
-            else {
-                return getUniqueMediaURL(length, event);
-            }
-        });
-    });
+        return getUniqueMediaURLinEvent(6, mediaConfig.event);
+    })
+    .then(function(newMediaURL) {
+        mediaConfig.url = newMediaURL;
+        var newMedia = createMediaDocument(mediaConfig);
+        return newMedia;
+    })
+    .then(saveMedia);
 };
 
 module.exports.createEventMedia = function(mediaConfig) {
