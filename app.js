@@ -7,6 +7,10 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var passport = require('passport');
 var helmet = require('helmet');
+var Raven = require('raven');
+
+Raven.config(process.env.__DSN__).install();
+
 require('./models/index');
 require('./core/passport');
 
@@ -15,6 +19,9 @@ require('./core/passport');
 var apiRoute = require('./api/index');
 
 var app = express();
+
+// Error reporting setup
+app.use(Raven.requestHandler());
 
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
@@ -33,6 +40,8 @@ app.use(express.static(path.join(__dirname, 'jvent-frontend/public')));
 
 app.use('/api', apiRoute);
 // app.use('/users', users);
+
+app.use(Raven.errorHandler());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
