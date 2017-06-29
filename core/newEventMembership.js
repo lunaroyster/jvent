@@ -7,13 +7,22 @@ var EventMembership = class EventMembership {
     constructor(eventMembership) {
         this._eventMembership = eventMembership;
     }
-    
-    checkPrivilege(privilege) {
+
+    hasPrivilege(privilege) {
         // Compare roles with config
         // Check for overrides
         return true;
     }
-    
+    hasRole(role) {
+        return(this._eventMembership.hasRole(role);
+    }
+
+    addRole(role) {
+        //TODO verify role.
+        this._eventMembership.addRole(role);
+        return this._eventMembership.save();
+    }
+
     static getMembership(user, event) {
         return EventMembershipModel.findOne({user: user._id, event: event._id})
         .then(function(eventMembershipObject) {
@@ -28,10 +37,11 @@ var EventMembership = class EventMembership {
         return EventMembershipModel.find({event: event._id})
         .then(EventMembership.deserializeObjectArray);
     }
-    
+
     static createNewEventMembership(eventMembershipConfig) {
+        //TODO: Verify roles.
         var newEventMembership = new EventMembershipModel({
-           // Initialize EventMembership 
+            roles: eventMembershipConfig.roles
         });
         newEventMembership.setUser(eventMembershipConfig.user);
         newEventMembership.setEvent(eventMembershipConfig.event);
@@ -40,7 +50,7 @@ var EventMembership = class EventMembership {
             return new EventMembership(eventMembership);
         });
     }
-    
+
     static deserializeObjectArray(eventMembershipObjectArray) {
         var EventMembershipArray = [];
         for(var eventMembershipObject of eventMembershipObjectArray) {
