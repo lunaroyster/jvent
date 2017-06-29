@@ -42,7 +42,10 @@ var EventMembership = class EventMembership {
         return EventMembershipModel.find({event: event._id, roles: role})
         .then(EventMembership.deserializeObjectArray);
     }
-
+    static getAllMembershipsForUserByRole(user, role) {
+        return EventMembershipModel.find({user: user._id, roles: role})
+        .then(EventMembership.deserializeObjectArray);
+    }
     static createNewEventMembership(eventMembershipConfig) {
         //TODO: Verify roles.
         var newEventMembership = new EventMembershipModel({
