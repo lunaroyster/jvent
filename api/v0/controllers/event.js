@@ -15,12 +15,8 @@ badAuthError.status = 404;
 
 // /event/
 var checkCreateEventPrivilege = function(req) {
-    if(req.user.privileges.createEvent) {
-        return;
-    }
-    else {
-        throw new Error("Bad privileges");
-    }
+    if(!req.user.privileges.createEvent) throw new Error("Bad privileges");
+    return;
 }
 var createEventTemplateFromRequest = function(req, event) {
     return {
@@ -48,9 +44,6 @@ module.exports.createEvent = function(req, res) {
         // }
         return eventCore.createEvent(eventTemplate);
     })         //Create event (using authenticated user)
-    // .then(function(event) {
-    //     return event; // Something happens here. Oops.
-    // })
     .then(function(event) {
         var state = {
             status: "Created",
@@ -115,23 +108,13 @@ var getEventAsRegular = function(req, res) {
 
 module.exports.getEvent = function(req, res) {
     if(req.header('moderator') == 1) {
-        if(req.user) {
-            getEventAsModerator(req, res);
-        }
+        if(!req.user) throw badAuthError;
+        getEventAsModerator(req, res);
     }
     else {
         getEventAsRegular(req, res);
     }
 };
-
-// module.exports.updateEvent = function(req, res) {
-//     res.json(req);
-//     res.send();
-// };
-// module.exports.deleteEvent = function(req, res) {
-//     res.json(req);
-//     res.send();
-// };
 
 // /event/:eventID/users/[role]
 
@@ -169,12 +152,6 @@ module.exports.joinEvent = function(req, res) {
         else if(ingress=="link") {
             assert.equal(req.query.c, event.joinUrl, "Bad link");
             return;
-            // if(req.query.c==event.joinUrl) {
-            //     return;
-            // }
-            // else {
-            //     throw new Error("Bad link");
-            // }
         }
         else if(ingress=="invite") {
             return eventMembershipCore.isUserInvited(req.user, req.event);
@@ -228,19 +205,6 @@ module.exports.appendEventURL = function(req, res, next) {
     req.eventURL = req.params.eventURL;
     next();
 }
-
-module.exports.appendMemberships = function(req, res, next) {
-    eventMembershipCore.getUserEventMemberships(req.user, req.event)
-    .then(function(memberships) {
-        //append memberships to req
-    })
-    .then(function() {
-        next();
-    })
-    .catch(function(error) {
-        next(error);
-    });
-};
 
 module.exports.appendEventGetter = function(req, res, next) {
     var EventGetter = function() {
@@ -297,12 +261,8 @@ var returnEventIfVisible = function(user, event) {
             return event;
         }
         else if(event.visibility=="unlisted") {
-            if(user) {
-                return event;
-            }
-            else {
-                throw badAuthError;
-            }
+            if(!user) throw badAuthError;
+            return event;
         }
         else if(event.visibility=="private") {
             return eventMembershipCore.isUserViewer(user, event)
