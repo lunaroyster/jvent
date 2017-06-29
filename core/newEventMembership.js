@@ -60,6 +60,8 @@ var EventMembership = class EventMembership {
     }
 };
 
-module.exports = {
-    EventMembership: EventMembership
-};
+// module.exports = {
+//     EventMembership: EventMembership
+// };
+
+module.exports.EventMembership = EventMembership;

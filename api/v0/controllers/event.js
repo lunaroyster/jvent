@@ -200,12 +200,8 @@ module.exports.appendEventIfVisible = function(req, res, next) {
             return event;
         }
         else if(event.visibility=="unlisted") {
-            if(req.user) {
-                return event;
-            }
-            else {
-                throw badAuthError;
-            }
+            if(req.user) throw badAuthError;
+            return event;
         }
         else if(event.visibility=="private") {
             return eventMembershipCore.isUserViewer(req.user, event)
@@ -245,6 +241,55 @@ module.exports.appendMemberships = function(req, res, next) {
         next(error);
     });
 };
+
+module.exports.appendEventGetter = function(req, res, next) {
+    var EventGetter = function() {
+        return Q.fcall(function() {
+            if(req.event) return req.event;
+            return eventCore.getEventByURL(req.eventURL || req.params.eventURL)
+            .then(function(event) {
+                if(event.visibility=="public") {
+                    return event;
+                }
+                else if(event.visibility=="unlisted") {
+                    if(!req.user) throw badAuthError;
+                    return event;
+                }
+                else if(event.visibility=="private") {
+                    return req.getEventMemberships()
+                    .then(function(eventMembership) {
+                        if(eventMembership.hasRole("viewer")) return event;
+                    })
+                }
+            })
+            .then(function(event) {
+                req.event = event;
+                return event;
+            })
+            .catch(function(error) {
+                next(error);
+            })
+        })
+    }
+    req.getEvent = EventGetter;
+    next();
+}
+
+module.exports.appendEventMembershipGetter = function(req, res, next) {
+    var EventMembershipGetter = function() {
+        return Q.fcall(function() {
+            if(req.EventMembership) return req.EventMembership;
+            if(!req.user || !req.event) throw Error("Failed to resolve memberships");
+            return EventMembership.getMembership(req.user, req.event)
+            .then(function(eventMembership) {
+                req.EventMembership = eventMembership;
+                return eventMembership;
+            })
+        });
+    };
+    req.getEventMemberships = EventMembershipGetter;
+    next();
+}
 
 var returnEventIfVisible = function(user, event) {
     return Q.fcall(function() {
