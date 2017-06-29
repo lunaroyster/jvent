@@ -14,7 +14,7 @@ var EventMembership = class EventMembership {
         return true;
     }
     hasRole(role) {
-        return(this._eventMembership.hasRole(role);
+        return(this._eventMembership.hasRole(role));
     }
 
     addRole(role) {
@@ -35,6 +35,11 @@ var EventMembership = class EventMembership {
     }
     static getAllMembershipsForEvent(event) {
         return EventMembershipModel.find({event: event._id})
+        .then(EventMembership.deserializeObjectArray);
+    }
+
+    static getAllMembershipsForEventByRole(event, role) {
+        return EventMembershipModel.find({event: event._id, roles: role})
         .then(EventMembership.deserializeObjectArray);
     }
 
