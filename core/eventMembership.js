@@ -5,6 +5,7 @@ var EventMembershipModel = mongoose.model('EventMembership');
 
 var EventMembership = class EventMembership {
     constructor(eventMembership) {
+        if(!eventMembership) throw new Error("No valid eventMembership object")
         this._eventMembership = eventMembership;
     }
 
