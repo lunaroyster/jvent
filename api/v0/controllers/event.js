@@ -258,7 +258,7 @@ module.exports.appendEventMembershipGetter = function(req, res, next) {
         return Q.fcall(function() {
             if(req.EventMembership) return req.EventMembership;
             if(!req.user || !req.event) throw Error("Failed to resolve memberships");
-            return EventMembership.getMembership(req.user, req.event)
+            return EventMembership.getOrCreateMembership(req.user, req.event)
             .then(function(eventMembership) {
                 req.EventMembership = eventMembership;
                 return eventMembership;

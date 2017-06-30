@@ -33,9 +33,9 @@ eventMembershipSchema.methods.hasRole = function(role) {
 
 eventMembershipSchema.methods.addRole = function(role) {
     //TODO: verify role type
-    if(!this.hasRole) {
-        this.roles.push(role);
-    }
+    if(this.hasRole(role)) return false;
+    this.roles.push(role);
+    return true;
 }
 
 mongoose.model('EventMembership', eventMembershipSchema);

@@ -20,8 +20,12 @@ var EventMembership = class EventMembership {
 
     addRole(role) {
         //TODO verify role.
-        this._eventMembership.addRole(role);
-        return this._eventMembership.save();
+        var eventMembership = this._eventMembership;
+        return Q.fcall(function() {
+            var addRoleSuccess = eventMembership.addRole(role);
+            if(addRoleSuccess) return eventMembership.save();
+            throw new Error("Already has role " + role);
+        })
     }
 
     static getMembership(user, event) {
@@ -38,7 +42,6 @@ var EventMembership = class EventMembership {
         return EventMembershipModel.find({event: event._id})
         .then(EventMembership.deserializeObjectArray);
     }
-
     static getAllMembershipsForEventByRole(event, role) {
         return EventMembershipModel.find({event: event._id, roles: role})
         .then(EventMembership.deserializeObjectArray);
@@ -47,18 +50,32 @@ var EventMembership = class EventMembership {
         return EventMembershipModel.find({user: user._id, roles: role})
         .then(EventMembership.deserializeObjectArray);
     }
-    static createNewEventMembership(eventMembershipConfig) {
-        //TODO: Verify roles.
-        var newEventMembership = new EventMembershipModel({
-            roles: eventMembershipConfig.roles
-        });
-        newEventMembership.setUser(eventMembershipConfig.user);
-        newEventMembership.setEvent(eventMembershipConfig.event);
-        return newEventMembership.save()
-        .then(function(eventMembership) {
-            return new EventMembership(eventMembership);
+
+    static getOrCreateMembership(user, event) {
+        return EventMembershipModel.findOne({user: user._id, event: event._id})
+        .then(function(eventMembershipModel) {
+            if(eventMembershipModel) return(eventMembershipModel);
+            var newEventMembershipModel = new EventMembershipModel({});
+            newEventMembershipModel.setUser(user);
+            newEventMembershipModel.setEvent(event);
+            return(newEventMembershipModel);
+        })
+        .then(function(eventMembershipModel) {
+            return new EventMembership(eventMembershipModel);
         });
     }
+    // static createEventMembershipObject(eventMembershipConfig) {
+    //     //TODO: Verify roles.
+    //     var newEventMembership = new EventMembershipModel({
+    //         roles: eventMembershipConfig.roles
+    //     });
+    //     newEventMembership.setUser(eventMembershipConfig.user);
+    //     newEventMembership.setEvent(eventMembershipConfig.event);
+    //     return newEventMembership.save()
+    //     .t   hen(function(eventMembership) {
+    //         return new EventMembership(eventMembership);
+    //     });
+    // }
 
     static deserializeObjectArray(eventMembershipObjectArray) {
         var EventMembershipArray = [];
