@@ -8,6 +8,8 @@ var eventMembershipCore = require('./eventMembership');
 var eventFindQuery = require('./eventFindQuery');
 var mediaCore = require('./media');
 
+var EventMembership = eventMembershipCore.EventMembership;
+
 var Event = mongoose.model('Event');
 
 // Create Event
@@ -60,7 +62,11 @@ var createEvent = function(eventConfig) {
         //TODO: Remove promise array and simplify as needed
         var promises = [];
         promises.push(collectionCore.createSuperCollection(event));
-        promises.push(eventMembershipCore.addModerator(user, event));
+        // promises.push(eventMembershipCore.addModerator(user, event));
+        promises.push(Q.fcall(function() {
+            var eventMembership = EventMembership.createUnsavedMembership(user, event);
+            return eventMembership.addRole("organizer");
+        }))
         // promises.push(userListCore.createDefaultUserLists(event));
         return Q.all(promises)
         .then(function(results) {

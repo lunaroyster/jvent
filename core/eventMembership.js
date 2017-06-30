@@ -28,6 +28,13 @@ var EventMembership = class EventMembership {
         })
     }
 
+    forceSave() {
+        this._eventMembership.save()
+        .then(function(eventMembershipModel) {
+            return this;
+        })
+    }
+
     static getMembership(user, event) {
         return EventMembershipModel.findOne({user: user._id, event: event._id})
         .then(function(eventMembershipObject) {
@@ -51,18 +58,35 @@ var EventMembership = class EventMembership {
         .then(EventMembership.deserializeObjectArray);
     }
 
+    static createMembershipModel(user, event) {
+        var newEventMembershipModel = new EventMembershipModel({});
+        newEventMembershipModel.setUser(user);
+        newEventMembershipModel.setEvent(event);
+        return(newEventMembershipModel);
+    }
     static getOrCreateMembership(user, event) {
         return EventMembershipModel.findOne({user: user._id, event: event._id})
         .then(function(eventMembershipModel) {
             if(eventMembershipModel) return(eventMembershipModel);
-            var newEventMembershipModel = new EventMembershipModel({});
-            newEventMembershipModel.setUser(user);
-            newEventMembershipModel.setEvent(event);
-            return(newEventMembershipModel);
+            return EventMembership.createMembershipModel(user, event);
         })
         .then(function(eventMembershipModel) {
             return new EventMembership(eventMembershipModel);
         });
+    }
+    static createAndSaveMembership(user, event) {
+        return Q.fcall(function() {
+            return EventMembership.createMembershipModel(user, event);
+        })
+        .then(function(eventMembershipModel) {
+            return eventMembershipModel.save();
+        })
+        .then(function(eventMembershipModel) {
+            return newEventMembership(eventMembershipModel);
+        });
+    }
+    static createUnsavedMembership(user, event) {
+        return new EventMembership(EventMembership.createMembershipModel(user, event));
     }
     // static createEventMembershipObject(eventMembershipConfig) {
     //     //TODO: Verify roles.
