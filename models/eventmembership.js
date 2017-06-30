@@ -38,4 +38,14 @@ eventMembershipSchema.methods.addRole = function(role) {
     return true;
 }
 
+eventMembershipSchema.methods.addRoles = function(roles) {
+    var addedRoles = [];
+    for(var role of roles) {
+        if(this.hasRole(role)) continue;
+        this.roles.push(role);
+        addedRoles.push(role);
+    }
+    return addedRoles;
+}
+
 mongoose.model('EventMembership', eventMembershipSchema);
