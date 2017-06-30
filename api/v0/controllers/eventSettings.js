@@ -1,4 +1,6 @@
 var Q = require('q');
+var assert = require('chai').assert;
+
 var eventCore = require('../../../core/event');
 var eventSettingsRequestSchema = require('../requests').eventSettings;
 var eventMembershipCore = require('../../../core/eventMembership');
@@ -17,8 +19,9 @@ module.exports.setEventBackground = function(req, res) {
     })
     .then(function() {
         // Check user privileges
-        return eventMembershipCore.isUserModerator(req.user, req.event)
-        .then(function() {
+        return req.getEventMembership()
+        .then(function(eventMembership) {
+            assert(eventMembership.hasRole("organizer"), "User is not an organizer"); //TODO: Change role test to privilege test
             return;
         })
     })

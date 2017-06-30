@@ -1,5 +1,7 @@
 var postCore = require('../../../core/post');
 var Q = require('q');
+var assert = require('chai').assert;
+
 // var eventCore = require('../../../core/event');
 var userListCore = require('../../../core/userList');
 var collectionCore = require('../../../core/collection');
@@ -11,22 +13,20 @@ var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
 var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
+var EventMembership = eventMembershipCore.EventMembership;
 
 // /post/
 var checkCreatePostPrivilege = function(req) {
     return Q.fcall(function() {
-        if(req.user.privileges.createPost) {
-            return;
-        }
-        else {
-            throw new Error("Bad privileges");
-        }
+        if(!req.user.privileges.createPost) throw new Error("Bad privileges");
+        return;
     })
     .then(function() {
-        return eventMembershipCore.isUserAttendee(req.user, req.event)
-        .then(function() {
-            return; //TODO: return only if user has post privileges within the event
-        });
+        return req.getEventMembership()
+        .then(function(eventMembership) {
+            assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
+            return;
+        })
     })
 };
 var createPostTemplateFromRequest = function(req, post) {
