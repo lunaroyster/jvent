@@ -8,6 +8,7 @@ var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
 var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
+var EventMembership = eventMembershipCore.EventMembership;
 
 // Errors
 var badAuthError = Error("Bad Auth");
@@ -15,12 +16,8 @@ badAuthError.status = 404;
 
 // /event/
 var checkCreateEventPrivilege = function(req) {
-    if(req.user.privileges.createEvent) {
-        return;
-    }
-    else {
-        throw new Error("Bad privileges");
-    }
+    if(!req.user.privileges.createEvent) throw new Error("Bad privileges");
+    return;
 }
 var createEventTemplateFromRequest = function(req, event) {
     return {
@@ -48,9 +45,6 @@ module.exports.createEvent = function(req, res) {
         // }
         return eventCore.createEvent(eventTemplate);
     })         //Create event (using authenticated user)
-    // .then(function(event) {
-    //     return event; // Something happens here. Oops.
-    // })
     .then(function(event) {
         var state = {
             status: "Created",
@@ -87,7 +81,11 @@ module.exports.getEvents = function(req, res) {
 var getEventAsModerator = function(req, res) {
     eventCore.getEventByURLAsModerator(req.eventURL)
     .then(function(event) {
-        return eventMembershipCore.isUserModerator(req.user, event)
+        // return eventMembershipCore.isUserModerator(req.user, event)
+        return req.getEventMembership()
+        .then(function(eventMembership) {
+            return eventMembership.hasRole("moderator");
+        })
         .then(function(result) {
             if(!result) throw Error();
             return event;
@@ -115,23 +113,13 @@ var getEventAsRegular = function(req, res) {
 
 module.exports.getEvent = function(req, res) {
     if(req.header('moderator') == 1) {
-        if(req.user) {
-            getEventAsModerator(req, res);
-        }
+        if(!req.user) throw badAuthError;
+        getEventAsModerator(req, res);
     }
     else {
         getEventAsRegular(req, res);
     }
 };
-
-// module.exports.updateEvent = function(req, res) {
-//     res.json(req);
-//     res.send();
-// };
-// module.exports.deleteEvent = function(req, res) {
-//     res.json(req);
-//     res.send();
-// };
 
 // /event/:eventID/users/[role]
 
@@ -146,16 +134,16 @@ var getUserList = function(req, res, userListPromise) {
 };
 
 module.exports.getEventAttendees = function(req, res) {
-    return getUserList(req, res, eventMembershipCore.getEventAttendees(req.event));
+    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "attendee"));
 };
 module.exports.getEventViewers = function(req, res) {
-    return getUserList(req, res, eventMembershipCore.getEventViewers(req.event));
+    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "viewer"));
 };
 module.exports.getEventInvited = function(req, res) {
-    return getUserList(req, res, eventMembershipCore.getEventInvited(req.event));
+    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "invite"));
 };
 module.exports.getEventModerators = function(req, res) {
-    return getUserList(req, res, eventMembershipCore.getEventModerators(req.event));
+    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "moderator"));
 };
 
 // /event/:eventID/join
@@ -169,19 +157,19 @@ module.exports.joinEvent = function(req, res) {
         else if(ingress=="link") {
             assert.equal(req.query.c, event.joinUrl, "Bad link");
             return;
-            // if(req.query.c==event.joinUrl) {
-            //     return;
-            // }
-            // else {
-            //     throw new Error("Bad link");
-            // }
         }
         else if(ingress=="invite") {
-            return eventMembershipCore.isUserInvited(req.user, req.event);
+            return req.getEventMembership()
+            .then(function(eventMembership) {
+                if(eventMembership.hasRole("invite")) return event;
+            })
         }
     })
     .then(function() {
-        return eventMembershipCore.addAttendee(req.user, req.event);
+        return req.getEventMembership()
+        .then(function(eventMembership) {
+            return eventMembership.addRole("attendee");
+        });
     })
     .then(function() {
         res.status(200).send();
@@ -200,15 +188,14 @@ module.exports.appendEventIfVisible = function(req, res, next) {
             return event;
         }
         else if(event.visibility=="unlisted") {
-            if(req.user) {
-                return event;
-            }
-            else {
-                throw badAuthError;
-            }
+            if(req.user) throw badAuthError;
+            return event;
         }
         else if(event.visibility=="private") {
-            return eventMembershipCore.isUserViewer(req.user, event)
+            return req.getEventMembership()
+            .then(function(eventMembership) {
+                return eventMembership.hasRole("viewer");
+            })
             .then(function(result) {
                 if(!result) throw badAuthError;
                 return event;
@@ -233,18 +220,54 @@ module.exports.appendEventURL = function(req, res, next) {
     next();
 }
 
-module.exports.appendMemberships = function(req, res, next) {
-    eventMembershipCore.getUserEventMemberships(req.user, req.event)
-    .then(function(memberships) {
-        //append memberships to req
-    })
-    .then(function() {
-        next();
-    })
-    .catch(function(error) {
-        next(error);
-    });
-};
+module.exports.appendEventGetter = function(req, res, next) {
+    var EventGetter = function() {
+        return Q.fcall(function() {
+            if(req.event) return req.event;
+            return eventCore.getEventByURL(req.eventURL || req.params.eventURL)
+            .then(function(event) {
+                if(event.visibility=="public") {
+                    return event;
+                }
+                else if(event.visibility=="unlisted") {
+                    if(!req.user) throw badAuthError;
+                    return event;
+                }
+                else if(event.visibility=="private") {
+                    return req.getEventMembership()
+                    .then(function(eventMembership) {
+                        if(eventMembership.hasRole("viewer")) return event;
+                    })
+                }
+            })
+            .then(function(event) {
+                req.event = event;
+                return event;
+            })
+            .catch(function(error) {
+                next(error);
+            })
+        })
+    }
+    req.getEvent = EventGetter;
+    next();
+}
+
+module.exports.appendEventMembershipGetter = function(req, res, next) {
+    var EventMembershipGetter = function() {
+        return Q.fcall(function() {
+            if(req.EventMembership) return req.EventMembership;
+            if(!req.user || !req.event) throw Error("Failed to resolve memberships");
+            return EventMembership.getOrCreateMembership(req.user, req.event)
+            .then(function(eventMembership) {
+                req.EventMembership = eventMembership;
+                return eventMembership;
+            })
+        });
+    };
+    req.getEventMembership = EventMembershipGetter;
+    next();
+}
 
 var returnEventIfVisible = function(user, event) {
     return Q.fcall(function() {
@@ -252,15 +275,14 @@ var returnEventIfVisible = function(user, event) {
             return event;
         }
         else if(event.visibility=="unlisted") {
-            if(user) {
-                return event;
-            }
-            else {
-                throw badAuthError;
-            }
+            if(!user) throw badAuthError;
+            return event;
         }
         else if(event.visibility=="private") {
-            return eventMembershipCore.isUserViewer(user, event)
+            return EventMembership.getMembership(user, membership)
+            .then(function(eventMembership) {
+                return eventMembership.hasRole("viewer");
+            })
             .then(function(result) {
                 if(!result) throw badAuthError;
                 return event;
@@ -273,7 +295,10 @@ var returnEventIfVisible = function(user, event) {
 };
 
 module.exports.moderatorOnly = function(req, res, next) {
-    eventMembershipCore.isUserModerator(req.user, req.event)
+    req.getEventMembership()
+    .then(function(eventMembership) {
+        return eventMembership.hasRole("moderator");
+    })
     .then(function(result) {
         if(!result) {
             return next(badAuthError);

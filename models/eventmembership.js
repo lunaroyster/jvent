@@ -2,21 +2,21 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var eventMembershipSchema = new Schema({
-    user: { 
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    event: { 
+    event: {
         type: Schema.Types.ObjectId,
         ref: 'Event'
     },
     time: Date,
-    role: String
+    roles: [String]
 });
 
 eventMembershipSchema.pre('save', function(next) {
     this.time = Date.now();
-    next(); 
+    next();
 });
 
 eventMembershipSchema.methods.setUser = function(user) {
@@ -26,5 +26,16 @@ eventMembershipSchema.methods.setUser = function(user) {
 eventMembershipSchema.methods.setEvent = function(event) {
     this.event = event._id;
 };
+
+eventMembershipSchema.methods.hasRole = function(role) {
+    return(this.roles.indexOf(role)!=-1);
+}
+
+eventMembershipSchema.methods.addRole = function(role) {
+    //TODO: verify role type
+    if(this.hasRole(role)) return false;
+    this.roles.push(role);
+    return true;
+}
 
 mongoose.model('EventMembership', eventMembershipSchema);

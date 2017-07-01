@@ -40,6 +40,6 @@ var ceRouter = express.Router(); //contextEvent Router
 
     ceRouter.use('/post', eventController.appendEventIfVisible, require('./post'));
 
-router.use('/:eventURL', eventController.appendEventURL, ceRouter);
+router.use('/:eventURL', eventController.appendEventURL, eventController.appendEventMembershipGetter, ceRouter);
 
 module.exports = router;

@@ -1,104 +1,117 @@
 var mongoose = require('mongoose');
 var Q = require('q');
 
-var EventMembership = mongoose.model('EventMembership');
+var EventMembershipModel = mongoose.model('EventMembership');
 
-var addAsRole = function(user, event, role) {
-    //TODO: Something's wrong
-    return EventMembership.findOne({user: user._id, event: event._id, role: role})
-    .then(function(eventMembership) {
-        if(!eventMembership) {
-            var newEventMembership = new EventMembership({
-                role: role
-            });
-            newEventMembership.setUser(user);
-            newEventMembership.setEvent(event);
-            return newEventMembership.save();
+var EventMembership = class EventMembership {
+    constructor(eventMembership) {
+        if(!eventMembership) throw new Error("No valid eventMembership object")
+        this._eventMembership = eventMembership;
+    }
+
+    hasPrivilege(privilege) {
+        // Compare roles with config
+        // Check for overrides
+        return true;
+    }
+    hasRole(role) {
+        return(this._eventMembership.hasRole(role));
+    }
+
+    addRole(role) {
+        //TODO verify role.
+        var eventMembership = this._eventMembership;
+        return Q.fcall(function() {
+            var addRoleSuccess = eventMembership.addRole(role);
+            if(addRoleSuccess) return eventMembership.save();
+            throw new Error("Already has role " + role);
+        })
+    }
+
+    forceSave() {
+        this._eventMembership.save()
+        .then(function(eventMembershipModel) {
+            return this;
+        })
+    }
+
+    static getMembership(user, event) {
+        return EventMembershipModel.findOne({user: user._id, event: event._id})
+        .then(function(eventMembershipObject) {
+            return new EventMembership(eventMembershipObject);
+        });
+    }
+    static getAllMembershipsForUser(user) {
+        return EventMembershipModel.find({user: user._id})
+        .then(EventMembership.deserializeObjectArray);
+    }
+    static getAllMembershipsForEvent(event) {
+        return EventMembershipModel.find({event: event._id})
+        .then(EventMembership.deserializeObjectArray);
+    }
+    static getAllMembershipsForEventByRole(event, role) {
+        return EventMembershipModel.find({event: event._id, roles: role})
+        .then(EventMembership.deserializeObjectArray);
+    }
+    static getAllMembershipsForUserByRole(user, role) {
+        return EventMembershipModel.find({user: user._id, roles: role})
+        .then(EventMembership.deserializeObjectArray);
+    }
+
+    static createMembershipModel(user, event) {
+        var newEventMembershipModel = new EventMembershipModel({});
+        newEventMembershipModel.setUser(user);
+        newEventMembershipModel.setEvent(event);
+        return(newEventMembershipModel);
+    }
+    static getOrCreateMembership(user, event) {
+        return EventMembershipModel.findOne({user: user._id, event: event._id})
+        .then(function(eventMembershipModel) {
+            if(eventMembershipModel) return(eventMembershipModel);
+            return EventMembership.createMembershipModel(user, event);
+        })
+        .then(function(eventMembershipModel) {
+            return new EventMembership(eventMembershipModel);
+        });
+    }
+    static createAndSaveMembership(user, event) {
+        return Q.fcall(function() {
+            return EventMembership.createMembershipModel(user, event);
+        })
+        .then(function(eventMembershipModel) {
+            return eventMembershipModel.save();
+        })
+        .then(function(eventMembershipModel) {
+            return newEventMembership(eventMembershipModel);
+        });
+    }
+    static createUnsavedMembership(user, event) {
+        return new EventMembership(EventMembership.createMembershipModel(user, event));
+    }
+    // static createEventMembershipObject(eventMembershipConfig) {
+    //     //TODO: Verify roles.
+    //     var newEventMembership = new EventMembershipModel({
+    //         roles: eventMembershipConfig.roles
+    //     });
+    //     newEventMembership.setUser(eventMembershipConfig.user);
+    //     newEventMembership.setEvent(eventMembershipConfig.event);
+    //     return newEventMembership.save()
+    //     .t   hen(function(eventMembership) {
+    //         return new EventMembership(eventMembership);
+    //     });
+    // }
+
+    static deserializeObjectArray(eventMembershipObjectArray) {
+        var EventMembershipArray = [];
+        for(var eventMembershipObject of eventMembershipObjectArray) {
+            EventMembershipArray.push(new EventMembership(eventMembershipObject));
         }
-        else {
-            // TODO: Complete error with status and stuff.
-            throw new Error("");
-        }
-    });
-};
-module.exports.addAttendee = function(user, event) {
-    return addAsRole(user, event, "attendee");
-};
-module.exports.addViewer = function(user, event) {
-    return addAsRole(user, event, "viewer");
-};
-module.exports.addInvite = function(user, event) {
-    //module.exports.invite breaks symmetry
-    return addAsRole(user, event, "invite");
-};  
-module.exports.addModerator = function(user, event) {
-    return addAsRole(user, event, "moderator");
+        return EventMembershipArray;
+    }
 };
 
-var isUserRole = function(user, event, role) {
-    return EventMembership.findOne({user: user._id, event: event._id, role: role})
-    .then(function(eventMembership) {
-        if(!eventMembership) {
-            return false;
-        }
-        else {
-            return true;
-        }
-    });
-};
-module.exports.isUserAttendee = function(user, event) {
-    return isUserRole(user, event, "attendee");
-};
-module.exports.isUserViewer = function(user, event) {
-    return isUserRole(user, event, "viewer");
-};
-module.exports.isUserInvited = function(user, event) {
-    return isUserRole(user, event, "invite");
-};
-module.exports.isUserModerator = function(user, event) {
-    return isUserRole(user, event, "moderator");
-};
+// module.exports = {
+//     EventMembership: EventMembership
+// };
 
-var getEventMemberships = function(event, role) {
-    return EventMembership
-    .find({role: role, event: event._id})
-    .populate('user', 'username')
-    .select('user -_id');
-};
-module.exports.getEventAttendees = function(event) {
-    return getEventMemberships(event, "attendee");
-};
-module.exports.getEventViewers = function(event) {
-    return getEventMemberships(event, "viewer");
-};
-module.exports.getEventInvited = function(event) {
-    return getEventMemberships(event, "invite");
-};
-module.exports.getEventModerators = function(event) {
-    return getEventMemberships(event, "moderator");
-};
-
-var getUserMemberships = function(user, role) {
-    return EventMembership
-    .find({role: role, user: user._id})
-    .populate('event', 'name url')
-    .select('event -_id');
-};
-module.exports.getAttendedEvents = function(user) {
-    return getUserMemberships(user, "attendee");
-};
-module.exports.getVisibleEvents = function(user) {
-    return getUserMemberships(user, "viewer");
-};
-module.exports.getInvitedEvents = function(user) {
-    return getUserMemberships(user, "invite");
-};
-module.exports.getModeratedEvents = function(user) {
-    return getUserMemberships(user, "moderator");
-};
-
-var getUserEventMemberships = function(user, event) {
-    return EventMembership
-    .find({event: event._id, user: user._id})
-    .select('role -_id');
-};
+module.exports.EventMembership = EventMembership;

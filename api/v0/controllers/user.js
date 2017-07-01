@@ -7,6 +7,7 @@ var userRequestSchema = require('../requests').user;
 var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
+var EventMembership = eventMembershipCore.EventMembership;
 
 module.exports.authenticate = function(req, res) {
     userCore.generateToken(req.user)
@@ -81,16 +82,16 @@ var getEventList = function(req, res, eventListPromise) {
 };
 
 module.exports.getAttendedEvents = function(req, res) {
-    return getEventList(req, res, eventMembershipCore.getAttendedEvents(req.user));
+    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, "attendee"));
 };
 module.exports.getVisibleEvents = function(req, res) {
-    return getEventList(req, res, eventMembershipCore.getVisibleEvents(req.user));
+    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, "viewer"));
 };
 module.exports.getInvitedEvents = function(req, res) {
-    return getEventList(req, res, eventMembershipCore.getInvitedEvents(req.user));
+    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, "invite"));
 };
 module.exports.getModeratedEvents = function(req, res) {
-    return getEventList(req, res, eventMembershipCore.getModeratedEvents(req.user));
+    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, "moderator"));
 };
 
 // Wait, what's this for?

@@ -1,6 +1,7 @@
 var Q = require('q');
 var mediaCore = require('../../../core/media');
 var eventMembershipCore = require('../../../core/eventMembership');
+var assert = require('chai').assert;
 
 var mediaRequestSchema = require('../requests').media;
 
@@ -8,21 +9,19 @@ var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
 var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
+var EventMembership = eventMembershipCore.EventMembership;
 
 var checkCreateMediaPrivilege = function(req) {
     return Q.fcall(function() {
-        if(req.user.privileges.createMedia) {
-            return;
-        }
-        else {
-            throw new Error("Bad privileges");
-        }
+        if(!req.user.privileges.createMedia) throw new Error("Bad privileges");
+        return;
     })
     .then(function() {
-        return eventMembershipCore.isUserAttendee(req.user, req.event)
-        .then(function() {
-            return; //TODO: return only if user has media privileges within the event
-        });
+        return req.getEventMembership()
+        .then(function(eventMembership) {
+            assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
+            return;
+        })
     })
 };
 module.exports.createEventMedia = function(req, res) {
