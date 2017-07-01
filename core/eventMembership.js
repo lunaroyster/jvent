@@ -27,6 +27,14 @@ var EventMembership = class EventMembership {
             throw new Error("Already has role " + role);
         })
     }
+    addRoles(roles) {
+        var eventMembership = this._eventMembership;
+        return Q.fcall(function() {
+            var addedRoles = eventMembership.addRoles(roles);
+            if(addedRoles.length>0) return eventMembership.save();
+            throw new Error("The roles " + roles + " already exist");
+        });
+    }
 
     forceSave() {
         this._eventMembership.save()
@@ -51,10 +59,12 @@ var EventMembership = class EventMembership {
     }
     static getAllMembershipsForEventByRole(event, role) {
         return EventMembershipModel.find({event: event._id, roles: role})
+        .populate('user', 'username')
         .then(EventMembership.deserializeObjectArray);
     }
     static getAllMembershipsForUserByRole(user, role) {
         return EventMembershipModel.find({user: user._id, roles: role})
+        .populate('event', 'url')
         .then(EventMembership.deserializeObjectArray);
     }
 

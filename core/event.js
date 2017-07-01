@@ -65,7 +65,7 @@ var createEvent = function(eventConfig) {
         // promises.push(eventMembershipCore.addModerator(user, event));
         promises.push(Q.fcall(function() {
             var eventMembership = EventMembership.createUnsavedMembership(user, event);
-            return eventMembership.addRole("organizer");
+            return eventMembership.addRoles(["organizer", "moderator"]);
         }))
         // promises.push(userListCore.createDefaultUserLists(event));
         return Q.all(promises)
