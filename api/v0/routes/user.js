@@ -14,10 +14,7 @@ router.get('/me', AuthOnly, userController.returnAuthenticatedUser);
 
 var eventsRouter = express.Router();
     eventsRouter.get('/', userController.getAllEvents);
-    eventsRouter.get('/viewer', userController.getVisibleEvents);
-    eventsRouter.get('/attendee', userController.getAttendedEvents);
-    eventsRouter.get('/invite', userController.getInvitedEvents);
-    eventsRouter.get('/moderator', userController.getModeratedEvents);
+    eventsRouter.get('/:role', userController.getEventsByRole)
 router.use('/events', AuthOnly, eventsRouter);
 
 module.exports = router;

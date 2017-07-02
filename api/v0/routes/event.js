@@ -17,10 +17,7 @@ var ceRouter = express.Router(); //contextEvent Router
 
     var usersRouter = express.Router(); //contextEvent/users Router
         usersRouter.get('/', eventController.getAllUsers);
-        usersRouter.get('/viewer', eventController.getEventViewers);
-        usersRouter.get('/attendee', eventController.getEventAttendees);
-        usersRouter.get('/invite', eventController.getEventInvited);
-        usersRouter.get('/moderator', eventController.getEventModerators);
+        usersRouter.get('/:role', eventController.getUsersByRole);
     ceRouter.use('/users', AuthOnly, eventController.appendEventIfVisible, usersRouter);
 
     var mediaRouter = express.Router();

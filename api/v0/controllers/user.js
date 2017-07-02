@@ -84,17 +84,8 @@ var getEventList = function(req, res, eventListPromise) {
 module.exports.getAllEvents = function(req, res) {
     return getEventList(req, res, EventMembership.getAllMembershipsForUser(req.user));
 };
-module.exports.getAttendedEvents = function(req, res) {
-    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, "attendee"));
-};
-module.exports.getVisibleEvents = function(req, res) {
-    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, "viewer"));
-};
-module.exports.getInvitedEvents = function(req, res) {
-    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, "invite"));
-};
-module.exports.getModeratedEvents = function(req, res) {
-    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, "moderator"));
+module.exports.getEventsByRole = function(req, res) {
+    return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, req.params.role));
 };
 
 // Wait, what's this for?
