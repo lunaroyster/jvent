@@ -133,6 +133,9 @@ var getUserList = function(req, res, userListPromise) {
     });
 };
 
+module.exports.getAllUsers = function(req, res) {
+    return getUserList(req, res, EventMembership.getAllMembershipsForEvent(req.event));
+}
 module.exports.getEventAttendees = function(req, res) {
     return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "attendee"));
 };
