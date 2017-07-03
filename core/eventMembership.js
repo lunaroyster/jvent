@@ -51,10 +51,12 @@ var EventMembership = class EventMembership {
     }
     static getAllMembershipsForUser(user) {
         return EventMembershipModel.find({user: user._id})
+        .populate('event', 'url')
         .then(EventMembership.deserializeObjectArray);
     }
     static getAllMembershipsForEvent(event) {
         return EventMembershipModel.find({event: event._id})
+        .populate('user', 'username')
         .then(EventMembership.deserializeObjectArray);
     }
     static getAllMembershipsForEventByRole(event, role) {

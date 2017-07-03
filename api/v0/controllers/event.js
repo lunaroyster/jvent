@@ -133,18 +133,12 @@ var getUserList = function(req, res, userListPromise) {
     });
 };
 
-module.exports.getEventAttendees = function(req, res) {
-    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "attendee"));
-};
-module.exports.getEventViewers = function(req, res) {
-    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "viewer"));
-};
-module.exports.getEventInvited = function(req, res) {
-    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "invite"));
-};
-module.exports.getEventModerators = function(req, res) {
-    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, "moderator"));
-};
+module.exports.getAllUsers = function(req, res) {
+    return getUserList(req, res, EventMembership.getAllMembershipsForEvent(req.event));
+}
+module.exports.getUsersByRole = function(req, res) {
+    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, req.params.role));
+}
 
 // /event/:eventID/join
 
