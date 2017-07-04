@@ -81,12 +81,21 @@ var getEventList = function(req, res, eventListPromise) {
     });
 };
 
-module.exports.getAllEvents = function(req, res) {
+module.exports.getAllEventMemberships = function(req, res) {
     return getEventList(req, res, EventMembership.getAllMembershipsForUser(req.user));
 };
-module.exports.getEventsByRole = function(req, res) {
+module.exports.getEventMembershipsByRole = function(req, res) {
     return getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, req.params.role));
 };
+module.exports.getEventMembership = function(req, res) {
+    return EventMembership.getMembershipByEventID(req.user, req.params.eventID)
+    .then(function(eventMembership) {
+        res.status(200).json(eventMembership);
+    })
+    .catch(function(error) {
+        res.status(error.status).json(error.message);
+    });
+}
 
 // Wait, what's this for?
 module.exports.returnAuthenticatedUser = function(req, res) {

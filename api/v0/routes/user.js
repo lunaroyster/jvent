@@ -13,8 +13,9 @@ router.get('/', AuthOnly, userController.returnAuthenticatedUser);
 router.get('/me', AuthOnly, userController.returnAuthenticatedUser);
 
 var eventsRouter = express.Router();
-    eventsRouter.get('/', userController.getAllEvents);
-    eventsRouter.get('/:role', userController.getEventsByRole)
+    eventsRouter.get('/', userController.getAllEventMemberships);
+    eventsRouter.get('/role/:role', userController.getEventMembershipsByRole);
+    eventsRouter.get('/:eventID', userController.getEventMembership); //TODO: Fix this route
 router.use('/events', AuthOnly, eventsRouter);
 
 module.exports = router;

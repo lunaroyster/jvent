@@ -45,9 +45,13 @@ var EventMembership = class EventMembership {
 
     static getMembership(user, event) {
         return EventMembershipModel.findOne({user: user._id, event: event._id})
-        .then(function(eventMembershipObject) {
-            return new EventMembership(eventMembershipObject);
-        });
+        .then(EventMembership.deserializeObject);
+    }
+    static getMembershipByEventID(user, eventID) {
+        // Same as getMembership but populates event field. TODO: Is this really required?
+        return EventMembershipModel.findOne({user: user._id, event: eventID})
+        .populate('event', 'url')
+        .then(EventMembership.deserializeObject);
     }
     static getAllMembershipsForUser(user) {
         return EventMembershipModel.find({user: user._id})
@@ -113,6 +117,10 @@ var EventMembership = class EventMembership {
     //     });
     // }
 
+    static deserializeObject(eventMembershipObject) {
+        if(!eventMembershipObject) throw Error();
+        return new EventMembership(eventMembershipObject);
+    }
     static deserializeObjectArray(eventMembershipObjectArray) {
         var EventMembershipArray = [];
         for(var eventMembershipObject of eventMembershipObjectArray) {
