@@ -93,7 +93,9 @@ module.exports.getEventMembership = function(req, res) {
         res.status(200).json(eventMembership);
     })
     .catch(function(error) {
-        res.status(error.status).json(error.message);
+        //HACK: This needs to go. Really.
+        if(error.message="No valid eventMembership object") return res.status(200).json({});
+        res.status(error.status||400).json(error.message);
     });
 }
 

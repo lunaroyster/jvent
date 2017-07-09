@@ -118,7 +118,6 @@ var EventMembership = class EventMembership {
     // }
 
     static deserializeObject(eventMembershipObject) {
-        if(!eventMembershipObject) throw Error();
         return new EventMembership(eventMembershipObject);
     }
     static deserializeObjectArray(eventMembershipObjectArray) {
