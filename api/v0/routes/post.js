@@ -7,6 +7,7 @@ var AuthOnly = authController.AuthOnly;
 
 router.post('/', AuthOnly, postController.createPost);
 router.get('/', postController.getPosts);
+
 router.get('/top', postController.getTopPosts);
 router.get('/hot', postController.getHotPosts);
 
