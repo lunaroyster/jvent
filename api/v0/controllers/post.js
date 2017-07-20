@@ -9,6 +9,8 @@ var mediaCore = require('../../../core/media');
 var eventMembershipCore = require('../../../core/eventMembership');
 var postRequestSchema = require('../requests').post;
 
+var postRankQueryCore = require('../../../core/postRankQuery');
+
 var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
@@ -115,6 +117,19 @@ module.exports.getPost = function(req, res) {
     var responseObject = {};
     responseObject.post = req.post;
     res.status(200).json(responseObject);
+};
+
+module.exports.getTopPosts = function(req, res) {
+    postRankQueryCore.topPosts(req.event)
+    .then(function(posts) {
+        res.status(200).json(posts);
+    });
+};
+module.exports.getHotPosts = function(req, res) {
+    postRankQueryCore.hotPosts(req.event)
+    .then(function(posts) {
+        res.status(200).json(posts);
+    });
 };
 
 // module.exports.updatePost = function(req, res) {

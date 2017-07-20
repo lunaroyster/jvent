@@ -7,11 +7,13 @@ var AuthOnly = authController.AuthOnly;
 
 router.post('/', AuthOnly, postController.createPost);
 router.get('/', postController.getPosts);
+router.get('/top', postController.getTopPosts);
+router.get('/hot', postController.getHotPosts);
 
 var cpRouter = express.Router();
     cpRouter.get('/', postController.appendPost, postController.getPost);
     cpRouter.patch('/vote', postController.appendPost, postController.vote);
-
+    
     cpRouter.use('/comment', postController.appendPost, require('./comment'));
 router.use('/:postURL', postController.appendPostURL, cpRouter);
 
