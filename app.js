@@ -11,6 +11,8 @@ var Raven = require('raven');
 
 Raven.config(process.env.__DSN__).install();
 
+global.config = require('./config/global');
+
 require('./models/index');
 require('./core/passport');
 
