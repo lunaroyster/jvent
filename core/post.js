@@ -6,6 +6,8 @@ var eventCore = require('./event');
 var urlCore = require('./url');
 var collectionCore = require('./collection');
 var mediaCore = require('./media');
+var postRankQuery = require('./postRankQuery');
+
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
@@ -23,7 +25,6 @@ var createPostDocument = function(postConfig, mediaDelegate) {
     newPost.setEvent(postConfig.event);
     newPost.setSubmitter(postConfig.user);
     if(mediaDelegate) newPost.setMedia(mediaDelegate);
-    console.log(newPost);
     return newPost;
 };
 var savePost = function(post) {
@@ -55,8 +56,11 @@ var createPost = function(postConfig, mediaDelegate) {
             return savePost(newPost)
             .then(function(post) {
                 sc.addPost(post);
-                return sc.save()
-                .then(function(sc) {
+                var promises = [];
+                promises.push(vote(postConfig.user, post, 1));
+                promises.push(sc.save());
+                return Q.all(promises)
+                .then(function() {
                     return post;
                 });
             });
@@ -81,6 +85,12 @@ module.exports.getEventPosts = function(event) {
     // Can use either supercollection or direct. Change this implementation if required.
     var postQuery = Post.find({parentEvent: event._id});
     return postQuery.exec();
+};
+module.exports.getRankedEventPosts = function(event, rank) {
+    return Q.fcall(function() {
+        if(rank=="top") return postRankQuery.topPosts(event);
+        if(rank=="hot") return postRankQuery.hotPosts(event);
+    });
 };
 module.exports.getPostByID = function(event, postID) {
     var postQuery = Post.findOne({parentEvent: event._id, _id: postID}).populate('media.media');
@@ -108,7 +118,7 @@ var postFindQuery = function() {
 module.exports.postFindQuery = postFindQuery;
 
 // Post Vote
-module.exports.vote = function(user, post, direction) {
+var vote = function(user, post, direction) {
     return Q.fcall(function() {
         return Vote.findOne({user: user._id, post: post._id})
         .then(function(vote) {
@@ -154,3 +164,4 @@ module.exports.vote = function(user, post, direction) {
         });
     });
 };
+module.exports.vote = vote;
