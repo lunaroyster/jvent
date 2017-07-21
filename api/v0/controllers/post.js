@@ -9,6 +9,8 @@ var mediaCore = require('../../../core/media');
 var eventMembershipCore = require('../../../core/eventMembership');
 var postRequestSchema = require('../requests').post;
 
+var postRankQueryCore = require('../../../core/postRankQuery');
+
 var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
@@ -88,15 +90,30 @@ module.exports.createPost = function(req, res) {
     });
 };
 
-module.exports.getPosts = function(req, res) {
-    // get a promise
-    // check req for querystring or parameters and format query
-    var responseObject = {};
-    return postCore.getEventPosts(req.event)
+// module.exports.getPosts = function(req, res) {
+//     // get a promise
+//     // check req for querystring or parameters and format query
+//     var responseObject = {};
+//     return postCore.getEventPosts(req.event)
+//     .then(function(posts) {
+//         responseObject.posts = posts;
+//         res.status(200);
+//         res.json(responseObject);
+//     });
+// };
+module.exports.getEventPosts = function(req, res) {
+    return Q.fcall(function() {
+        var rankType = req.query.rank || "hot";
+        assert.include(["hot", "top"], rankType, "Not a valid rank");
+        return(postCore.getRankedEventPosts(req.event, rankType));
+    })
     .then(function(posts) {
-        responseObject.posts = posts;
-        res.status(200);
-        res.json(responseObject);
+        res.status(200).json({posts: posts});
+    })
+    .catch(function(error) {
+        //TODO
+        // res.status(400).json(error)
+        res.status(400).json(error.message);
     });
 };
 
@@ -116,6 +133,7 @@ module.exports.getPost = function(req, res) {
     responseObject.post = req.post;
     res.status(200).json(responseObject);
 };
+
 
 // module.exports.updatePost = function(req, res) {
 //     res.json(req);
