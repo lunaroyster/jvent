@@ -6,10 +6,7 @@ var authController = require('../controllers/auth');
 var AuthOnly = authController.AuthOnly;
 
 router.post('/', AuthOnly, postController.createPost);
-router.get('/', postController.getPosts);
-
-router.get('/top', postController.getTopPosts);
-router.get('/hot', postController.getHotPosts);
+router.get('/', postController.getEventPosts);
 
 var cpRouter = express.Router();
     cpRouter.get('/', postController.appendPost, postController.getPost);

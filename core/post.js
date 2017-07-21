@@ -6,6 +6,8 @@ var eventCore = require('./event');
 var urlCore = require('./url');
 var collectionCore = require('./collection');
 var mediaCore = require('./media');
+var postRankQuery = require('./postRankQuery');
+
 var Event = mongoose.model('Event');
 var Post = mongoose.model('Post');
 var Vote = mongoose.model('Vote');
@@ -81,6 +83,12 @@ module.exports.getEventPosts = function(event) {
     // Can use either supercollection or direct. Change this implementation if required.
     var postQuery = Post.find({parentEvent: event._id});
     return postQuery.exec();
+};
+module.exports.getRankedEventPosts = function(event, rank) {
+    return Q.fcall(function() {
+        if(rank=="top") return postRankQuery.topPosts(event);
+        if(rank=="hot") return postRankQuery.hotPosts(event);
+    });
 };
 module.exports.getPostByID = function(event, postID) {
     var postQuery = Post.findOne({parentEvent: event._id, _id: postID}).populate('media.media');
