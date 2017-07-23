@@ -99,6 +99,31 @@ module.exports.getEventMembership = function(req, res) {
     });
 }
 
+module.exports.getSelfPosts = function(req, res) {
+    return userCore.getSelfPosts(req.user)
+    .then(function(posts) {
+        res.status(200).json({posts:posts})
+    });
+};
+module.exports.getSelfMedia = function(req, res) {
+    return userCore.getSelfMedia(req.user)
+    .then(function(media) {
+        res.status(200).json({media:media})
+    });
+};
+module.exports.getSelfEventPosts = function(req, res) {
+    return userCore.getSelfPosts(req.user, req.event)
+    .then(function(posts) {
+        res.status(200).json({posts:posts})
+    });
+};
+module.exports.getSelfEventMedia = function(req, res) {
+    return userCore.getSelfMedia(req.user, req.event)
+    .then(function(media) {
+        res.status(200).json({media:media})
+    });
+};
+
 // Wait, what's this for?
 module.exports.returnAuthenticatedUser = function(req, res) {
     var user = _.pick(req.user, '_id', 'email', 'username');
