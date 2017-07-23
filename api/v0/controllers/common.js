@@ -42,6 +42,10 @@ module.exports.appendEventURL = function(req, res, next) {
     req.eventURL = req.params.eventURL;
     next();
 }
+module.exports.appendEventID = function(req, res, next) {
+    req.eventID = req.params.eventID;
+    next();
+}
 
 module.exports.appendEventGetter = function(req, res, next) {
     var EventGetter = function() {
@@ -93,7 +97,13 @@ module.exports.appendEventMembershipGetter = function(req, res, next) {
 }
 
 module.exports.appendEventIfVisible = function(req, res, next) {
-    eventCore.getEventByURL(req.eventURL || req.params.eventURL)
+    Q.fcall(function() {
+        var eventID = req.eventID || req.params.eventID;
+        var eventURL = req.eventURL || req.params.eventURL;
+        console.log(eventID, eventURL)
+        if(eventURL) return eventCore.getEventByURL(eventURL);
+        return eventCore.getEventByID(eventID);
+    })
     .then(function(event) {
         if(event.visibility=="public") {
             return event;
