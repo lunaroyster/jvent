@@ -29,9 +29,11 @@ var meRouter = express.Router();
     var meEventRouter = express.Router();
         meEventRouter.get('/', userController.getEventMembership);
         meEventRouter.get('/post', userController.getSelfEventPosts);
+        meEventRouter.get('/post/votes', userController.getEventPostVotes);
         meEventRouter.get('/media', userController.getSelfEventMedia);
     meRouter.use('/event/:eventID', commonController.appendEventID, commonController.appendEventIfVisible, meEventRouter)
     meRouter.get('/post', userController.getSelfPosts);
+    meRouter.get('/post/votes', userController.getAllPostVotes)
     meRouter.get('/media', userController.getSelfMedia);
 router.use('/me', AuthOnly, meRouter);
 

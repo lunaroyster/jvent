@@ -4,6 +4,8 @@ var userCore = require('../../../core/user');
 var eventMembershipCore = require('../../../core/eventMembership');
 var userRequestSchema = require('../requests').user;
 
+var userQueryCore = require('../../../core/userQuery');
+
 var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
@@ -123,6 +125,19 @@ module.exports.getSelfEventMedia = function(req, res) {
         res.status(200).json({media:media})
     });
 };
+
+module.exports.getEventPostVotes = function(req, res) {
+    return userQueryCore.getUserPostVotes(req.user, req.event)
+    .then(function(votes) {
+        res.status(200).json({votes: votes})
+    })
+};
+module.exports.getAllPostVotes = function(req, res) {
+    return userQueryCore.getUserPostVotes(req.user)
+    .then(function(votes) {
+        res.status(200).json({votes: votes})
+    })
+}
 
 // Wait, what's this for?
 module.exports.returnAuthenticatedUser = function(req, res) {
