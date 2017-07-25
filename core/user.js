@@ -3,8 +3,8 @@ var jwt = require('jsonwebtoken');
 
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
-
-
+var Post = mongoose.model('Post');
+var Media = mongoose.model('Media');
 module.exports.createUser = function(userObj) {
     var newUser = createUser(userObj);
     return newUser.save();
@@ -40,6 +40,20 @@ module.exports.getUserByUsername = function(username) {
     .then(returnUserOrError);
 };
 
+module.exports.getSelfPosts = function(user, event) {
+    var findQuery = {"submitter.user": user._id};
+    if(event) findQuery.parentEvent = event._id;
+    console.log(findQuery)
+    var postQuery = Post.find(findQuery);
+    return postQuery.exec();
+};
+module.exports.getSelfMedia = function(user, event) {
+    var findQuery = {"submitter.user": user._id};
+    if(event) findQuery.event = event._id;
+    var mediaQuery = Media.find(findQuery);
+    return mediaQuery.exec();
+};
+
 module.exports.changePassword = function(user, password) {
     return Q.fcall(function() {
         //TODO: Check password validity
@@ -65,4 +79,3 @@ module.exports.generateToken = function(user) {
         return token;
     });
 };
-

@@ -8,10 +8,10 @@ module.exports.getUserPostVotes = function(user, event) {
         var deferred = Q.defer();
         var postVotes = [];
         var $matchStage = {
-                user: user._id
+            user: user._id
         }
         if(event) {
-            $matchStage.$match.event = event._id;
+            $matchStage.event = event._id;
         }
         var cursor = Vote.aggregate([
             {
@@ -20,7 +20,7 @@ module.exports.getUserPostVotes = function(user, event) {
             {
                 $group: {
                     _id: null,
-                    entries: {
+                    votes: {
                         $addToSet: {
                             post: "$post",
                             direction: "$direction"
@@ -31,12 +31,8 @@ module.exports.getUserPostVotes = function(user, event) {
         ])
         .cursor({batchSize:2}).exec();
         cursor.on('data', function(postVotes) {
-            postVotes = postVotes;
-        });
-        cursor.on('end', function() {
-            deferred.resolve(postVotes);
+            deferred.resolve(postVotes.votes);
         });
         return deferred.promise;
     });
 };
-
