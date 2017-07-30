@@ -4,6 +4,8 @@ var userCore = require('../../../core/user');
 var eventMembershipCore = require('../../../core/eventMembership');
 var userRequestSchema = require('../requests').user;
 
+var userQueryCore = require('../../../core/userQuery');
+
 var common = require('./common');
 var validateRequest = common.validateRequest;
 var packError = common.packError;
@@ -97,6 +99,44 @@ module.exports.getEventMembership = function(req, res) {
         if(error.message="No valid eventMembership object") return res.status(200).json({});
         res.status(error.status||400).json(error.message);
     });
+}
+
+module.exports.getSelfPosts = function(req, res) {
+    return userCore.getSelfPosts(req.user)
+    .then(function(posts) {
+        res.status(200).json({posts:posts})
+    });
+};
+module.exports.getSelfMedia = function(req, res) {
+    return userCore.getSelfMedia(req.user)
+    .then(function(media) {
+        res.status(200).json({media:media})
+    });
+};
+module.exports.getSelfEventPosts = function(req, res) {
+    return userCore.getSelfPosts(req.user, req.event)
+    .then(function(posts) {
+        res.status(200).json({posts:posts})
+    });
+};
+module.exports.getSelfEventMedia = function(req, res) {
+    return userCore.getSelfMedia(req.user, req.event)
+    .then(function(media) {
+        res.status(200).json({media:media})
+    });
+};
+
+module.exports.getEventPostVotes = function(req, res) {
+    return userQueryCore.getUserPostVotes(req.user, req.event)
+    .then(function(votes) {
+        res.status(200).json({votes: votes})
+    })
+};
+module.exports.getAllPostVotes = function(req, res) {
+    return userQueryCore.getUserPostVotes(req.user)
+    .then(function(votes) {
+        res.status(200).json({votes: votes})
+    })
 }
 
 // Wait, what's this for?

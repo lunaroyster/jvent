@@ -108,7 +108,7 @@ module.exports.queryEvents = function(query) {
 module.exports.getEventByID = function(eventID) {
     return Event.findOne({_id: eventID})
     .populate('backgroundImage')
-    .select('-_id name byline description url organizer.name ingress visibility timeOfCreation superCollection backgroundImage')
+    .select('name byline description url organizer.name ingress visibility timeOfCreation superCollection backgroundImage')
     .then(returnEventOrError);
 };
 module.exports.getEventByURL = function(url) {

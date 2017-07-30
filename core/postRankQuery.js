@@ -104,7 +104,7 @@ module.exports.hotPosts = function(event) {
             {
                 $addFields: {
                     score: {$sum: [
-                        {$cond: {if: {$gte: ["$votes", 1]}, then: "$votes", else: 1}}, 
+                        {$log10: {$cond: {if: {$gte: ["$votes", 1]}, then: "$votes", else: 1}}}, 
                         {$multiply: [
                             {$subtract: ["$time.creation", global.config.epoch]}, 
                             {$switch: {branches: [
