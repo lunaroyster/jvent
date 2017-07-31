@@ -33,14 +33,29 @@ var commentSchema = new Schema({
         edits: [{
             type: Date
         }]
+    },
+    url: {
+        type: String,
+        index: true
+        // unique: true
     }
 });
 
-commentSchema.methods.attachToParent = function(parentComment) {
+commentSchema.methods.attachToParentComment = function(parentComment) {
+    if(!parentComment) {
+        this.makeRootComment();
+        return;
+    }
     this.degree = parentComment.degree + 1;
-    this.isRoot = true;
+    this.isRoot = false;
     this.parent = parentComment._id;
 };
+
+commentSchema.methods.makeRootComment = function() {
+    this.degree = 0;
+    this.isRoot = true;
+    this.parent = null;
+}
 
 commentSchema.methods.setBody = function(body) {
     this.body = body;
