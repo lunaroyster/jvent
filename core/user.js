@@ -42,7 +42,7 @@ module.exports.getUserByUsername = function(username) {
 
 module.exports.getSelfPosts = function(user, event) {
     var findQuery = {"submitter.user": user._id};
-    if(event) findQuery.parentEvent = event._id;
+    if(event) findQuery.event = event._id;
     console.log(findQuery)
     var postQuery = Post.find(findQuery);
     return postQuery.exec();

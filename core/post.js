@@ -34,7 +34,7 @@ var savePost = function(post) {
 var getUniquePostURL = function(length, event) {
     return Q.fcall(function() {
         var url = urlCore.generateRandomUrl(length);
-        return Post.findOne({url: url, parentEvent: event._id})
+        return Post.findOne({url: url, event: event._id})
         .then(function(post) {
             if(!post) {
                 return url;
@@ -83,7 +83,7 @@ module.exports.createPost = function(postConfig, mediaConfig) {
 module.exports.getEventPosts = function(event) {
     //TODO: Queries
     // Can use either supercollection or direct. Change this implementation if required.
-    var postQuery = Post.find({parentEvent: event._id});
+    var postQuery = Post.find({event: event._id});
     return postQuery.exec();
 };
 module.exports.getRankedEventPosts = function(event, rank) {
@@ -93,12 +93,12 @@ module.exports.getRankedEventPosts = function(event, rank) {
     });
 };
 module.exports.getPostByID = function(event, postID) {
-    var postQuery = Post.findOne({parentEvent: event._id, _id: postID}).populate('media.media');
+    var postQuery = Post.findOne({event: event._id, _id: postID}).populate('media.media');
     return postQuery.exec()
     .then(returnPostOrError);
 };
 module.exports.getPostByURL = function(event, postURL) {
-    var postQuery = Post.findOne({parentEvent: event._id, url: postURL}).populate('media.media');
+    var postQuery = Post.findOne({event: event._id, url: postURL}).populate('media.media');
     return postQuery.exec()
     .then(returnPostOrError);
 };

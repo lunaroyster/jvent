@@ -31,7 +31,7 @@ var postSchema = new Schema({
             type: Date
         }]
     },
-    parentEvent: {
+    event: {
         type: Schema.Types.ObjectId,
         ref: 'Event'
     },
@@ -75,7 +75,7 @@ postSchema.methods.setSubmitter = function(user) {
 };
 
 postSchema.methods.setEvent = function(event) {
-    this.parentEvent = event._id;
+    this.event = event._id;
 };
 
 postSchema.methods.setText = function(text) {
