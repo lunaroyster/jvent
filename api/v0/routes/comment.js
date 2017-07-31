@@ -9,7 +9,7 @@ router.post('/', AuthOnly, commentController.createComment);
 router.get('/', commentController.getComments);
 
 var ccRouter = express.Router();
-    ccRouter.get('/', commentController.getCommentByURL);
+    ccRouter.get('/', commentController.appendComment, commentController.getCommentByURL);
     ccRouter.patch('/', AuthOnly, commentController.updateCommentByURL);
     ccRouter.delete('/', AuthOnly, commentController.deleteCommentByURL);
 router.use('/:commentURL', commentController.appendCommentURL, ccRouter);

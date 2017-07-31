@@ -62,14 +62,22 @@ module.exports.createComment = function(req, res) {
 };
 
 module.exports.getComments = function(req, res) {
-    res.json(req);
-    res.send();
+    Q.fcall(function() {
+        return commentCore.getComments(req.event, req.post)
+    })
+    .then(function(comments) {
+        res.status(200).json({comments: comments});
+    })
+    .catch(function(error) {
+        res.status(400).json(error.message);
+    });
 };
 
 // /comment/:commentURL
 module.exports.getCommentByURL = function(req, res) {
-    // res.json(req);
-    res.send(JSON.stringify(res));
+    var responseObject = {};
+    responseObject.comment = req.comment;
+    res.status(200).json(responseObject);
 };
 
 module.exports.updateCommentByURL = function(req, res) {
@@ -86,3 +94,10 @@ module.exports.appendCommentURL = function(req, res, next) {
     req.commentURL = req.params.commentURL;
     next();
 }
+module.exports.appendComment = function(req, res, next) {
+    commentCore.getCommentByURL(req.event, req.post, req.commentURL)
+    .then(function(comment) {
+        req.comment = comment;
+        next();
+    });
+};

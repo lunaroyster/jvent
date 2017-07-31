@@ -17,12 +17,13 @@ var returnCommentOrError = function(comment) {
 
 var createCommentDocument = function(commentConfig) {
     var newComment = new Comment({
-        body: commentConfig.body
+        body: commentConfig.body,
+        url: commentConfig.url
     });
     newComment.attachToParentComment(commentConfig.parentComment);
     newComment.setEvent(commentConfig.event);
     newComment.setPost(commentConfig.post);
-    newComment.setSubmitter(commentConfig.submitter);
+    newComment.setSubmitter(commentConfig.user);
     return newComment;
 };
 var saveComment = function(comment) {
@@ -47,9 +48,19 @@ module.exports.createComment = function(commentConfig) {
         commentConfig.url = newCommentUrl;
         var newComment = createCommentDocument(commentConfig);
         return saveComment(newComment);
-    })
+    });
 };
 
 //Comment fetching
+module.exports.getComments = function(event, post) {
+    var commentQuery = Comment
+    .find({event: event._id, post: post._id});
+    return commentQuery.exec();
+};
 
+module.exports.getCommentByURL = function(event, post, commentURL) {
+    var commentQuery = Comment.findOne({event: event._id, post: post._id, url: commentURL});
+    return commentQuery.exec()
+    .then(returnCommentOrError);
+}
 //Comment vote
