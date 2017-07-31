@@ -36,11 +36,11 @@ var createPostTemplateFromRequest = function(req, post) {
     return {
         title: post.title,
         content: {
-           text: post.content.text,
-           link: post.content.link
-       },
-       user: req.user,
-       event: req.event
+            text: post.content.text,
+            link: post.content.link
+        },
+        user: req.user,
+        event: req.event
     };
 };
 module.exports.createPost = function(req, res) {

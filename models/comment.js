@@ -29,7 +29,7 @@ var commentSchema = new Schema({
     time: {
         creation: {
             type: Date
-        }
+        },
         edits: [{
             type: Date
         }]

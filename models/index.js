@@ -1,6 +1,7 @@
 // BRING IN YOUR SCHEMAS & MODELS
 require('./event');
 require('./post');
+require('./comment')
 require('./collection');
 require('./supercollection');
 require('./compilation');
