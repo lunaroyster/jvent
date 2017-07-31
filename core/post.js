@@ -36,12 +36,8 @@ var getUniquePostURL = function(length, event) {
         var url = urlCore.generateRandomUrl(length);
         return Post.findOne({url: url, event: event._id})
         .then(function(post) {
-            if(!post) {
-                return url;
-            }
-            else {
-                return getUniquePostURL(length, event);
-            }
+            if(!post) return url;
+            return getUniquePostURL(length, event);
         });
     });
 };
