@@ -46,6 +46,13 @@ module.exports.createComment = function(commentConfig) {
     })
     .then(function(newCommentUrl) {
         commentConfig.url = newCommentUrl;
+        if(!commentConfig.parent) return;
+        return getCommentByID(commentConfig.event, commentConfig.post, commentConfig.parent)
+        .then(function(parentComment) {
+            commentConfig.parentComment = parentComment;
+        })
+    })
+    .then(function() {
         var newComment = createCommentDocument(commentConfig);
         return saveComment(newComment);
     });
@@ -57,6 +64,13 @@ module.exports.getComments = function(event, post) {
     .find({event: event._id, post: post._id});
     return commentQuery.exec();
 };
+
+var getCommentByID = function(event, post, commentID) {
+    var commentQuery = Comment.findOne({event: event._id, post: post._id, _id: commentID});
+    return commentQuery.exec()
+    .then(returnCommentOrError);
+};
+module.exports.getCommentByID = getCommentByID;
 
 module.exports.getCommentByURL = function(event, post, commentURL) {
     var commentQuery = Comment.findOne({event: event._id, post: post._id, url: commentURL});

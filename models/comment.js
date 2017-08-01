@@ -24,6 +24,10 @@ var commentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Comment'
     },
+    tree: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    }],
     degree: Number,
     body: String,
     time: {
@@ -49,12 +53,15 @@ commentSchema.methods.attachToParentComment = function(parentComment) {
     this.degree = parentComment.degree + 1;
     this.isRoot = false;
     this.parent = parentComment._id;
+    this.tree = parentComment.tree;
+    this.tree.push(parentComment._id);
 };
 
 commentSchema.methods.makeRootComment = function() {
     this.degree = 0;
     this.isRoot = true;
     this.parent = null;
+    this.tree = [];
 }
 
 commentSchema.methods.setBody = function(body) {

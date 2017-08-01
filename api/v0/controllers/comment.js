@@ -28,6 +28,7 @@ var createCommentTemplateFromRequest = function(req, comment) {
     if(!comment) return;
     return {
         body: comment.body,
+        parent: comment.parent,
         user: req.user,
         event: req.event,
         post: req.post
@@ -41,8 +42,8 @@ module.exports.createComment = function(req, res) {
         return checkCreateCommentPrivilege(req);
     })
     .then(function() {
-        var commentTemplate = createCommentTemplateFromRequest(req, req.body.comment);
-        return commentCore.createComment(commentTemplate);
+        var commentConfig = createCommentTemplateFromRequest(req, req.body.comment);
+        return commentCore.createComment(commentConfig);
     })
     .then(function(comment) {
         var state = {
