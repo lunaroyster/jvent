@@ -8,9 +8,10 @@ var AuthOnly = authController.AuthOnly;
 router.post('/', AuthOnly, commentController.createComment);
 router.get('/', commentController.getComments);
 
-router.get('/:commentID', commentController.getCommentByID);
-router.patch('/:commentID', AuthOnly, commentController.updateCommentByID);
-router.delete('/:commentID', AuthOnly, commentController.deleteCommentByID);
-// router.use('/:postID/comment', require('./comment'));
+var ccRouter = express.Router();
+    ccRouter.get('/', commentController.appendComment, commentController.getCommentByURL);
+    ccRouter.patch('/', AuthOnly, commentController.updateCommentByURL);
+    ccRouter.delete('/', AuthOnly, commentController.deleteCommentByURL);
+router.use('/:commentURL', commentController.appendCommentURL, ccRouter);
 
 module.exports = router;

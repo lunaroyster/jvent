@@ -24,23 +24,45 @@ var commentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Comment'
     },
+    tree: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    }],
     degree: Number,
     body: String,
     time: {
         creation: {
             type: Date
-        }
+        },
         edits: [{
             type: Date
         }]
+    },
+    url: {
+        type: String,
+        index: true
+        // unique: true
     }
 });
 
-commentSchema.methods.attachToParent = function(parentComment) {
+commentSchema.methods.attachToParentComment = function(parentComment) {
+    if(!parentComment) {
+        this.makeRootComment();
+        return;
+    }
     this.degree = parentComment.degree + 1;
-    this.isRoot = true;
+    this.isRoot = false;
     this.parent = parentComment._id;
+    this.tree = parentComment.tree;
+    this.tree.push(parentComment._id);
 };
+
+commentSchema.methods.makeRootComment = function() {
+    this.degree = 0;
+    this.isRoot = true;
+    this.parent = null;
+    this.tree = [];
+}
 
 commentSchema.methods.setBody = function(body) {
     this.body = body;

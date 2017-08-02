@@ -41,7 +41,7 @@ voteSchema.methods.setUser = function(user) {
 };
 voteSchema.methods.setPost = function(post) {
     this.post = post._id;
-    this.event = post.parentEvent;
+    this.event = post.event;
 };
 
 voteSchema.pre('save', function(next) {
