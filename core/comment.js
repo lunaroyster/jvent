@@ -49,6 +49,7 @@ module.exports.createComment = function(commentConfig) {
         if(!commentConfig.parent) return;
         return getCommentByID(commentConfig.event, commentConfig.post, commentConfig.parent)
         .then(function(parentComment) {
+            if(!parentComment) throw new Error("Can't find that parent");
             commentConfig.parentComment = parentComment;
         })
     })
@@ -63,6 +64,42 @@ module.exports.getComments = function(event, post) {
     var commentQuery = Comment
     .find({event: event._id, post: post._id});
     return commentQuery.exec();
+};
+
+module.exports.getCommentTree = function(event, post) {
+    var toTree = function(comments) {
+        if(comments.length==0) return [];
+        comments.sort(function(x, y) {return -(x.degree-y.degree)}) //Sorts by degree, descending.
+        var treeDegree = comments[0].degree; //Max degree
+        var commentsByDegree = {};
+        comments.forEach(function(comment) {
+            //Separates comments by degree.
+            var comments = [];
+            comment.comments = comments;
+            if(commentsByDegree.hasOwnProperty(comment.degree)) {
+                commentsByDegree[comment.degree].push(comment);
+            }
+            else {
+                commentsByDegree[comment.degree] = [comment];
+            }
+        });
+        for(var i = treeDegree-1; i >=0; i--) {
+            for(var comment of commentsByDegree[i+1]) {
+                for(var parentComment of commentsByDegree[i]) {
+                    if(comment.parent.toString() != parentComment._id.toString()) continue;
+                    parentComment.comments.push(comment);
+                }
+            }
+        }
+        return commentsByDegree[0];
+    }
+    var commentQuery = Comment
+    .find({event: event._id, post: post._id})
+    .lean();
+    return commentQuery.exec()
+    .then(function(comments) {
+        return toTree(comments);
+    });
 };
 
 var getCommentByID = function(event, post, commentID) {
