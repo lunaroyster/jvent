@@ -3,5 +3,6 @@ module.exports = {
     post: require('./post'),
     comment: require('./comment'),
     user: require('./user'),
-    eventSettings: require('./eventSettings')
+    eventSettings: require('./eventSettings'),
+    service: require('./service')
 };
