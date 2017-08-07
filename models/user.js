@@ -47,6 +47,10 @@ var userSchema = new Schema({
         createMedia: {
             type: Boolean,
             default: true
+        },
+        uploadImage: {
+            type: Boolean,
+            default: true
         }
     }
 });
