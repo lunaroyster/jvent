@@ -25,6 +25,7 @@
     "jade": "~1.11.0",
     "jsonwebtoken": "^7.4.1",
     "less": "^2.7.2",
+    "mime-types": "^2.1.16",
     "mongoose": "^4.11.1",
     "mongoose-unique-validator": "^1.0.3",
     "morgan": "~1.7.0",
