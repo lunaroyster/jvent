@@ -1,12 +1,13 @@
 module.exports.getImageUploadToken = {
-    'file-name': {
+    //TODO: Either one is acceptable.
+    'fileName': {
         in: 'query',
-        notEmpty: true,
+        // notEmpty: true,
         errorMessage: "Bad file name"
     },
-    'file-type': {
+    'fileType': {
         in: 'query',
-        notEmpty: true,
+        // notEmpty: true,
         errorMessage: "Bad file type"
     }
 };
