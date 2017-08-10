@@ -4,6 +4,7 @@ var aws = require('aws-sdk');
 var mime = require('mime-types')
 
 var S3_BUCKET = "jvent-media";
+var S3_REGION = "us-east-2"
 var urlCore = require('../url');
 
 module.exports.generateImageUploadToken = function(fileName, fileType) {
@@ -12,12 +13,13 @@ module.exports.generateImageUploadToken = function(fileName, fileType) {
     };
     return Q.fcall(function() {
         var deferred = Q.defer();
-        var s3 = new aws.S3({signatureVersion: 'v4', region: 'us-east-2'});
+        var s3 = new aws.S3({signatureVersion: 'v4', region: S3_REGION});
         if(!fileType) fileType = mime.lookup(fileName);
         assert.include(["image/png", "image/jpeg"], fileType, "Bad file type");
+        var awsFileName = generateFileName();
         var s3Params = {
             Bucket: S3_BUCKET,
-            Key: generateFileName(),
+            Key: awsFileName,
             Expires: 60,
             ContentType: fileType,
             ACL: 'public-read'
@@ -26,7 +28,7 @@ module.exports.generateImageUploadToken = function(fileName, fileType) {
             if(err) throw deferred.reject(err);
             return deferred.resolve({
                 signedRequest: data,
-                url: `https://${S3_BUCKET}.s3.amazonaws.com/${generateFileName()}`
+                url: `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${awsFileName}`
             });
         });
         return deferred.promise;

@@ -23,7 +23,6 @@ module.exports.getImageUploadToken = function(req, res) {
         return checkCreateMediaPrivilege(req);
     })
     .then(function() {
-        
         return imageServiceCore.generateImageUploadToken(req.query["fileName"], req.query["fileType"]);
     })
     .then(function(uploadToken) {
