@@ -10,3 +10,4 @@ require('./vote');
 require('./eventmembership');
 require('./media');
 require('./userlist');
+require('./location');
