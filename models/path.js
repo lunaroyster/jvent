@@ -9,5 +9,5 @@ module.exports = {
     eventMembership: require('./eventmembership'),
     media: require('./media'),
     userList: require('./userlist'),
-    location: require('./location')
+    venue: require('./venue')
 };

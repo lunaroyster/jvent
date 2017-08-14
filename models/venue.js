@@ -1,12 +1,10 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var locationSchema = new Schema({
-    event: {
-        type: Schema.Types.ObjectId,
-        ref: 'Event'
-    },
-    loc: {
+var venueSchema = new Schema({
+    name: String,
+    //Full address
+    location: {
         'type': {
             type: String,
             required: true,
@@ -18,6 +16,11 @@ var locationSchema = new Schema({
             }
         ]
     },
+    //Map entities
+    event: {
+        type: Schema.Types.ObjectId,
+        ref: 'Event'
+    }, // Temporary. Venues are independant from events.
     time: {
         creation:  {
             type: Date
@@ -28,11 +31,11 @@ var locationSchema = new Schema({
     }
 });
 
-locationSchema.pre('save', function(next) {
+venueSchema.pre('save', function(next) {
     if(this.isNew) {
         this.time.creation = Date.now();
     }
     next();
 });
 
-mongoose.model('Location', locationSchema);
+mongoose.model('Venue', venueSchema);
