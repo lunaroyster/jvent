@@ -1,26 +1,17 @@
-var seedrandom  = require("seedrandom");
+var RNG = require('./RNG');
+var prototypes = require('./prototypes');
 
-var RNG = function(seed) {
-    if(!seed) seed = seedrandom()();
-    return function(iteration) {
-        if(!iteration) iteration = 0;
-        return seedrandom(seed+iteration).int32(); // Use a linear congruential generator
-    };
-};
-
-var Event = class Event {
+var Event = class Event extends prototypes.objectPrototype {
     constructor(seed) {
+        super();
         this.seededRNG = RNG(seed);
         var _event = {};
-        _event.name = Event.convertToBase36String(this.seededRNG(0));
-        _event.byline = Event.convertToBase36String(this.seededRNG(1));
+        _event.name = super.constructor.convertToBase36String(this.seededRNG(0));
+        _event.byline = super.constructor.convertToBase36String(this.seededRNG(1));
         _event.visibility = Event.visibility(Math.abs(this.seededRNG(2) % 3));
         _event.ingress = Event.ingress(Math.abs(this.seededRNG(3) % 3));
         _event.comment = Event.comment(Math.abs(this.seededRNG(4) % 3));
         this._event = _event;
-    }
-    static convertToBase36String(number) {
-        return (Math.abs(number)).toString(36);
     }
     static visibility(option) {
         return ["public", "unlisted", "private"][option];
@@ -47,7 +38,7 @@ var EventGenerator = class EventGenerator {
             i = iteration;
         }
         if(this._events[i]) return {event: this._events[i]};
-        this._events[i] = new Event(i);
+        this._events[i] = new Event(i*this._seed);
         return {event: this._events[i]};
     }
 
