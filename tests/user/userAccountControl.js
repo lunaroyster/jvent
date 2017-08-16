@@ -51,56 +51,67 @@ var failAuthenticate = function(email, password) {
     return authenticate(email, password, 400);
 };
 
+var createUser = function(user, status) {
+    var deferred = Q.defer();
+    agent
+    .post('/api/v0/user/signup')
+    .send({user: user})
+    .expect(status)
+    .end(function(err, res) {
+        if(err) return deferred.reject(new Error(err));
+        return deferred.resolve();
+    });
+    return deferred.promise;
+};
+var successfulCreateUser = function(user) {
+    return createUser(user, 201);
+};
+var failCreateUser = function(user) {
+    return createUser(user, 400);
+};
+
 describe("user account control", function() {
     describe("account creation", function() {
         describe("user creation with valid information", function() {
-            it("creates user", function(done) {
-                agent
-                .post('/api/v0/user/signup')
-                .send({user: data.users.test})
-                .expect(201)
-                .end(function(err, res) {
-                    done(err);
-                });
+            it("creates user", function() {
+                return successfulCreateUser(data.users.test);
             });
         });
         describe("user non-creation with invalid information", function() {
-            it("doesn't create user with short username");
-            it("doesn't create user with bad email");
-            it("doesn't create user with easy passwords");
+            it("doesn't create user with short username", function() {
+                return failCreateUser(data.users.shortUsername);
+            });
+            it("doesn't create user with bad email", function() {
+                return failCreateUser(data.users.badEmail);
+            });
+            it("doesn't create user with easy passwords", function() {
+                return failCreateUser(data.users.easyPassword);
+            });
         });
         describe("user non-creation with incomplete information", function() {
-            it("doesn't create user without username", function(done) {
-                agent
-                .post('/api/v0/user/signup')
-                .send({user: data.users.noUsername})
-                .expect(400)
-                .end(function(err, res) {
-                    done(err);
-                });
+            it("doesn't create user without username", function() {
+                return failCreateUser(data.users.noUsername);
             });
-            it("doesn't create user without email", function(done) {
-                agent
-                .post('/api/v0/user/signup')
-                .send({user: data.users.noEmail})
-                .expect(400)
-                .end(function(err, res) {
-                    done(err);
-                });
+            it("doesn't create user without email", function() {
+                return failCreateUser(data.users.noEmail);
             });
-            it("doesn't create user without password", function(done) {
-                agent
-                .post('/api/v0/user/signup')
-                .send({user: data.users.noPassword})
-                .expect(400)
-                .end(function(err, res) {
-                    done(err);
-                });
+            it("doesn't create user without password", function() {
+                return failCreateUser(data.users.noPassword);
             });
         });
         describe("user non-creation with duplicate information", function() {
-            it("doesn't create user with existing email");
-            it("doesn't create user with existing username");
+            it("doesn't create user with existing email", function() {
+                return successfulCreateUser(data.users.jeff)
+                .then(function() {
+                    return failCreateUser(data.users.jeffsAlt);
+                });
+            });
+            it("doesn't create user with existing username", function() {
+                return successfulCreateUser(data.users.lucida)
+                .then(function() {
+                    return failCreateUser(data.users.lucidasAlt);
+                });
+            });
         });
     });
     describe("account deletion", function() {

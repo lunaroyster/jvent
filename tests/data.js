@@ -9,6 +9,21 @@ module.exports.users = {
         email: "eventtester@unpaidinterns.example.org",
         password: "t35tl012D"
     },
+    shortUsername: {
+        username: "a",
+        email: "shortUsername@unpaidinterns.example.org",
+        password: "t35tl012D"
+    },
+    badEmail: {
+        username: "badEmail",
+        email: "shortUsername@unpaidinterns",
+        password: "t35tl012D"
+    },
+    easyPassword: {
+        username: "badPassword",
+        email: "shortUsername@unpaidinterns.example.org",
+        password: "123"
+    },
     noUsername: {
         email: "test@unpaidinterns.example.org",
         password: "t35tl012D"
@@ -26,9 +41,19 @@ module.exports.users = {
         email: "jeff@unpaidinterns.example.org",
         password: "7KKkrBEc"
     },
+    jeffsAlt: {
+        username: "jeffsAlt",
+        email: "jeff@unpaidinterns.example.org",
+        password: "7KKkrBEc"
+    },
     lucida: {
         username: "lucida",
         email: "lucida@unpaidinterns.example.org",
+        password: "4WJY3RgX"
+    },
+    lucidasAlt: {
+        username: "lucida",
+        email: "lucida2@unpaidinterns.example.org",
         password: "4WJY3RgX"
     },
     alice: {
