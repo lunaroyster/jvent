@@ -4,14 +4,18 @@ var prototypes = require('./prototypes');
 var Event = class Event extends prototypes.objectPrototype {
     constructor(seed) {
         super();
-        this.seededRNG = RNG(seed);
+        this.seededRNG = new RNG(seed);
+        this.randomGenerator = this.seededRNG.generator();
         var _event = {};
-        _event.name = super.constructor.convertToBase36String(this.seededRNG(0));
-        _event.byline = super.constructor.convertToBase36String(this.seededRNG(1));
-        _event.visibility = Event.visibility(Math.abs(this.seededRNG(2) % 3));
-        _event.ingress = Event.ingress(Math.abs(this.seededRNG(3) % 3));
-        _event.comment = Event.comment(Math.abs(this.seededRNG(4) % 3));
+        _event.name = super.constructor.convertToBase36String(this.random());
+        _event.byline = super.constructor.convertToBase36String(this.random());
+        _event.visibility = Event.visibility(Math.abs(this.random() % 3));
+        _event.ingress = Event.ingress(Math.abs(this.random() % 3));
+        _event.comment = Event.comment(Math.abs(this.random() % 3));
         this._event = _event;
+    }
+    random() {
+        return this.randomGenerator.next().value;
     }
     static visibility(option) {
         return ["public", "unlisted", "private"][option];
@@ -26,7 +30,7 @@ var Event = class Event extends prototypes.objectPrototype {
 
 var EventGenerator = class EventGenerator {
     constructor() {
-        this._seed = RNG()(); //Generates random seed upon init
+        this._seed = RNG.random(); //Generates random seed upon init
         this._events = [];
     }
     event(iteration) {

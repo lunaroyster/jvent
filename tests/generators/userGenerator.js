@@ -4,15 +4,16 @@ var prototypes = require('./prototypes');
 var User = class User extends prototypes.objectPrototype {
     constructor(seed) {
         super();
-        this.seededRNG = RNG(seed);
-        var _users = [];
-        this._users = _users;
+        this.seededRNG = new RNG(seed);
+        this.randomGenerator = this.seededRNG.generator();
+        var _user = [];
+        this._user = _user;
     }
 };
 
 var UserGenerator = class UserGenerator {
     constructor() {
-        this._seed = RNG()(); //Generates random seed upon init
+        this._seed = RNG.random(); //Generates random seed upon init
         this._users = [];
     }
     user(iteration) {
