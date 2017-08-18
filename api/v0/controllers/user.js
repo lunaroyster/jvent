@@ -24,7 +24,6 @@ module.exports.signup = function(req, res) {
         return validateRequest(req, userRequestSchema.signup);
     })
     .then(function() {
-        console.log("creating userobj")
         var userObj = {
             email: req.body.user.email,
             username: req.body.user.username,
