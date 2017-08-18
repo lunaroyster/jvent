@@ -6,140 +6,88 @@ var data = require("../data");
 var app = data.app;
 var agent = supertest.agent(app);
 
-var JWT = "";
-var links = {
-    Public: {},
-    Unlisted: {},
-    Private: {}
-};
+var generators = data.generators;
+var UserGenerator = generators.UserGenerator;
+var EventGenerator = generators.EventGenerator;
 
-var eventCreation = function(event, status) {
-    var deferred = Q.defer();
-    agent
-    .post('/api/v0/event')
-    .set('Authorization', 'JWT ' + JWT)
-    .set('Content-Type', 'application/json')
-    .send({event:event})
-    .expect(status)
-    .end(function(err, res) {
-        if(err) return deferred.reject(new Error(err));
-        return deferred.resolve(res.body.event);
-    });
-    return deferred.promise; 
-};
-var successfulEventCreation = function(event) {
-    return eventCreation(event, 201)
-};
-var failedEventCreation = function(event) {
-    return eventCreation(event, 400);  
-};
+var requests = require('../requests');
+var createUser = requests.createUser;
+var authenticate = requests.authenticate;
+var eventCreation = requests.eventCreation;
+var retrieveEvent = requests.retrieveEvent;
+var createUserAndAuthenticate = requests.createUserAndAuthenticate;
 
-
-var retrieveEventWithoutAuth = function(url, status) {
-    var deferred = Q.defer();
-    agent
-    .get('/api/v0/event/'+ url)
-    .expect(status)
-    .end(function(err, res) {
-        if(err) return deferred.reject(new Error(err));
-        //assert response is valid
-        deferred.resolve();
-    });
-    return deferred.promise;
-};
-var retrieveEventWithAuth = function(url, JWT, status) {
-    var deferred = Q.defer();
-    agent
-    .get('/api/v0/event/'+ url)
-    .set('Authorization', `JWT ${JWT}`)
-    .expect(status)
-    .end(function(err, res) {
-        if(err) return deferred.reject(new Error(err));
-        //assert response is valid
-        deferred.resolve();
-    });
-    return deferred.promise;
-};
-
-var successRetrieveEventWithoutAuth = function(url) {
-    return retrieveEventWithoutAuth(url, 200);
-};
-var successRetrieveEventWithAuth = function(url, JWT) {
-    return retrieveEventWithAuth(url, JWT, 200);
-};
-
-var failRetrieveEventWithoutAuth = function(url) {
-    return retrieveEventWithoutAuth(url, 400);
-};
-var failRetrieveEventWithAuth = function(url, JWT) {
-    return retrieveEventWithoutAuth(url, JWT, 400);
-};
+// var retrieveEventWithAuth = function(url, JWT, status) {
+//     var deferred = Q.defer();
+//     agent
+//     .get('/api/v0/event/'+ url)
+//     .set('Authorization', `JWT ${JWT}`)
+//     .expect(status)
+//     .end(function(err, res) {
+//         if(err) return deferred.reject(new Error(err));
+//         //assert response is valid
+//         deferred.resolve();
+//     });
+//     return deferred.promise;
+// };
 
 describe("event setup", function() {
-    before(function(done) {
-        async.series([
-            function(cb) {
-                agent
-                .post('/api/v0/user/signup')
-                .send(data.users.eventtester)
-                .expect(201)
-                .end(function(err, res) {
-                    cb(err);
-                });
-            },
-            function(cb) {
-                agent
-                .post('/api/v0/user/authenticate')
-                .type('form')
-                .set('Content-Type', 'application/x-www-form-urlencoded')
-                .send({'email':data.users.eventtester.email, 'password':data.users.eventtester.password})
-                .expect(200)
-                .end(function(err, res) {
-                    if(err) throw err; 
-                    JWT = res.body.token;
-                    cb(err);
-                });
-            }
-        ], done);
+    var userGen = new UserGenerator();
+    var eventGen = new EventGenerator();
+    var user = function(seed) {
+        return userGen.user(seed).user._user;
+    };
+    var event = function(seed) {
+        return eventGen.event(seed).event._event;
+    };
+    var users = {};
+    var events = {};
+    before(function() {
+        users.organizer = user('organizer');
+        users.attendee = user('attendee');
+        return Q.all([createUserAndAuthenticate(users.organizer), createUserAndAuthenticate(users.attendee)]);
     });
     describe("event creation", function() {
         describe("event types", function() {
-            it("public x everyone", function() {
-                return successfulEventCreation(data.eventTypes.Public.Everyone)
-                .then(function(url) {links.Public.Everyone = url;});
-            });
-            it("public x link", function() {
-                return successfulEventCreation(data.eventTypes.Public.Link)
-                .then(function(url) {links.Public.Link = url;});
-            });
-            it("public x invite", function() {
-                return successfulEventCreation(data.eventTypes.Public.Invite)
-                .then(function(url) {links.Public.Invite = url;});
-            });
-            it("unlisted x everyone", function() {
-                return successfulEventCreation(data.eventTypes.Unlisted.Everyone)
-                .then(function(url) {links.Unlisted.Everyone = url;});
-            });
-            it("unlisted x link", function() {
-                return successfulEventCreation(data.eventTypes.Unlisted.Link)
-                .then(function(url) {links.Unlisted.Link = url;});
-            });
-            it("unlisted x invite", function() {
-                return successfulEventCreation(data.eventTypes.Unlisted.Invite)
-                .then(function(url) {links.Unlisted.Invite = url;});
-            });
-            it("private x everyone", function() {
-                return successfulEventCreation(data.eventTypes.Private.Everyone)
-                .then(function(url) {links.Public.Everyone = url;});
-            });
-            it("private x link", function() {
-                return successfulEventCreation(data.eventTypes.Private.Link)
-                .then(function(url) {links.Public.Link = url;});
-            });
-            it("private x invite", function() {
-                return successfulEventCreation(data.eventTypes.Private.Invite)
-                .then(function(url) {links.Public.Invite = url;});
-            });
+            describe("visibility", function() {
+                it("creates public events");
+            })
+            // it("public x everyone", function() {
+            //     return successfulEventCreation(data.eventTypes.Public.Everyone)
+            //     .then(function(url) {links.Public.Everyone = url;});
+            // });
+            // it("public x link", function() {
+            //     return successfulEventCreation(data.eventTypes.Public.Link)
+            //     .then(function(url) {links.Public.Link = url;});
+            // });
+            // it("public x invite", function() {
+            //     return successfulEventCreation(data.eventTypes.Public.Invite)
+            //     .then(function(url) {links.Public.Invite = url;});
+            // });
+            // it("unlisted x everyone", function() {
+            //     return successfulEventCreation(data.eventTypes.Unlisted.Everyone)
+            //     .then(function(url) {links.Unlisted.Everyone = url;});
+            // });
+            // it("unlisted x link", function() {
+            //     return successfulEventCreation(data.eventTypes.Unlisted.Link)
+            //     .then(function(url) {links.Unlisted.Link = url;});
+            // });
+            // it("unlisted x invite", function() {
+            //     return successfulEventCreation(data.eventTypes.Unlisted.Invite)
+            //     .then(function(url) {links.Unlisted.Invite = url;});
+            // });
+            // it("private x everyone", function() {
+            //     return successfulEventCreation(data.eventTypes.Private.Everyone)
+            //     .then(function(url) {links.Public.Everyone = url;});
+            // });
+            // it("private x link", function() {
+            //     return successfulEventCreation(data.eventTypes.Private.Link)
+            //     .then(function(url) {links.Public.Link = url;});
+            // });
+            // it("private x invite", function() {
+            //     return successfulEventCreation(data.eventTypes.Private.Invite)
+            //     .then(function(url) {links.Public.Invite = url;});
+            // });
         });
     });
     describe("event non creation", function() {
