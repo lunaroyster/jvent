@@ -13,41 +13,46 @@ var links = {
     Private: {}
 };
 
-var successfulEventCreation = function(event) {
+var eventCreation = function(event, status) {
     var deferred = Q.defer();
     agent
     .post('/api/v0/event')
     .set('Authorization', 'JWT ' + JWT)
     .set('Content-Type', 'application/json')
     .send({event:event})
-    .expect(201)
+    .expect(status)
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
         return deferred.resolve(res.body.event);
     });
     return deferred.promise; 
 };
-
+var successfulEventCreation = function(event) {
+    return eventCreation(event, 201)
+};
 var failedEventCreation = function(event) {
-    var deferred = Q.defer();
-    agent
-    .post('/api/v0/event')
-    .set('Authorization', 'JWT ' + JWT)
-    .set('Content-Type', 'application/json')
-    .send({event:event})
-    .expect(400)
-    .end(function(err, res) {
-        if(err) return deferred.reject(new Error(err));
-        return deferred.resolve(res);
-    });
-    return deferred.promise;   
+    return eventCreation(event, 400);  
 };
 
-var retrieveEventWithoutAuth = function(url) {
+
+var retrieveEventWithoutAuth = function(url, status) {
     var deferred = Q.defer();
     agent
     .get('/api/v0/event/'+ url)
-    .expect(200)
+    .expect(status)
+    .end(function(err, res) {
+        if(err) return deferred.reject(new Error(err));
+        //assert response is valid
+        deferred.resolve();
+    });
+    return deferred.promise;
+};
+var retrieveEventWithAuth = function(url, JWT, status) {
+    var deferred = Q.defer();
+    agent
+    .get('/api/v0/event/'+ url)
+    .set('Authorization', `JWT ${JWT}`)
+    .expect(status)
     .end(function(err, res) {
         if(err) return deferred.reject(new Error(err));
         //assert response is valid
@@ -56,45 +61,18 @@ var retrieveEventWithoutAuth = function(url) {
     return deferred.promise;
 };
 
-var retrieveEventWithAuth = function(url) {
-    var deferred = Q.defer();
-    agent
-    .get('/api/v0/event/'+ url)
-    .set('Authorization', 'JWT ' + JWT)
-    .expect(200)
-    .end(function(err, res) {
-        if(err) return deferred.reject(new Error(err));
-        //assert response is valid
-        deferred.resolve();
-    });
-    return deferred.promise;
+var successRetrieveEventWithoutAuth = function(url) {
+    return retrieveEventWithoutAuth(url, 200);
+};
+var successRetrieveEventWithAuth = function(url, JWT) {
+    return retrieveEventWithAuth(url, JWT, 200);
 };
 
 var failRetrieveEventWithoutAuth = function(url) {
-    var deferred = Q.defer();
-    agent
-    .get('/api/v0/event/'+ url)
-    .expect(400)
-    .end(function(err, res) {
-        if(err) return deferred.reject(new Error(err));
-        //assert response is valid
-        deferred.resolve();
-    });
-    return deferred.promise;
+    return retrieveEventWithoutAuth(url, 400);
 };
-
-var failRetrieveEventWithAuth = function(url) {
-    var deferred = Q.defer();
-    agent
-    .get('/api/v0/event/'+ url)
-    .set('Authorization', 'JWT ' + JWT)
-    .expect(400)
-    .end(function(err, res) {
-        if(err) return deferred.reject(new Error(err));
-        //assert response is valid
-        deferred.resolve();
-    });
-    return deferred.promise;
+var failRetrieveEventWithAuth = function(url, JWT) {
+    return retrieveEventWithoutAuth(url, JWT, 400);
 };
 
 describe("event setup", function() {
@@ -164,7 +142,6 @@ describe("event setup", function() {
             });
         });
     });
-    
     describe("event non creation", function() {
         it("doesn't create without authentication", function(done) {
             agent
@@ -206,44 +183,34 @@ describe("event setup", function() {
         it("retrieves public events (without auth)", function(done) {
             var eventCreationPromises = [];
             for(var link in links.Public) {
-                eventCreationPromises += retrieveEventWithoutAuth(links.Public[link]);
+                eventCreationPromises += successRetrieveEventWithoutAuth(links.Public[link]);
             }
             Q.all(eventCreationPromises)
             .then(function() {
                 done();
             });
         });
-        it("fails to retrieve unlisted events (without auth)", function(done) {
+        it("fails to retrieve unlisted events (without auth)", function() {
             var eventNonCreationPromises = [];
             for(var link in links.Unlisted) {
                 eventNonCreationPromises += failRetrieveEventWithoutAuth(links.Unlisted[link]);
             }
-            Q.all(eventNonCreationPromises)
-            .then(function() {
-                done();
-            });
+            return Q.all(eventNonCreationPromises);
         });
-        it("retrieves unlisted events (with auth)", function(done) {
+        it("retrieves unlisted events (with auth)", function() {
             var eventCreationPromises = [];
             for(var link in links.Unlisted) {
-                eventCreationPromises += retrieveEventWithAuth(links.Unlisted[link]);
+                eventCreationPromises += successRetrieveEventWithAuth(links.Unlisted[link]);
             }
-            Q.all(eventCreationPromises)
-            .then(function() {
-                done();
-            });
+            return Q.all(eventCreationPromises);
         });
-        it("fails to retrieve private event (without auth)", function(done) {
+        it("fails to retrieve private event (without auth)", function() {
             var eventNonCreationPromises = [];
             for(var link in links.Private) {
                 eventNonCreationPromises += failRetrieveEventWithoutAuth(links.Private[link]);
             }
-            Q.all(eventNonCreationPromises)
-            .then(function() {
-                done();
-            });
+            return Q.all(eventNonCreationPromises);
         });
         it("fails to retrieve private event (with auth but no privileges)");
     });
-    
 });

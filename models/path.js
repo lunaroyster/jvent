@@ -8,5 +8,6 @@ module.exports = {
     vote: require('./vote'),
     eventMembership: require('./eventmembership'),
     media: require('./media'),
-    userList: require('./userlist')
+    userList: require('./userlist'),
+    venue: require('./venue')
 };
