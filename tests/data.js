@@ -194,5 +194,11 @@ module.exports.eventTypes = {
     }
 };
 
+module.exports.strings = {
+    longpassword: "00000000000000000000000000000000000000000000000000000000000000000", //129 chars
+    shortpassword: "00000" //5 chars
+};
+
 // Reduces the number of dependent links that would break if app.js had to be moved.
 module.exports.app = require("../app.js");
+module.exports.generators = require('./generators/index');

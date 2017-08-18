@@ -6,8 +6,14 @@ var User = class User extends prototypes.objectPrototype {
         super();
         this.seededRNG = new RNG(seed);
         this.randomGenerator = this.seededRNG.generator();
-        var _user = [];
+        var _user = {};
+        _user.username = super.constructor.convertToBase36String(this.random());
+        _user.email = `${super.constructor.convertToBase36String(this.random())}@example.org`;
+        _user.password = super.constructor.convertToBase36String(this.random());
         this._user = _user;
+    }
+    random() {
+        return this.randomGenerator.next().value;
     }
 };
 
