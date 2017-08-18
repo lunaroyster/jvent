@@ -9,70 +9,11 @@ var UserGenerator = generators.UserGenerator;
 // var app = require('../../app.js')
 var agent = supertest.agent(app);
 
-var changePassword = function(JWT, oldPassword, newPassword) {
-    var _changePassword = function(JWT, oldPassword, newPassword, status) {
-        var deferred = Q.defer();
-        agent
-        .post('/api/v0/user/me/changepassword')
-        // .type('form')
-        // .set('Content-Type', 'application/json')
-        .set('Authorization', `JWT ${JWT}`)
-        .set('oldpassword', oldPassword)
-        .set('newpassword', newPassword)
-        .expect(status)
-        .end(function(err, res) {
-            if(err) return deferred.reject(new Error(err));
-            return deferred.resolve();
-        });
-        return deferred.promise; 
-    };
-    var response = {};
-    response.success = (status)=>{return _changePassword(JWT, oldPassword, newPassword, status||200)};
-    response.fail = (status)=>{return _changePassword(JWT, oldPassword, newPassword, status||401)};
-    return response;
-};
-
-var authenticate = function(email, password) {
-    var _authenticate = function(email, password, status) {
-        var deferred = Q.defer();
-        agent
-        .post('/api/v0/user/authenticate')
-        .type('form')
-        .set('Content-Type', 'application/x-www-form-urlencoded')
-        // .field('email', email)
-        // .field('password', password)
-        .send({'email':email, 'password':password})
-        .expect(status)
-        .end(function(err, res) {
-            if(err) return deferred.reject(new Error(err));
-            return deferred.resolve(res.body.token);
-        });
-        return deferred.promise; 
-    };
-    var response = {};
-    response.success = (status)=>{return _authenticate(email, password, status||200)};
-    response.fail = (status)=>{return _authenticate(email, password, status||400)};
-    return response;
-};
-
-var createUser = function(user) {
-    var _createUser = function(user, status) {
-        var deferred = Q.defer();
-        agent
-        .post('/api/v0/user/signup')
-        .send({user: user})
-        .expect(status)
-        .end(function(err, res) {
-            if(err) return deferred.reject(new Error(err));
-            return deferred.resolve();
-        });
-        return deferred.promise;
-    };
-    var response = {};
-    response.success = (status)=>{return _createUser(user, status||201)};
-    response.fail = (status)=>{return _createUser(user, status||400)};
-    return response;
-};
+var requests = require('../requests');
+var changePassword = requests.changePassword;
+var createUser = requests.createUser;
+var authenticate = requests.authenticate;
+var createUserAndAuthenticate = requests.createUserAndAuthenticate;
 
 describe("user account control", function() {
     describe("account creation", function() {
@@ -163,18 +104,9 @@ describe("user account control", function() {
         };
         var users = {};
         before(function() {
-            var createUserAndAuthenticate = function(testUser) {
-                return createUser(testUser).success()
-                .then(function() {
-                    return authenticate(testUser.email, testUser.password).success()
-                    .then(function(token) {
-                        testUser.JWT = token;
-                    });
-                });
-            };
             users.A = user('A');
             users.B = user('B');
-            return Q.all([createUserAndAuthenticate(users.A), createUserAndAuthenticate(users.B)])
+            return Q.all([createUserAndAuthenticate(users.A), createUserAndAuthenticate(users.B)]);
         });
         describe("successful password change", function() {
             it("changes password", function() {
