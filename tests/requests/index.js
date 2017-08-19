@@ -107,6 +107,7 @@ var createEvent = function(event, JWT) {
     response.success = function(status) {
         return _createEvent(event, JWT, function(res) {
             assert(res.status == (status||201), `Error: expected ${status||201}, got ${res.status}`);
+            event.url = res.body.event.url;
         });
     };
     response.fail = function(status) {

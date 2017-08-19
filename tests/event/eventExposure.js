@@ -16,6 +16,7 @@ var authenticate = requests.authenticate;
 var createEvent = requests.createEvent;
 var retrieveEvent = requests.retrieveEvent;
 var createUserAndAuthenticate = requests.createUserAndAuthenticate;
+var createUsersAndAuthenticate = requests.createUsersAndAuthenticate;
 
 describe("event exposure", function() {
     var userGen = new UserGenerator();
@@ -31,51 +32,81 @@ describe("event exposure", function() {
     before(function() {
         users.organizer = user('organizer');
         users.viewer = user('viewer');
-        return Q.all([createUserAndAuthenticate(users.organizer), createUserAndAuthenticate(users.viewer)]);
+        return createUsersAndAuthenticate([users.organizer, users.viewer]);
     });
     describe("visibility", function() {
         describe("public events", function() {
-            before({
-                //Creates public event
+            before(function(){
+                events.publicEvent = event("publicEvent");
+                events.publicEvent.visibility = "public";
+                return createEvent(events.publicEvent, users.organizer.JWT).success();
             });
-            it("lets the organizer retrieve a public event");
-            it("lets a user retrieve a public event");
-            it("lets anon retrieve a public event");
+            it("lets the organizer retrieve a public event", function() {
+                return retrieveEvent(events.publicEvent.url, users.organizer.JWT).success();
+            });
+            it("lets a user retrieve a public event", function() {
+                return retrieveEvent(events.publicEvent.url, users.viewer.JWT).success();
+            });
+            it("lets anon retrieve a public event", function() {
+                return retrieveEvent(events.publicEvent.url, null).success();
+            });
             it("lists the public event");
         });
         describe("unlisted event", function() {
-            before({
-                //Creates unlisted event
+            before(function(){
+                events.unlistedEvent = event("unlistedEvent");
+                events.unlistedEvent.visibility = "unlisted";
+                return createEvent(events.unlistedEvent, users.organizer.JWT).success();
             });
-            it("lets the organizer retrieve an unlisted event");
-            it("lets a user retrieve an unlisted event");
-            it("doesn't let anon retrieve an unlisted event");
+            it("lets the organizer retrieve an unlisted event", function() {
+                return retrieveEvent(events.unlistedEvent.url, users.organizer.JWT).success();
+            });
+            it("lets a user retrieve an unlisted event", function() {
+                return retrieveEvent(events.unlistedEvent.url, users.viewer.JWT).success();
+            });
+            it("doesn't let anon retrieve an unlisted event", function() {
+                return retrieveEvent(events.unlistedEvent.url, null).fail(404);
+            });
             it("doesn't list the unlisted event");
         });
         describe("private event", function() {
-            before({
-                //Creates private event
+            before(function(){
+                events.privateEvent = event("privateEvent");
+                events.privateEvent.visibility = "private";
+                return createEvent(events.privateEvent, users.organizer.JWT).success();
             });
-            it("lets the organizer retrieve a private event");
-            it("doesn't let a user retrieve a private event");
-            it("doesn't let anon retrieve a private event");
+            it("lets the organizer retrieve a private event", function() {
+                return retrieveEvent(events.privateEvent.url, users.organizer.JWT).success();
+            });
+            it("doesn't let a user retrieve a private event", function() {
+                return retrieveEvent(events.privateEvent.url, users.viewer.JWT).fail(404);
+            });
+            it("doesn't let anon retrieve a private event", function() {
+                return retrieveEvent(events.privateEvent.url, null).fail(404);
+            });
             it("doesn't list the private event");
         });
     });
     describe("ingress", function() {
-        describe("everybody", function() {
-            before({
-                //Creates 'everybody' event
+        describe("everyone", function() {
+            before(function(){
+                events.everyoneEvent = event("everyoneEvent");
+                events.everyoneEvent.ingress = "everyone";
+                return createEvent(events.everyoneEvent, users.organizer.JWT).success();
             });
         });
         describe("link", function() {
-            before({
-                //Creates 'link' event
+            before(function(){
+                events.linkEvent = event("linkEvent");
+                events.linkEvent.ingress = "link";
+                return createEvent(events.linkEvent, users.organizer.JWT).success();
             });
         });
         describe("invite", function() {
-            before({
-                //Creates 'invite' event
+            before(function(){
+                events.inviteEvent = event("inviteEvent");
+                events.inviteEvent.ingress = "invite";
+                return createEvent(events.inviteEvent, users.organizer.JWT).success();
             });
         });
     });

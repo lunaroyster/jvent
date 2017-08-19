@@ -3,6 +3,10 @@ var eventCore = require('../../../core/event');
 var eventMembershipCore = require('../../../core/eventMembership');
 var EventMembership = eventMembershipCore.EventMembership;
 
+// Errors
+var badAuthError = Error("Bad Auth");
+badAuthError.status = 404;
+
 module.exports.validateRequest = function(req, schema) {
     return Q.fcall(function() {
         req.check(schema);
@@ -61,10 +65,11 @@ module.exports.appendEventGetter = function(req, res, next) {
                     return event;
                 }
                 else if(event.visibility=="private") {
+                    if(!req.user) throw badAuthError;
                     return req.getEventMembership()
                     .then(function(eventMembership) {
                         if(eventMembership.hasRole("viewer")) return event;
-                    })
+                    });
                 }
             })
             .then(function(event) {
@@ -73,12 +78,12 @@ module.exports.appendEventGetter = function(req, res, next) {
             })
             .catch(function(error) {
                 next(error);
-            })
-        })
-    }
+            });
+        });
+    };
     req.getEvent = EventGetter;
     next();
-}
+};
 
 module.exports.appendEventMembershipGetter = function(req, res, next) {
     var EventMembershipGetter = function() {
@@ -89,18 +94,18 @@ module.exports.appendEventMembershipGetter = function(req, res, next) {
             .then(function(eventMembership) {
                 req.EventMembership = eventMembership;
                 return eventMembership;
-            })
+            });
         });
     };
     req.getEventMembership = EventMembershipGetter;
     next();
-}
+};
 
 module.exports.appendEventIfVisible = function(req, res, next) {
     Q.fcall(function() {
         var eventID = req.eventID || req.params.eventID;
         var eventURL = req.eventURL || req.params.eventURL;
-        console.log(eventID, eventURL)
+        // console.log(eventID, eventURL)
         if(eventURL) return eventCore.getEventByURL(eventURL);
         return eventCore.getEventByID(eventID);
     })
@@ -109,7 +114,7 @@ module.exports.appendEventIfVisible = function(req, res, next) {
             return event;
         }
         else if(event.visibility=="unlisted") {
-            if(req.user) throw badAuthError;
+            if(!req.user) throw badAuthError;
             return event;
         }
         else if(event.visibility=="private") {
