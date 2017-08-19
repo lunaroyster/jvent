@@ -11,8 +11,6 @@ var UserGenerator = generators.UserGenerator;
 var EventGenerator = generators.EventGenerator;
 
 var requests = require('../requests');
-var createUser = requests.createUser;
-var authenticate = requests.authenticate;
 var createEvent = requests.createEvent;
 var retrieveEvent = requests.retrieveEvent;
 var createUserAndAuthenticate = requests.createUserAndAuthenticate;
@@ -35,17 +33,60 @@ describe("event creation", function() {
         return createUsersAndAuthenticate([users.organizer, users.viewer]);
     });
     describe("successful event creation", function() {
-        it("creates event", function() {
-            return createEvent(data.events.generic, users.organizer.JWT).success();
+        describe("basic event creation", function() {
+            it("creates event", function() {
+                return createEvent(data.events.generic, users.organizer.JWT).success();
+            });
         });
         
-        it("creates 'public' event");
-        it("creates 'unlisted' event");
-        it("creates 'private' event");
-        
-        it("creates 'everyone' event");
-        it("creates 'link' event");
-        it("creates 'invite' event");
+        describe("by visibility", function() {
+            var createEventByVisibility = function(visibility) {
+                var newEvent = event(visibility);
+                event.visibility = visibility;
+                return createEvent(newEvent, users.organizer.JWT).success();
+            };
+            it("creates 'public' event", function() {
+                return createEventByVisibility("public");
+            });
+            it("creates 'unlisted' event", function() {
+                return createEventByVisibility("unlisted");
+            });
+            it("creates 'private' event", function() {
+                return createEventByVisibility("private");
+            });
+        });
+        describe("by ingress", function() {
+            var createEventByIngress = function(ingress) {
+                var newEvent = event(ingress);
+                event.ingress = ingress;
+                return createEvent(newEvent, users.organizer.JWT).success();
+            };
+            it("creates 'everyone' event", function() {
+                return createEventByIngress("everyone");
+            });
+            it("creates 'link' event", function() {
+                return createEventByIngress("link");
+            });
+            it("creates 'invite' event", function() {
+                return createEventByIngress("invite");
+            });
+        });
+        describe("by comment", function() {
+            var createEventByComment = function(comment) {
+                var newEvent = event(comment);
+                event.comment = comment;
+                return createEvent(newEvent, users.organizer.JWT).success();
+            };
+            it("creates 'anyone' event", function() {
+                return createEventByComment("anyone");
+            });
+            it("creates 'attendee' event", function() {
+                return createEventByComment("attendee");
+            });
+            it("creates 'nobody' event", function() {
+                return createEventByComment("nobody");
+            });
+        });
         
     });
     describe("failed event creation", function() {
@@ -72,9 +113,21 @@ describe("event creation", function() {
             it("doesn't create with short name", function() {
                 return createEvent(data.events.incomplete.shortName, users.organizer.JWT).fail(400);
             });
-            it("doesn't create with invalid visibility setting");
-            it("doesn't create with invalid ingress setting");
-            it("doesn't create with invalid comment setting");
+            it("doesn't create with invalid visibility setting", function() {
+                events.badVisibility = event("badVisibility");
+                events.badVisibility.visibility = "badvisibility";
+                return createEvent(events.badVisibility, users.organizer.JWT).fail();
+            });
+            it("doesn't create with invalid ingress setting", function() {
+                events.badIngress = event("badIngress");
+                events.badIngress.ingress = "badIngress";
+                return createEvent(events.badIngress, users.organizer.JWT).fail();
+            });
+            it("doesn't create with invalid comment setting", function() {
+                events.badComment = event("badComment");
+                events.badComment.comment = "badComment";
+                return createEvent(events.badComment, users.organizer.JWT).fail();
+            });
         });
     });
 });

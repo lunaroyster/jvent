@@ -11,11 +11,8 @@ var UserGenerator = generators.UserGenerator;
 var EventGenerator = generators.EventGenerator;
 
 var requests = require('../requests');
-var createUser = requests.createUser;
-var authenticate = requests.authenticate;
 var createEvent = requests.createEvent;
 var retrieveEvent = requests.retrieveEvent;
-var createUserAndAuthenticate = requests.createUserAndAuthenticate;
 var createUsersAndAuthenticate = requests.createUsersAndAuthenticate;
 
 describe("event exposure", function() {
@@ -94,6 +91,9 @@ describe("event exposure", function() {
                 events.everyoneEvent.ingress = "everyone";
                 return createEvent(events.everyoneEvent, users.organizer.JWT).success();
             });
+            it("doesn't let anon join an 'everyone' event");
+            it("lets any user join an 'everyone' event");
+            it("doesn't let organizer generate a join-link for an 'everyone' event");
         });
         describe("link", function() {
             before(function(){
@@ -101,6 +101,10 @@ describe("event exposure", function() {
                 events.linkEvent.ingress = "link";
                 return createEvent(events.linkEvent, users.organizer.JWT).success();
             });
+            it("doesn't let anon join a link event");
+            it("doesn't let any user join a link event without token");
+            it("lets any user join a link event with token");
+            it("lets the organizer of a link event generate a token");
         });
         describe("invite", function() {
             before(function(){
@@ -108,6 +112,11 @@ describe("event exposure", function() {
                 events.inviteEvent.ingress = "invite";
                 return createEvent(events.inviteEvent, users.organizer.JWT).success();
             });
+            it("doesn't let anon join an invite event");
+            it("doesn't let any uninvited user join an invite event");
+            it("doesn't let the organizer generate a join-link for an invite event");
+            it("lets the organizer invite a user to an invite event");
+            it("lets an invited user join an invite event");
         });
     });
 });
