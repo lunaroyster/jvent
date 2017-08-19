@@ -5,7 +5,7 @@ module.exports = function(db) {
     var dbURI = 'mongodb://localhost/' + db;
     
     var deferred = Q.defer();
-    mongoose.connect(dbURI);
+    mongoose.connect(dbURI, {useMongoClient: true});
     
     // CONNECTION EVENTS
     mongoose.connection.on('connected', function() {

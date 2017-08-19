@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "oldtest": "mocha tests --reporter spec",
-    "test": "node ./bin/test"
+    "test": "istanbul cover ./bin/test"
   },
   "dependencies": {
     "async": "^2.1.4",
