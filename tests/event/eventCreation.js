@@ -6,7 +6,7 @@ var data = require("../data");
 var app = data.app;
 var agent = supertest.agent(app);
 
-var generators = require('../generators');
+var generators = data.generators;
 var UserGenerator = generators.UserGenerator;
 var EventGenerator = generators.EventGenerator;
 
