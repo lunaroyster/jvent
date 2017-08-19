@@ -38,6 +38,15 @@ describe("event creation", function() {
         it("creates event", function() {
             return createEvent(data.events.generic, users.organizer.JWT).success();
         });
+        
+        it("creates 'public' event");
+        it("creates 'unlisted' event");
+        it("creates 'private' event");
+        
+        it("creates 'everyone' event");
+        it("creates 'link' event");
+        it("creates 'invite' event");
+        
     });
     describe("failed event creation", function() {
         describe("authentication/privilege", function() {
@@ -45,7 +54,7 @@ describe("event creation", function() {
                 return createEvent(data.events.generic, null).fail(401);
             });
         });
-        describe("incomplete/invalid data", function() {
+        describe("incomplete data", function() {
             it("doesn't create without name", function() {
                 return createEvent(data.events.incomplete.noName, users.organizer.JWT).fail(400);
             });
@@ -58,9 +67,14 @@ describe("event creation", function() {
             it("doesn't create without comment setting", function() {
                 return createEvent(data.events.incomplete.noComment, users.organizer.JWT).fail(400);
             });
+        });
+        describe("invalid data", function() {
             it("doesn't create with short name", function() {
                 return createEvent(data.events.incomplete.shortName, users.organizer.JWT).fail(400);
             });
+            it("doesn't create with invalid visibility setting");
+            it("doesn't create with invalid ingress setting");
+            it("doesn't create with invalid comment setting");
         });
     });
 });
