@@ -1,7 +1,8 @@
 Tests
     User
         UserAccountControl
-            Creation/Deletion
+            Creation
+            Deletion
             Authentication
             Password Change
         UserProfileControl
@@ -9,10 +10,16 @@ Tests
     Event
         EventCreation
             Creation
-            Deletion
-        EventMembership
-            Joining
-            Inviting
+            Non Creation
+        EventExposure
+            Visibility
+                Public
+                Unlisted
+                Private
+            Ingress
+                Everyone
+                Link
+                Invite
         EventModeration
             Changing settings
         (EventInteraction)

@@ -144,14 +144,16 @@ var events = {
         byline: "Nothing interesting",
         description: "No BS",
         visibility: "public",
-        ingress: "everyone"
+        ingress: "everyone",
+        comment: "anyone"
     },
     incomplete: {
         noName: {
             byline: "Nothing interesting",
             description: "No BS",
             visibility: "public",
-            ingress: "everyone"
+            ingress: "everyone",
+            comment: "anyone"
         },
         // noByline: {
         //     name: "Generic Event",
@@ -163,13 +165,30 @@ var events = {
             name: "Generic Event",
             byline: "Nothing interesting",
             description: "No BS",
-            ingress: "everyone"
+            ingress: "everyone",
+            comment: "anyone"
         },
         noIngress: {
             name: "Generic Event",
             byline: "Nothing interesting",
             description: "No BS",
-            visibility: "public"
+            visibility: "public",
+            comment: "anyone"
+        },
+        noComment: {
+            name: "Generic Event",
+            byline: "Nothing interesting",
+            description: "No BS",
+            visibility: "public",
+            ingress: "everyone"
+        },
+        shortName: {
+            name: "e",
+            byline: "Nothing interesting",
+            description: "No BS",
+            visibility: "public",
+            ingress: "everyone",
+            comment: "anyone"
         }
     }
 };

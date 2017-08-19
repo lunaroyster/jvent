@@ -14,6 +14,7 @@ var changePassword = requests.changePassword;
 var createUser = requests.createUser;
 var authenticate = requests.authenticate;
 var createUserAndAuthenticate = requests.createUserAndAuthenticate;
+var createUsersAndAuthenticate = requests.createUsersAndAuthenticate;
 
 describe("user account control", function() {
     describe("account creation", function() {
@@ -106,7 +107,7 @@ describe("user account control", function() {
         before(function() {
             users.A = user('A');
             users.B = user('B');
-            return Q.all([createUserAndAuthenticate(users.A), createUserAndAuthenticate(users.B)]);
+            return createUsersAndAuthenticate([users.A, users.B]);
         });
         describe("successful password change", function() {
             it("changes password", function() {

@@ -1,6 +1,6 @@
 var Q = require('q');
 var supertest = require('supertest');
-
+var assert = require("chai").assert;
 
 var data = require("../data");
 var app = data.app;
@@ -72,25 +72,48 @@ var createUser = function(user) {
     return response;
 };
 
-var eventCreation = function(event, JWT) {
-    var _eventCreation = function(event, JWT, status) {
-        var deferred = Q.defer();
-        agent
+var createUserAndAuthenticate = function(user) {
+    return createUser(user).success()
+    .then(function() {
+        return authenticate(user.email, user.password).success()
+        .then(function(token) {
+            user.JWT = token;
+        });
+    });
+};
+
+var createUsersAndAuthenticate = function(users) {
+    var createAndAuthenticate = function(i) {
+        if(i==users.length) return;
+        return createUserAndAuthenticate(users[i])
+        .then(function() {
+            return createAndAuthenticate(i+1);
+        });
+    };
+    return createAndAuthenticate(0);
+};
+
+var createEvent = function(event, JWT) {
+    // var deferred = Q.defer();
+    var _createEvent = function(event, JWT, endCallback) {
+        return agent
         .post('/api/v0/event')
-        .set('Authorization', 'JWT ' + JWT)
+        .set('Authorization', `JWT ${JWT}`)
         .set('Content-Type', 'application/json')
         .send({event:event})
-        .expect(status)
-        .end(function(err, res) {
-            if(err) return deferred.reject(new Error(err));
-            event.url = res.body.event.url;
-            return deferred.resolve(res.body.event);
-        });
-        return deferred.promise; 
+        .then(endCallback);
     };
     var response = {};
-    response.success = (status)=>{return _eventCreation(event, status||200)};
-    response.fail = (status)=>{return _eventCreation(event, status||401)};
+    response.success = function(status) {
+        return _createEvent(event, JWT, function(res) {
+            assert(res.status == (status||201), `Error: expected ${status||201}, got ${res.status}`);
+        });
+    };
+    response.fail = function(status) {
+        return _createEvent(event, JWT, function(res) {
+            assert(res.status == (status||400), `Error: expected ${status||400}, got ${res.status}`);
+        });
+    };
     return response;
 };
 
@@ -114,21 +137,12 @@ var retrieveEvent = function(eventURL, JWT) {
     return response;
 };
 
-var createUserAndAuthenticate = function(user) {
-    return createUser(user).success()
-    .then(function() {
-        return authenticate(user.email, user.password).success()
-        .then(function(token) {
-            user.JWT = token;
-        });
-    });
-};
-
 module.exports = {
     changePassword: changePassword,
     authenticate: authenticate,
     createUser: createUser,
-    eventCreation: eventCreation,
+    createEvent: createEvent,
     retrieveEvent: retrieveEvent,
-    createUserAndAuthenticate: createUserAndAuthenticate
+    createUserAndAuthenticate: createUserAndAuthenticate,
+    createUsersAndAuthenticate: createUsersAndAuthenticate
 };
