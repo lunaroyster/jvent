@@ -1,3 +1,3 @@
 require('./eventCreation');
-require('./eventExposure');
+require('./eventMembership');
 // require('./eventModeration');
