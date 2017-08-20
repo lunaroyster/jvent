@@ -15,7 +15,7 @@ var createEvent = requests.createEvent;
 var retrieveEvent = requests.retrieveEvent;
 var createUsersAndAuthenticate = requests.createUsersAndAuthenticate;
 
-describe("event exposure", function() {
+describe("event membership", function() {
     var userGen = new UserGenerator();
     var eventGen = new EventGenerator();
     var user = function(seed) {
@@ -119,5 +119,13 @@ describe("event exposure", function() {
             it("lets an invited user join an invite event");
         });
     });
+    describe("event membership", function() {
+        describe("retrieval", function() {
+            it("allows user to retrieve their event memberships");
+            it("allows user to retrieve a specific event membership");
+            it("doesn't allow user to retrieve event membership for a private event without invitation");
+        })
+    })
+    
 });
     
