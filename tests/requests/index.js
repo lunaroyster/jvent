@@ -178,6 +178,30 @@ var joinEvent = function(eventURL, joinLink, JWT) {
     return response;
 };
 
+var createPost = function(post, eventURL, JWT) {
+    var _createPost = function(post, eventURL, JWT, endCallback) {
+        return agent
+        .post(`api/v0/event/${eventURL}/post`)
+        .set('Authorization', `JWT ${JWT}`)
+        .set('Content-Type', 'application/json')
+        .send({post: post})
+        .then(endCallback);
+    };
+    var response = {};
+    response.success = function(status) {
+        return _createPost(post, eventURL, JWT, function(res) {
+            assert(res.status == (status||201), `Error: expected ${status||201}, got ${res.status}`);
+            post.url = res.body.post.url;
+        });
+    };
+    response.fail = function(status) {
+        return _createPost(post, eventURL, JWT, function(res) {
+            assert(res.status == (status||400), `Error: expected ${status||400}, got ${res.status}`);
+        });
+    };
+    return response;
+};
+
 module.exports = {
     changePassword: changePassword,
     authenticate: authenticate,
@@ -187,5 +211,6 @@ module.exports = {
     createUserAndAuthenticate: createUserAndAuthenticate,
     createUsersAndAuthenticate: createUsersAndAuthenticate,
     inviteToEvent: inviteToEvent,
-    joinEvent: joinEvent
+    joinEvent: joinEvent,
+    createPost: createPost
 };
