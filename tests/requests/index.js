@@ -181,7 +181,7 @@ var joinEvent = function(eventURL, joinLink, JWT) {
 var createPost = function(post, eventURL, JWT) {
     var _createPost = function(post, eventURL, JWT, endCallback) {
         return agent
-        .post(`api/v0/event/${eventURL}/post`)
+        .post(`/api/v0/event/${eventURL}/post`)
         .set('Authorization', `JWT ${JWT}`)
         .set('Content-Type', 'application/json')
         .send({post: post})
@@ -190,6 +190,7 @@ var createPost = function(post, eventURL, JWT) {
     var response = {};
     response.success = function(status) {
         return _createPost(post, eventURL, JWT, function(res) {
+            console.log(res.body)
             assert(res.status == (status||201), `Error: expected ${status||201}, got ${res.status}`);
             post.url = res.body.post.url;
         });
