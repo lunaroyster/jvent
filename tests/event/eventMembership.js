@@ -14,6 +14,7 @@ var requests = require('../requests');
 var createEvent = requests.createEvent;
 var retrieveEvent = requests.retrieveEvent;
 var createUsersAndAuthenticate = requests.createUsersAndAuthenticate;
+var joinEvent = requests.joinEvent;
 
 describe("event membership", function() {
     var userGen = new UserGenerator();
@@ -88,32 +89,47 @@ describe("event membership", function() {
         describe("everyone", function() {
             before(function(){
                 events.everyoneEvent = event("everyoneEvent");
+                events.everyoneEvent.visibility = "public";
                 events.everyoneEvent.ingress = "everyone";
                 return createEvent(events.everyoneEvent, users.organizer.JWT).success();
             });
-            it("doesn't let anon join an 'everyone' event");
-            it("lets any user join an 'everyone' event");
+            it("doesn't let anon join an 'everyone' event", function() {
+                return joinEvent(events.everyoneEvent.url, null, null).fail(401);
+            });
+            it("lets any user join an 'everyone' event", function() {
+                return joinEvent(events.everyoneEvent.url, null, users.viewer.JWT).success();
+            });
             it("doesn't let organizer generate a join-link for an 'everyone' event");
         });
         describe("link", function() {
             before(function(){
                 events.linkEvent = event("linkEvent");
+                events.linkEvent.visibility = "public";
                 events.linkEvent.ingress = "link";
                 return createEvent(events.linkEvent, users.organizer.JWT).success();
             });
-            it("doesn't let anon join a link event");
-            it("doesn't let any user join a link event without token");
+            it("doesn't let anon join a link event", function() {
+                return joinEvent(events.linkEvent.url, null, null).fail(401);
+            });
+            it("doesn't let any user join a link event without token", function() {
+                return joinEvent(events.linkEvent.url, null, users.viewer.JWT).fail(401);
+            });
             it("lets any user join a link event with token");
             it("lets the organizer of a link event generate a token");
         });
         describe("invite", function() {
             before(function(){
                 events.inviteEvent = event("inviteEvent");
+                events.inviteEvent.visibility = "public";
                 events.inviteEvent.ingress = "invite";
                 return createEvent(events.inviteEvent, users.organizer.JWT).success();
             });
-            it("doesn't let anon join an invite event");
-            it("doesn't let any uninvited user join an invite event");
+            it("doesn't let anon join an invite event", function() {
+                return joinEvent(events.inviteEvent.url, null, null).fail(401);
+            });
+            it("doesn't let any uninvited user join an invite event", function() {
+                return joinEvent(events.inviteEvent.url, null, users.viewer.JWT).fail(401);
+            });
             it("doesn't let the organizer generate a join-link for an invite event");
             it("lets the organizer invite a user to an invite event");
             it("lets an invited user join an invite event");

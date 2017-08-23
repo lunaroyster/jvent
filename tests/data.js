@@ -213,7 +213,11 @@ var posts = {
     },
     largetitle: {},
     largetext: {},
-    untitled: {}
+    untitled: {
+        content: {
+            text: "post body"
+        }
+    }
 };
 
 module.exports.posts = posts;

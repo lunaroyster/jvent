@@ -163,9 +163,10 @@ var joinEvent = function(eventURL, joinLink, JWT) {
         var deferred = Q.defer();
         var requestURL = `/api/v0/event/${eventURL}/join`;
         if(joinLink) requestURL = `/api/v0/event/${eventURL}/join?token=${joinLink}`;
+        
         var request = agent.patch(requestURL);
-        if(JWT) request.set('Authorization', `JWT ${JWT}`);
-        request.expect(status);
+        if(JWT) request = request.set('Authorization', `JWT ${JWT}`);
+        request = request.expect(status);
         request.end(function(err, res) {
             if(err) return deferred.reject(new Error(err));
             deferred.resolve();
@@ -190,7 +191,6 @@ var createPost = function(post, eventURL, JWT) {
     var response = {};
     response.success = function(status) {
         return _createPost(post, eventURL, JWT, function(res) {
-            console.log(res.body)
             assert(res.status == (status||201), `Error: expected ${status||201}, got ${res.status}`);
             post.url = res.body.post.url;
         });
