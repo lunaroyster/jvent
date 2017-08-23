@@ -11,7 +11,17 @@ var eventMembershipSchema = new Schema({
         ref: 'Event'
     },
     time: Date,
-    roles: [String]
+    roles: [String],
+    invite: {
+        view: {
+            type: Boolean,
+            default: false
+        },
+        join: {
+            type: Boolean,
+            default: false
+        }
+    }
 });
 
 eventMembershipSchema.pre('save', function(next) {
@@ -47,5 +57,14 @@ eventMembershipSchema.methods.addRoles = function(roles) {
     }
     return addedRoles;
 }
+
+eventMembershipSchema.methods.acceptViewInvite = function() {
+    this.addrole("viewer");
+};
+
+eventMembershipSchema.methods.acceptJoinInvite = function() {
+    this.addrole("viewer");
+    this.addRole("attendee");
+};
 
 mongoose.model('EventMembership', eventMembershipSchema);
