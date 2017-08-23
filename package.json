@@ -27,7 +27,7 @@
     "less": "^2.7.2",
     "mime-types": "^2.1.16",
     "mongoose": "^4.11.1",
-    "mongoose-unique-validator": "^1.0.3",
+    "mongoose-unique-validator": "^1.0.5",
     "morgan": "~1.7.0",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",

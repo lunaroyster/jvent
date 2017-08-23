@@ -195,6 +195,33 @@ var events = {
 
 module.exports.events = events;
 
+var posts = {
+    titlePost: {
+        title: "post title"
+    },
+    textPost: {
+        title: "post title",
+        content: {
+            text: "post body"
+        }
+    },
+    titlezerolength: {
+        title: "",
+        content: {
+            text: "post body"
+        }
+    },
+    largetitle: {},
+    largetext: {},
+    untitled: {
+        content: {
+            text: "post body"
+        }
+    }
+};
+
+module.exports.posts = posts;
+
 module.exports.eventTypes = {	
     Public: {		
         Everyone: events.festival,		

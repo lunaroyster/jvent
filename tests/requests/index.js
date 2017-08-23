@@ -107,6 +107,7 @@ var createEvent = function(event, JWT) {
     response.success = function(status) {
         return _createEvent(event, JWT, function(res) {
             assert(res.status == (status||201), `Error: expected ${status||201}, got ${res.status}`);
+            event.url = res.body.event.url;
         });
     };
     response.fail = function(status) {
@@ -137,6 +138,71 @@ var retrieveEvent = function(eventURL, JWT) {
     return response;
 };
 
+var inviteToEvent = function(username, eventURL, JWT) {
+    var _inviteToEvent = function(username, eventURL, JWT, status) {
+        var deferred = Q.defer();
+        agent
+        .post(`/api/v0/event/${eventURL}/users/invite`)
+        .data({user:username})
+        .set('Authorization', `JWT ${JWT}`)
+        .expect(status)
+        .end(function(err, status) {
+            if(err) return deferred.reject(new Error(err));
+            deferred.resolve();
+        });
+        return deferred.promise;
+    };
+    var response = {};
+    response.success = (status)=>{return _inviteToEvent(username, eventURL, JWT, status||200)};
+    response.fail = (status)=>{return _inviteToEvent(username, eventURL, JWT, status||400)};
+    return response;
+};
+
+var joinEvent = function(eventURL, joinLink, JWT) {
+    var _joinEvent = function(eventURL, joinLink, JWT, status) {
+        var deferred = Q.defer();
+        var requestURL = `/api/v0/event/${eventURL}/join`;
+        if(joinLink) requestURL = `/api/v0/event/${eventURL}/join?token=${joinLink}`;
+        
+        var request = agent.patch(requestURL);
+        if(JWT) request = request.set('Authorization', `JWT ${JWT}`);
+        request = request.expect(status);
+        request.end(function(err, res) {
+            if(err) return deferred.reject(new Error(err));
+            deferred.resolve();
+        });
+        return deferred.promise;
+    };
+    var response = {};
+    response.success = (status)=>{return _joinEvent(eventURL, joinLink, JWT, status||200)};
+    response.fail = (status)=>{return _joinEvent(eventURL, joinLink, JWT, status||400)};
+    return response;
+};
+
+var createPost = function(post, eventURL, JWT) {
+    var _createPost = function(post, eventURL, JWT, endCallback) {
+        return agent
+        .post(`/api/v0/event/${eventURL}/post`)
+        .set('Authorization', `JWT ${JWT}`)
+        .set('Content-Type', 'application/json')
+        .send({post: post})
+        .then(endCallback);
+    };
+    var response = {};
+    response.success = function(status) {
+        return _createPost(post, eventURL, JWT, function(res) {
+            assert(res.status == (status||201), `Error: expected ${status||201}, got ${res.status}`);
+            post.url = res.body.post.url;
+        });
+    };
+    response.fail = function(status) {
+        return _createPost(post, eventURL, JWT, function(res) {
+            assert(res.status == (status||400), `Error: expected ${status||400}, got ${res.status}`);
+        });
+    };
+    return response;
+};
+
 module.exports = {
     changePassword: changePassword,
     authenticate: authenticate,
@@ -144,5 +210,8 @@ module.exports = {
     createEvent: createEvent,
     retrieveEvent: retrieveEvent,
     createUserAndAuthenticate: createUserAndAuthenticate,
-    createUsersAndAuthenticate: createUsersAndAuthenticate
+    createUsersAndAuthenticate: createUsersAndAuthenticate,
+    inviteToEvent: inviteToEvent,
+    joinEvent: joinEvent,
+    createPost: createPost
 };

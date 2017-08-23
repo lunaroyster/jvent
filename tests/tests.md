@@ -11,15 +11,17 @@ Tests
         EventCreation
             Creation
             Non Creation
-        EventExposure
-            Visibility
+        EventMembership
+            Exposure (visibility)
                 Public
                 Unlisted
                 Private
-            Ingress
+            Joinability (ingress)
                 Everyone
                 Link
                 Invite
+            Privileging
+                Inviting?
         EventModeration
             Changing settings
         (EventInteraction)
