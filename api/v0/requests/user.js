@@ -1,13 +1,11 @@
 module.exports.signup = {
     'user.email': {
-        optional: false,
         notEmpty: true,
         isEmail: {
             errorMessage: 'Invalid Email'
         }
     },
     'user.username': {
-        optional: false,
         notEmpty: true,
         isLength: {
             options: [{ min: 4, max: 16 }],
@@ -15,17 +13,30 @@ module.exports.signup = {
         }
     },
     'user.password': {
-        optional: false,
         notEmpty: true,
+        isLength: {
+            options: [{ min: 6, max: 128}],
+            errorMessage: 'Must be between 6 and 128 characters'
+        }
     }
 };
 module.exports.changePassword = {
     'newpassword': {
-        optional: false,
+        in: 'headers',
         notEmpty: true,
+        exists: {
+            errorMessage: 'No newpassword field'
+        },
+        isLength: {
+            options: [{ min: 6, max: 128}],
+            errorMessage: 'Must be between 6 and 128 characters'
+        }
     },
     'oldpassword': {
-        optional: false,
+        in: 'headers',
         notEmpty: true,
+        exists: {
+            errorMessage: 'No newpassword field'
+        },
     }
-}
+};

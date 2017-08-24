@@ -10,7 +10,8 @@ var debug = require('debug')('jvent:server');
 var http = require('http');
 
 var mocha = new Mocha({
-    // reporter: 'html'
+    // reporter: 'html',
+    // grep: ""
 });
 mocha.addFile('./tests/index');
 

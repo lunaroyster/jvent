@@ -54,8 +54,9 @@ module.exports.changePassword = function(req, res) {
             return;
         }
         else {
-            res.status(401);
-            throw new Error("Bad password");
+            var error = new Error("Bad password");
+            error.status = 401;
+            throw error;
         }
     })
     .then(function() {
@@ -67,7 +68,7 @@ module.exports.changePassword = function(req, res) {
     })
     .fail(function(error) {
         var err = packError(error);
-        res.json(err);
+        res.status(error.status||400).json(err);
     });
 };
 

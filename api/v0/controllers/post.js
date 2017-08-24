@@ -68,7 +68,6 @@ module.exports.createPost = function(req, res) {
         // }); //TODO: secondary collections
     })    //Create post and add to collections
     .spread(function(post, media) {
-        console.log([post,media])
         var state = {
             status: "Created",
             post: {
@@ -85,7 +84,7 @@ module.exports.createPost = function(req, res) {
     })     //Send post creation success
     .catch(function(error) {
         var err = packError(error);
-        console.log(error.stack);
+        // console.log(error.stack);
         res.status(400).json(err);
     });
 };

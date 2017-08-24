@@ -121,10 +121,10 @@ describe("user account control", function() {
             });
         });
         describe("failed password change", function() {
-            var failChangePassword = function(JWT, oldpassword, newpassword, email) {
-                return changePassword(JWT, oldpassword, newpassword).fail(401)
+            var failChangePassword = function(JWT, oldpassword, newpassword, email, changeStatus) {
+                return changePassword(JWT, oldpassword, newpassword).fail(changeStatus||401)
                 .then(function() {
-                    return authenticate(email, newpassword).fail(401);
+                    return authenticate(email, newpassword||"Test password").fail(401);
                 });
             };
             describe("due to bad credentials", function() {
@@ -132,7 +132,10 @@ describe("user account control", function() {
                     return failChangePassword(null, users.B.password, `${users.B.password}changed`, users.B.email);
                 });
                 it("doesn't change password without old password", function() {
-                    return failChangePassword(users.B.JWT, null, `${users.B.password}changed`, users.B.email);
+                    return failChangePassword(users.B.JWT, null, `${users.B.password}changed`, users.B.email, 400);
+                });
+                it("doesn't change password without new password", function() {
+                    return failChangePassword(users.B.JWT, users.B.password, null, users.B.email, 400);
                 });
                 it("doesn't change password with incorrect old password", function() {
                     return failChangePassword(users.B.JWT, "wrongpassword", `${users.B.password}changed`, users.B.email);
@@ -140,10 +143,10 @@ describe("user account control", function() {
             });
             describe("due to bad password", function() {
                 it("fails short passwords", function() {
-                    return failChangePassword(users.B.JWT, users.B.password, data.strings.shortpassword, users.B.email);
+                    return failChangePassword(users.B.JWT, users.B.password, data.strings.shortpassword, users.B.email, 400);
                 });
                 it("fails super long passwords", function() {
-                    return failChangePassword(users.B.JWT, users.B.password, data.strings.longpassword, users.B.email);
+                    return failChangePassword(users.B.JWT, users.B.password, data.strings.longpassword, users.B.email, 400);
                 });
             });
         });

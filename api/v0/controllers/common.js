@@ -18,7 +18,7 @@ module.exports.validateRequest = function(req, schema) {
             return;
         });
     });
-}
+};
 
 module.exports.packError = function(error) {
     var err;
