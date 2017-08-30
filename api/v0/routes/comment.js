@@ -1,9 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var commentController = require('../controllers/comment');
-var authController = require('../controllers/auth');
-var AuthOnly = authController.AuthOnly;
+const commentController = require('../controllers/comment');
+const authController = require('../controllers/auth');
+const AuthOnly = authController.AuthOnly;
 
 router.post('/', AuthOnly, commentController.createComment);
 router.get('/', commentController.getComments);

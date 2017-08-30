@@ -1,12 +1,12 @@
-var Q = require('q');
+const Q = require('q');
 
-var imageServiceCore = require('../../../core/imageService');
+const imageServiceCore = require('../../../core/imageService');
 
-var serviceRequestSchema = require('../requests').service;
+const serviceRequestSchema = require('../requests').service;
 
-var common = require('./common');
-var validateRequest = common.validateRequest;
-var packError = common.packError;
+const common = require('./common');
+const validateRequest = common.validateRequest;
+const packError = common.packError;
 
 
 module.exports.getImageUploadToken = function(req, res) {

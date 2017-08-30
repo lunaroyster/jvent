@@ -1,6 +1,6 @@
 module.exports = function(db) {
-    var mongoose = require('mongoose');
-    var Q = require('q');
+    const mongoose = require('mongoose');
+    const Q = require('q');
     var gracefulShutdown;
     var dbURI = 'mongodb://localhost/' + db;
     

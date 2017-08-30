@@ -1,14 +1,14 @@
-var Q = require('q');
-var assert = require('chai').assert;
+const Q = require('q');
+const assert = require('chai').assert;
 
-var eventCore = require('../../../core/event');
-var eventSettingsRequestSchema = require('../requests').eventSettings;
-var eventMembershipCore = require('../../../core/eventMembership');
+const eventCore = require('../../../core/event');
+const eventSettingsRequestSchema = require('../requests').eventSettings;
+const eventMembershipCore = require('../../../core/eventMembership');
 
-var common = require('./common');
-var validateRequest = common.validateRequest;
-var packError = common.packError;
-var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
+const common = require('./common');
+const validateRequest = common.validateRequest;
+const packError = common.packError;
+const createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
 
 module.exports.getEventBackground = function(req, res) {
     //  TODO: Implement

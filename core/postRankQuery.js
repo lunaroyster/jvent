@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Q = require('q');
+const mongoose = require('mongoose');
+const Q = require('q');
 
-var Vote = mongoose.model('Vote');
+const Vote = mongoose.model('Vote');
 
 module.exports.topPosts = function(event) {
     return Q.fcall(function() {

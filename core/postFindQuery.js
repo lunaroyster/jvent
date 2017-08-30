@@ -1,10 +1,10 @@
-var mongoose = require('mongoose');
-var Q = require('q');
-var _ = require('underscore')._;
-var assert = require('chai').assert;
+const mongoose = require('mongoose');
+const Q = require('q');
+const _ = require('underscore')._;
+const assert = require('chai').assert;
 
-var Event = mongoose.model('Event');
-var Post = mongoose.model('Post');
+const Event = mongoose.model('Event');
+const Post = mongoose.model('Post');
 
 var postFindQuery = function(event) {
     this.Post = Post;

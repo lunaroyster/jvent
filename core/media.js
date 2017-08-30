@@ -1,11 +1,11 @@
-var mongoose = require('mongoose');
-var url = require('url');
-var Q = require('q');
+const mongoose = require('mongoose');
+const url = require('url');
+const Q = require('q');
 
-var Media = mongoose.model('Media');
+const Media = mongoose.model('Media');
 
-var urlCore = require("./url");
-var URL = url.URL;
+const urlCore = require("./url");
+const URL = url.URL;
 
 // Media Creation
 var getUniqueMediaURLinEvent = function(length, event) {

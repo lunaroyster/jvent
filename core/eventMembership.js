@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Q = require('q');
+const mongoose = require('mongoose');
+const Q = require('q');
 
-var EventMembershipModel = mongoose.model('EventMembership');
+const EventMembershipModel = mongoose.model('EventMembership');
 
 var EventMembership = class EventMembership {
     constructor(eventMembership) {

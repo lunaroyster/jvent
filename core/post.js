@@ -1,16 +1,16 @@
-var mongoose = require('mongoose');
-var Q = require('q');
+const mongoose = require('mongoose');
+const Q = require('q');
 
-// var User = mongoose.model('User');
-var eventCore = require('./event');
-var urlCore = require('./url');
-var collectionCore = require('./collection');
-var mediaCore = require('./media');
-var postRankQuery = require('./postRankQuery');
+// const User = mongoose.model('User');
+const eventCore = require('./event');
+const urlCore = require('./url');
+const collectionCore = require('./collection');
+const mediaCore = require('./media');
+const postRankQuery = require('./postRankQuery');
 
-var Event = mongoose.model('Event');
-var Post = mongoose.model('Post');
-var Vote = mongoose.model('Vote');
+const Event = mongoose.model('Event');
+const Post = mongoose.model('Post');
+const Vote = mongoose.model('Vote');
 
 // Post Creation
 var createPostDocument = function(postConfig, mediaDelegate) {

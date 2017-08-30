@@ -1,4 +1,4 @@
-var passport = require('passport');
+const passport = require('passport');
 
 module.exports.blockingjwtAuth = passport.authenticate('jwt', { session: false});
 module.exports.localAuth = passport.authenticate('local', { session: false });

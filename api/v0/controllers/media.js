@@ -1,15 +1,15 @@
-var Q = require('q');
-var mediaCore = require('../../../core/media');
-var eventMembershipCore = require('../../../core/eventMembership');
-var assert = require('chai').assert;
+const Q = require('q');
+const mediaCore = require('../../../core/media');
+const eventMembershipCore = require('../../../core/eventMembership');
+const assert = require('chai').assert;
 
-var mediaRequestSchema = require('../requests').media;
+const mediaRequestSchema = require('../requests').media;
 
-var common = require('./common');
-var validateRequest = common.validateRequest;
-var packError = common.packError;
-var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
-var EventMembership = eventMembershipCore.EventMembership;
+const common = require('./common');
+const validateRequest = common.validateRequest;
+const packError = common.packError;
+const createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
+const EventMembership = eventMembershipCore.EventMembership;
 
 var checkCreateMediaPrivilege = function(req) {
     return Q.fcall(function() {

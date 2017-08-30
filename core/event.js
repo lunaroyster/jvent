@@ -1,16 +1,16 @@
-var mongoose = require('mongoose');
-var Q = require('q');
-// var User = mongoose.model('User');
-var urlCore = require('./url');
-var collectionCore = require('./collection');
-var userListCore = require('./userList');
-var eventMembershipCore = require('./eventMembership');
-var eventFindQuery = require('./eventFindQuery');
-var mediaCore = require('./media');
+const mongoose = require('mongoose');
+const Q = require('q');
+// const User = mongoose.model('User');
+const urlCore = require('./url');
+const collectionCore = require('./collection');
+const userListCore = require('./userList');
+const eventMembershipCore = require('./eventMembership');
+const eventFindQuery = require('./eventFindQuery');
+const mediaCore = require('./media');
 
-var EventMembership = eventMembershipCore.EventMembership;
+const EventMembership = eventMembershipCore.EventMembership;
 
-var Event = mongoose.model('Event');
+const Event = mongoose.model('Event');
 
 // Create Event
 var getUniqueEventURL = function(length) {

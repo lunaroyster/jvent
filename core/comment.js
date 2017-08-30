@@ -1,9 +1,9 @@
-var mongoose = require('mongoose');
-var Q = require('q');
+const mongoose = require('mongoose');
+const Q = require('q');
 
-var urlCore = require('./url');
+const urlCore = require('./url');
 
-var Comment = mongoose.model('Comment');
+const Comment = mongoose.model('Comment');
 
 //Comment creation
 var returnCommentOrError = function(comment) {

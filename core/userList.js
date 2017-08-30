@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
-var Q = require('q');
-var collectionCore = require('./collection');
-var UserList = mongoose.model('UserList');
+const mongoose = require('mongoose');
+const Q = require('q');
+const collectionCore = require('./collection');
+const UserList = mongoose.model('UserList');
 
 //Create
 module.exports.createDefaultUserLists = function(event) {

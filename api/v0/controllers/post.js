@@ -1,21 +1,21 @@
-var postCore = require('../../../core/post');
-var Q = require('q');
-var assert = require('chai').assert;
+const postCore = require('../../../core/post');
+const Q = require('q');
+const assert = require('chai').assert;
 
-// var eventCore = require('../../../core/event');
-var userListCore = require('../../../core/userList');
-var collectionCore = require('../../../core/collection');
-var mediaCore = require('../../../core/media');
-var eventMembershipCore = require('../../../core/eventMembership');
-var postRequestSchema = require('../requests').post;
+// const eventCore = require('../../../core/event');
+const userListCore = require('../../../core/userList');
+const collectionCore = require('../../../core/collection');
+const mediaCore = require('../../../core/media');
+const eventMembershipCore = require('../../../core/eventMembership');
+const postRequestSchema = require('../requests').post;
 
-var postRankQueryCore = require('../../../core/postRankQuery');
+const postRankQueryCore = require('../../../core/postRankQuery');
 
-var common = require('./common');
-var validateRequest = common.validateRequest;
-var packError = common.packError;
-var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
-var EventMembership = eventMembershipCore.EventMembership;
+const common = require('./common');
+const validateRequest = common.validateRequest;
+const packError = common.packError;
+const createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
+const EventMembership = eventMembershipCore.EventMembership;
 
 // /post/
 var checkCreatePostPrivilege = function(req) {

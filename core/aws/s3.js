@@ -1,11 +1,11 @@
-var Q = require('q');
-var assert = require('chai').assert;
-var aws = require('aws-sdk');
-var mime = require('mime-types')
+const Q = require('q');
+const assert = require('chai').assert;
+const aws = require('aws-sdk');
+const mime = require('mime-types')
 
-var S3_BUCKET = "jvent-media";
-var S3_REGION = "us-east-2"
-var urlCore = require('../url');
+const S3_BUCKET = "jvent-media";
+const S3_REGION = "us-east-2"
+const urlCore = require('../url');
 
 module.exports.generateImageUploadToken = function(fileName, fileType) {
     var generateFileName = function() {

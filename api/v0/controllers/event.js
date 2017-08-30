@@ -1,14 +1,14 @@
-var Q = require('q');
-var eventCore = require('../../../core/event');
-var eventMembershipCore = require('../../../core/eventMembership');
-var eventRequestSchema = require('../requests').event;
-var assert = require('chai').assert;
+const Q = require('q');
+const eventCore = require('../../../core/event');
+const eventMembershipCore = require('../../../core/eventMembership');
+const eventRequestSchema = require('../requests').event;
+const assert = require('chai').assert;
 
-var common = require('./common');
-var validateRequest = common.validateRequest;
-var packError = common.packError;
-var createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
-var EventMembership = eventMembershipCore.EventMembership;
+const common = require('./common');
+const validateRequest = common.validateRequest;
+const packError = common.packError;
+const createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
+const EventMembership = eventMembershipCore.EventMembership;
 
 // Errors
 var badAuthError = Error("Bad Auth");

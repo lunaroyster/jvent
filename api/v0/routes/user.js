@@ -1,10 +1,10 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var commonController = require('../controllers/common');
-var userController = require('../controllers/user');
-var authController = require('../controllers/auth');
-var AuthOnly = authController.AuthOnly;
+const commonController = require('../controllers/common');
+const userController = require('../controllers/user');
+const authController = require('../controllers/auth');
+const AuthOnly = authController.AuthOnly;
 
 //TODO: Restructure authentication and password routes
 router.post('/changepassword', AuthOnly, userController.changePassword);

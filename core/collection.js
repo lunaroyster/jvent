@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
-// var User = mongoose.model('User');
-var Collection = mongoose.model('Collection');
-var SuperCollection = mongoose.model('SuperCollection');
-// var Event = mongoose.model('Event');
+const mongoose = require('mongoose');
+// const User = mongoose.model('User');
+const Collection = mongoose.model('Collection');
+const SuperCollection = mongoose.model('SuperCollection');
+// const Event = mongoose.model('Event');
 
 module.exports.createSuperCollection = function(event) {
     var superCollection = new SuperCollection({

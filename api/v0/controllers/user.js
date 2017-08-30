@@ -1,15 +1,15 @@
-var Q = require('q');
-var _ = require('underscore')._;
-var userCore = require('../../../core/user');
-var eventMembershipCore = require('../../../core/eventMembership');
-var userRequestSchema = require('../requests').user;
+const Q = require('q');
+const _ = require('underscore')._;
+const userCore = require('../../../core/user');
+const eventMembershipCore = require('../../../core/eventMembership');
+const userRequestSchema = require('../requests').user;
 
-var userQueryCore = require('../../../core/userQuery');
+const userQueryCore = require('../../../core/userQuery');
 
-var common = require('./common');
-var validateRequest = common.validateRequest;
-var packError = common.packError;
-var EventMembership = eventMembershipCore.EventMembership;
+const common = require('./common');
+const validateRequest = common.validateRequest;
+const packError = common.packError;
+const EventMembership = eventMembershipCore.EventMembership;
 
 module.exports.authenticate = function(req, res) {
     userCore.generateToken(req.user)

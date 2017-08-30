@@ -1,7 +1,7 @@
-var Q = require('q');
-var eventCore = require('../../../core/event');
-var eventMembershipCore = require('../../../core/eventMembership');
-var EventMembership = eventMembershipCore.EventMembership;
+const Q = require('q');
+const eventCore = require('../../../core/event');
+const eventMembershipCore = require('../../../core/eventMembership');
+const EventMembership = eventMembershipCore.EventMembership;
 
 // Errors
 var badAuthError = Error("Bad Auth");

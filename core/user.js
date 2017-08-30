@@ -1,10 +1,10 @@
-var Q = require('q');
-var jwt = require('jsonwebtoken');
+const Q = require('q');
+const jwt = require('jsonwebtoken');
 
-var mongoose = require('mongoose');
-var User = mongoose.model('User');
-var Post = mongoose.model('Post');
-var Media = mongoose.model('Media');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
+const Post = mongoose.model('Post');
+const Media = mongoose.model('Media');
 module.exports.createUser = function(userObj) {
     var newUser = createUser(userObj);
     return newUser.save();

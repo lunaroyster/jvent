@@ -1,14 +1,14 @@
-var Q = require('q');
-var assert = require('chai').assert;
+const Q = require('q');
+const assert = require('chai').assert;
 
-var commentCore = require('../../../core/comment');
-var eventMembershipCore = require('../../../core/eventMembership');
-var commentRequestSchema = require('../requests').comment;
+const commentCore = require('../../../core/comment');
+const eventMembershipCore = require('../../../core/eventMembership');
+const commentRequestSchema = require('../requests').comment;
 
-var common = require('./common');
-var validateRequest = common.validateRequest;
-var packError = common.packError;
-var EventMembership = eventMembershipCore.EventMembership;
+const common = require('./common');
+const validateRequest = common.validateRequest;
+const packError = common.packError;
+const EventMembership = eventMembershipCore.EventMembership;
 
 // /comment/
 var checkCreateCommentPrivilege = function(req) {

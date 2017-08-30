@@ -1,12 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var eventController = require('../controllers/event');
-var commonController = require('../controllers/common');
-var eventSettingsController = require('../controllers/eventSettings');
-var mediaController = require('../controllers/media');
-var authController = require('../controllers/auth');
-var AuthOnly = authController.AuthOnly;
+const eventController = require('../controllers/event');
+const commonController = require('../controllers/common');
+const eventSettingsController = require('../controllers/eventSettings');
+const mediaController = require('../controllers/media');
+const authController = require('../controllers/auth');
+const AuthOnly = authController.AuthOnly;
 
 
 router.post('/', AuthOnly, eventController.createEvent);
