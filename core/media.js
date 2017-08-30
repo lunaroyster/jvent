@@ -1,9 +1,11 @@
 var mongoose = require('mongoose');
+var url = require('url');
 var Q = require('q');
 
 var Media = mongoose.model('Media');
 
 var urlCore = require("./url");
+var URL = url.URL;
 
 // Media Creation
 var getUniqueMediaURLinEvent = function(length, event) {
@@ -12,11 +14,19 @@ var getUniqueMediaURLinEvent = function(length, event) {
         return Media.findOne({url: url, event: event._id})
         .then(function(media) {
             if(!media) return url;
-            return getUniqueMediaURL(length, event);
+            return getUniqueMediaURLinEvent(length, event);
         });
     });
 };
 var createMediaDocument = function(mediaConfig) {
+    var getSource = function(url) {
+        return url.host;
+    };
+    var getType = function(url) {
+        //Look at known types to figure out data type. 
+        //If that fails, try opengraph
+    };
+    var ResolvedURL = URL(mediaConfig.url);
     var newMedia = new Media({
         link: mediaConfig.link,
         url: mediaConfig.url
@@ -52,11 +62,11 @@ var returnMediaOrError = function(media) {
         throw err;
     }
     return media;
-}
+};
 module.exports.getEventMedia = function(event) {
-    var mediaQuery = Media.find({event: event._id})
+    var mediaQuery = Media.find({event: event._id});
     return mediaQuery.exec();
-}
+};
 module.exports.getMediaByID = function(event, mediaID) {
     var mediaQuery = Media.findOne({event: event._id, _id: mediaID});
     return mediaQuery.exec()
