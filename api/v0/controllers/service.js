@@ -10,25 +10,25 @@ const packError = common.packError;
 
 
 module.exports.getImageUploadToken = function(req, res) {
-    var checkCreateMediaPrivilege = function(req) {
-        return Q.fcall(function() {
+    var checkCreateMediaPrivilege = (req)=> {
+        return Q.fcall(()=> {
             if(!req.user.privileges.uploadImage) throw new Error("Bad privileges");
             return;
         });
     };
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, serviceRequestSchema.getImageUploadToken);
     })
-    .then(function() {
+    .then(()=> {
         return checkCreateMediaPrivilege(req);
     })
-    .then(function() {
+    .then(()=> {
         return imageServiceCore.generateImageUploadToken(req.query["fileName"], req.query["fileType"]);
     })
-    .then(function(uploadToken) {
+    .then((uploadToken)=> {
         res.status(200).json(uploadToken);
     })
-    .catch(function(error) {
+    .catch((error)=> {
         var err = packError(error);
         res.status(400).json(err);
     });

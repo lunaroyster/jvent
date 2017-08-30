@@ -31,13 +31,13 @@ var createEventTemplateFromRequest = function(req, event) {
     };
 }
 module.exports.createEvent = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, eventRequestSchema.createEvent)
     })
-    .then(function() {
+    .then(()=> {
         return checkCreateEventPrivilege(req);
     })         //Check user privileges
-    .then(function() {
+    .then(()=> {
         var eventTemplate = createEventTemplateFromRequest(req, req.body.event);
         // var mediaTemplate = undefined;
         // if(req.body.media) {
@@ -45,7 +45,7 @@ module.exports.createEvent = function(req, res) {
         // }
         return eventCore.createEvent(eventTemplate);
     })         //Create event (using authenticated user)
-    .then(function(event) {
+    .then((event)=> {
         var state = {
             status: "Created",
             event: {
@@ -56,7 +56,7 @@ module.exports.createEvent = function(req, res) {
         res.status(201).json(state);
         return;
     })    //Send event creation success
-    .catch(function(error) {
+    .catch((error)=> {
         var err = packError(error);
         res.status(400).json(err);
     });
@@ -65,11 +65,11 @@ module.exports.createEvent = function(req, res) {
 module.exports.getEvents = function(req, res) {
     var responseObject = {};
     eventCore.getPublicEvents()
-    .then(function(events) {
+    .then((events)=> {
         responseObject.events = events;
         res.status(200);
         res.json(responseObject);
-    }, function(error) {
+    }, (error)=> {
         responseObject.error = error;
         res.status(400);
         res.json(responseObject);
@@ -80,33 +80,33 @@ module.exports.getEvents = function(req, res) {
 
 var getEventAsModerator = function(req, res) {
     eventCore.getEventByURLAsModerator(req.eventURL)
-    .then(function(event) {
+    .then((event)=> {
         // return eventMembershipCore.isUserModerator(req.user, event)
         return req.getEventMembership()
-        .then(function(eventMembership) {
+        .then((eventMembership)=> {
             return eventMembership.hasRole("moderator");
         })
-        .then(function(result) {
+        .then((result)=> {
             if(!result) throw Error();
             return event;
         });
     })
-    .then(function(event) {
+    .then((event)=> {
         res.status(200).json({event: event});
     })
-    .catch(function(error) {
+    .catch((error)=> {
         res.status(400).json(error);
     });
 };
 var getEventAsRegular = function(req, res) {
     eventCore.getEventByURL(req.eventURL)
-    .then(function(event) {
+    .then((event)=> {
         return returnEventIfVisible(req.user, event);
     })
-    .then(function(event) {
+    .then((event)=> {
         res.status(200).json({event: event});
     })
-    .catch(function(error) {
+    .catch((error)=> {
         res.status(400).json(error);
     });
 };
@@ -125,10 +125,10 @@ module.exports.getEvent = function(req, res) {
 
 var getUserList = function(req, res, userListPromise) {
     return userListPromise
-    .then(function(userList) {
+    .then((userList)=> {
         res.status(200).json(userList);
     })
-    .catch(function(error) {
+    .catch((error)=> {
         res.status(error.status).json(error.message);
     });
 };
@@ -143,7 +143,7 @@ module.exports.getUsersByRole = function(req, res) {
 // /event/:eventID/join
 
 module.exports.joinEvent = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         var ingress = req.event.ingress;
         if(ingress=="everyone") {
             return;
@@ -154,21 +154,21 @@ module.exports.joinEvent = function(req, res) {
         }
         else if(ingress=="invite") {
             return req.getEventMembership()
-            .then(function(eventMembership) {
+            .then((eventMembership)=> {
                 if(eventMembership.hasRole("invite")) return event;
             })
         }
     })
-    .then(function() {
+    .then(()=> {
         return req.getEventMembership()
-        .then(function(eventMembership) {
+        .then((eventMembership)=> {
             return eventMembership.addRole("attendee");
         });
     })
-    .then(function() {
+    .then(()=> {
         res.status(200).send();
     })
-    .fail(function(error) {
+    .fail((error)=> {
         console.log(error);
         res.status(400).send();
     })
@@ -177,7 +177,7 @@ module.exports.joinEvent = function(req, res) {
 
 
 var returnEventIfVisible = function(user, event) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         if(event.visibility=="public") {
             return event;
         }
@@ -187,14 +187,14 @@ var returnEventIfVisible = function(user, event) {
         }
         else if(event.visibility=="private") {
             return EventMembership.getMembership(user, membership)
-            .then(function(eventMembership) {
+            .then((eventMembership)=> {
                 return eventMembership.hasRole("viewer");
             })
-            .then(function(result) {
+            .then((result)=> {
                 if(!result) throw badAuthError;
                 return event;
             })
-            .catch(function(error) {
+            .catch((error)=> {
                 throw badAuthError;
             });
         }
@@ -203,10 +203,10 @@ var returnEventIfVisible = function(user, event) {
 
 module.exports.moderatorOnly = function(req, res, next) {
     req.getEventMembership()
-    .then(function(eventMembership) {
+    .then((eventMembership)=> {
         return eventMembership.hasRole("moderator");
     })
-    .then(function(result) {
+    .then((result)=> {
         if(!result) {
             return next(badAuthError);
         }

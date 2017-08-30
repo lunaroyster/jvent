@@ -32,10 +32,10 @@ var savePost = function(post) {
     .then(returnPostOrError);
 };
 var getUniquePostURL = function(length, event) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var url = urlCore.generateRandomUrl(length);
         return Post.findOne({url: url, event: event._id})
-        .then(function(post) {
+        .then((post)=> {
             if(!post) return url;
             return getUniquePostURL(length, event);
         });
@@ -43,20 +43,20 @@ var getUniquePostURL = function(length, event) {
 };
 var createPost = function(postConfig, mediaDelegate) {
     return getUniquePostURL(6, postConfig.event)
-    .then(function(newPostUrl) {
+    .then((newPostUrl)=> {
         postConfig.url = newPostUrl;
         return collectionCore.getSuperCollectionByID(postConfig.event.superCollection)
-        .then(function(sc) {
+        .then((sc)=> {
             var newPost = createPostDocument(postConfig, mediaDelegate);
             newPost.sc = sc;
             return savePost(newPost)
-            .then(function(post) {
+            .then((post)=> {
                 sc.addPost(post);
                 var promises = [];
                 promises.push(vote(postConfig.user, post, 1));
                 promises.push(sc.save());
                 return Q.all(promises)
-                .then(function() {
+                .then(()=> {
                     return post;
                 });
             });
@@ -65,12 +65,12 @@ var createPost = function(postConfig, mediaDelegate) {
     });
 };
 module.exports.createPost = function(postConfig, mediaConfig) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         if(mediaConfig) {
             return mediaCore.createMedia(mediaConfig);
         }
     })
-    .then(function(mediaDelegate) {
+    .then((mediaDelegate)=> {
         return [createPost(postConfig, mediaDelegate), mediaDelegate];
     });
 }
@@ -83,7 +83,7 @@ module.exports.getEventPosts = function(event) {
     return postQuery.exec();
 };
 module.exports.getRankedEventPosts = function(event, rank) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         if(rank=="top") return postRankQuery.topPosts(event);
         if(rank=="hot") return postRankQuery.hotPosts(event);
     });
@@ -115,9 +115,9 @@ module.exports.postFindQuery = postFindQuery;
 
 // Post Vote
 var vote = function(user, post, direction) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         return Vote.findOne({user: user._id, post: post._id})
-        .then(function(vote) {
+        .then((vote)=> {
             if(vote) {
                 return vote;
             }
@@ -129,8 +129,8 @@ var vote = function(user, post, direction) {
             }
         });
     })
-    .then(function(vote) {
-        return Q.fcall(function() {
+    .then((vote)=> {
+        return Q.fcall(()=> {
             if(direction==1) {
                 return vote.upvote();
             }
@@ -141,17 +141,17 @@ var vote = function(user, post, direction) {
                 return vote.downvote();
             }
         })
-        .then(function(change) {
-            return Q.fcall(function() {
+        .then((change)=> {
+            return Q.fcall(()=> {
                 if(change) {
                     return vote.save()
-                    .then(function(vote) {
+                    .then((vote)=> {
                         if(!vote) throw Error("Failed to vote.");
                         return;
                     });
                 }
             })
-            .then(function() {
+            .then(()=> {
                 return {
                     change: change,
                     direction: vote.direction

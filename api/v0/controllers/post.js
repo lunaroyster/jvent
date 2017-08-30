@@ -19,13 +19,13 @@ const EventMembership = eventMembershipCore.EventMembership;
 
 // /post/
 var checkCreatePostPrivilege = function(req) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         if(!req.user.privileges.createPost) throw new Error("Bad privileges");
         return;
     })
-    .then(function() {
+    .then(()=> {
         return req.getEventMembership()
-        .then(function(eventMembership) {
+        .then((eventMembership)=> {
             assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
             return;
         })
@@ -44,30 +44,30 @@ var createPostTemplateFromRequest = function(req, post) {
     };
 };
 module.exports.createPost = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, postRequestSchema.createPost);
     })
-    .then(function() {
+    .then(()=> {
         return checkCreatePostPrivilege(req)
-        .then(function() {
+        .then(()=> {
             return req.event;
         });
     }) // Checks create post privilege.
-    .then(function() {
+    .then(()=> {
         var postTemplate = createPostTemplateFromRequest(req, req.body.post);
         var mediaTemplate = undefined;
         if(req.body.media) {
             mediaTemplate = createMediaTemplateFromRequest(req, req.body.media);
         }
         return postCore.createPost(postTemplate, mediaTemplate);
-        // .then(function(post) {
+        // .then((post)=> {
         //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
-        //     .then(function(collection) {
+        //     .then((collection)=> {
         //         return post;
         //     });
         // }); //TODO: secondary collections
     })    //Create post and add to collections
-    .spread(function(post, media) {
+    .spread((post, media)=> {
         var state = {
             status: "Created",
             post: {
@@ -82,7 +82,7 @@ module.exports.createPost = function(req, res) {
         res.status(201).json(state);
         return;
     })     //Send post creation success
-    .catch(function(error) {
+    .catch((error)=> {
         var err = packError(error);
         // console.log(error.stack);
         res.status(400).json(err);
@@ -101,15 +101,15 @@ module.exports.createPost = function(req, res) {
 //     });
 // };
 module.exports.getEventPosts = function(req, res) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var rankType = req.query.rank || "hot";
         assert.include(["hot", "top"], rankType, "Not a valid rank");
         return(postCore.getRankedEventPosts(req.event, rankType));
     })
-    .then(function(posts) {
+    .then((posts)=> {
         res.status(200).json({posts: posts});
     })
-    .catch(function(error) {
+    .catch((error)=> {
         //TODO
         // res.status(400).json(error)
         res.status(400).json(error.message);
@@ -122,7 +122,7 @@ module.exports.getPostByID = function(req, res) {
     // Check user privilege
     // Perhaps check querystring (for comment sorting maybe?)
     return postCore.getPostByID(req.event._id, req.params.postURL)
-    .then(function(post) {
+    .then((post)=> {
         res.status(200);
         res.json(post);
     });
@@ -149,7 +149,7 @@ module.exports.appendPostURL = function(req, res, next) {
 };
 module.exports.appendPost = function(req, res, next) {
     postCore.getPostByURL(req.event, req.postURL)
-    .then(function(post) {
+    .then((post)=> {
         req.post = post;
         next();
     });
@@ -158,13 +158,13 @@ module.exports.appendPost = function(req, res, next) {
 // /post/:postURL/vote
 
 module.exports.vote = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, postRequestSchema.vote);
     })
-    .then(function() {
+    .then(()=> {
         return postCore.vote(req.user, req.post, req.body.direction);
     })
-    .then(function(response) {
+    .then((response)=> {
         if(response.change) {
             res.status(200).json(response);
         }
@@ -172,7 +172,7 @@ module.exports.vote = function(req, res) {
             res.status(400).json(response);
         }
     })
-    .catch(function(error) {
+    .catch((error)=> {
         var err = packError(error);
         res.status(400).json(err);
     });

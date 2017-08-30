@@ -8,10 +8,10 @@ const S3_REGION = "us-east-2"
 const urlCore = require('../url');
 
 module.exports.generateImageUploadToken = function(fileName, fileType) {
-    var generateFileName = function() {
+    var generateFileName = ()=> {
         return `${Date.now()}-${urlCore.generateRandomUrl(6)}.${mime.extension(fileType)}`;
     };
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var deferred = Q.defer();
         var s3 = new aws.S3({signatureVersion: 'v4', region: S3_REGION});
         if(!fileType) fileType = mime.lookup(fileName);
@@ -24,7 +24,7 @@ module.exports.generateImageUploadToken = function(fileName, fileType) {
             ContentType: fileType,
             ACL: 'public-read'
         };
-        s3.getSignedUrl('putObject', s3Params, function(err, data) {
+        s3.getSignedUrl('putObject', s3Params, (err, data)=> {
             if(err) throw deferred.reject(err);
             return deferred.resolve({
                 signedRequest: data,

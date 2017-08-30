@@ -21,7 +21,7 @@ var EventMembership = class EventMembership {
     addRole(role) {
         //TODO verify role.
         var eventMembership = this._eventMembership;
-        return Q.fcall(function() {
+        return Q.fcall(()=> {
             var addRoleSuccess = eventMembership.addRole(role);
             if(addRoleSuccess) return eventMembership.save();
             throw new Error("Already has role " + role);
@@ -29,7 +29,7 @@ var EventMembership = class EventMembership {
     }
     addRoles(roles) {
         var eventMembership = this._eventMembership;
-        return Q.fcall(function() {
+        return Q.fcall(()=> {
             var addedRoles = eventMembership.addRoles(roles);
             if(addedRoles.length>0) return eventMembership.save();
             throw new Error("The roles " + roles + " already exist");
@@ -38,7 +38,7 @@ var EventMembership = class EventMembership {
 
     forceSave() {
         this._eventMembership.save()
-        .then(function(eventMembershipModel) {
+        .then((eventMembershipModel)=> {
             return this;
         })
     }
@@ -82,22 +82,22 @@ var EventMembership = class EventMembership {
     }
     static getOrCreateMembership(user, event) {
         return EventMembershipModel.findOne({user: user._id, event: event._id})
-        .then(function(eventMembershipModel) {
+        .then((eventMembershipModel)=> {
             if(eventMembershipModel) return(eventMembershipModel);
             return EventMembership.createMembershipModel(user, event);
         })
-        .then(function(eventMembershipModel) {
+        .then((eventMembershipModel)=> {
             return new EventMembership(eventMembershipModel);
         });
     }
     static createAndSaveMembership(user, event) {
-        return Q.fcall(function() {
+        return Q.fcall(()=> {
             return EventMembership.createMembershipModel(user, event);
         })
-        .then(function(eventMembershipModel) {
+        .then((eventMembershipModel)=> {
             return eventMembershipModel.save();
         })
-        .then(function(eventMembershipModel) {
+        .then((eventMembershipModel)=> {
             return newEventMembership(eventMembershipModel);
         });
     }

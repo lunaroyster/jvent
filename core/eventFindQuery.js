@@ -75,7 +75,7 @@ eventFindQuery.prototype = {
     //  Find {
     all: function() {
         // this.find = {};
-        _.each(this.find, function(finder) {
+        _.each(this.find, (finder)=> {
             finder.enabled = false;
         });
         return this;
@@ -209,11 +209,11 @@ eventFindQuery.prototype = {
     then: function() {
         var query = this.Event;
         
-        var thenPromise = Q.fcall(function() {
+        var thenPromise = Q.fcall(()=> {
             var queryPromises = [];
             
             //  Find {
-                queryPromises.push(Q.fcall(function() {
+                queryPromises.push(Q.fcall(()=> {
                     var findQuery = {};
                     var findPromises = [];
                     //  No query {
@@ -245,7 +245,7 @@ eventFindQuery.prototype = {
                         }
                     //  }
                     return Q.all(findPromises)
-                    .then(function() {
+                    .then(()=> {
                         query = query.find(findQuery);
                     });
                 }));
@@ -253,7 +253,7 @@ eventFindQuery.prototype = {
             
             //  Sort {
                 if(this.sort.enabled) {
-                    queryPromises.push(Q.fcall(function() {
+                    queryPromises.push(Q.fcall(()=> {
                         var sortQuery; //What object is this?
                         var sortPromises = [];
                         //  No Query {
@@ -263,7 +263,7 @@ eventFindQuery.prototype = {
                             
                         //  }
                         return Q.all(sortPromises)
-                        .then(function() {
+                        .then(()=> {
                             
                         });
                     }));
@@ -285,7 +285,7 @@ eventFindQuery.prototype = {
             
             return Q.all(queryPromises);
         })
-        .then(function() {
+        .then(()=> {
             return query.exec();
         });
         return thenPromise;

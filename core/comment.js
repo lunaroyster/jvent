@@ -31,28 +31,28 @@ var saveComment = function(comment) {
     .then(returnCommentOrError);
 };
 var getUniqueCommentURL = function(length, event, post) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var url = urlCore.generateRandomUrl(length);
         return Comment.findOne({url: url, event: event._id, post: post._id})
-        .then(function(comment) {
+        .then((comment)=> {
             if(!comment) return url;
             return getUniqueCommentURL(length, event, post);
         });
-    })
+    });
 };
 module.exports.createComment = function(commentConfig) {
-    return Q.fcall(function() {
-        return getUniqueCommentURL(4, commentConfig.event, commentConfig.post)
+    return Q.fcall(()=> {
+        return getUniqueCommentURL(4, commentConfig.event, commentConfig.post);
     })
-    .then(function(newCommentUrl) {
+    .then((newCommentUrl)=> {
         commentConfig.url = newCommentUrl;
         if(!commentConfig.parent) return;
         return getCommentByID(commentConfig.event, commentConfig.post, commentConfig.parent)
-        .then(function(parentComment) {
+        .then((parentComment)=> {
             commentConfig.parentComment = parentComment;
-        })
+        });
     })
-    .then(function() {
+    .then(()=> {
         var newComment = createCommentDocument(commentConfig);
         return saveComment(newComment);
     });
@@ -76,5 +76,5 @@ module.exports.getCommentByURL = function(event, post, commentURL) {
     var commentQuery = Comment.findOne({event: event._id, post: post._id, url: commentURL});
     return commentQuery.exec()
     .then(returnCommentOrError);
-}
+};
 //Comment vote

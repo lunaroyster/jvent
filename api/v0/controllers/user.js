@@ -13,17 +13,17 @@ const EventMembership = eventMembershipCore.EventMembership;
 
 module.exports.authenticate = function(req, res) {
     userCore.generateToken(req.user)
-    .then(function(token) {
+    .then((token)=> {
         res.status(200);
         res.json({token: token});
     });
 };
 
 module.exports.signup = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, userRequestSchema.signup);
     })
-    .then(function() {
+    .then(()=> {
         var userObj = {
             email: req.body.user.email,
             username: req.body.user.username,
@@ -31,7 +31,7 @@ module.exports.signup = function(req, res) {
         };
         return userCore.createUser(userObj);
     })
-    .then(function(user) {
+    .then((user)=> {
         var response = {
             username: user.username,
             timeOfCreation: user.time.creation
@@ -39,17 +39,17 @@ module.exports.signup = function(req, res) {
         res.status(201);
         res.json(response);
     })
-    .catch(function(error) {
+    .catch((error)=> {
         var err = packError(error);
         res.status(400).json(err);
     });
 };
 
 module.exports.changePassword = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, userRequestSchema.changePassword);
     })
-    .then(function() {
+    .then(()=> {
         if(req.user.validPassword(req.header('oldpassword'))) {
             return;
         }
@@ -59,14 +59,14 @@ module.exports.changePassword = function(req, res) {
             throw error;
         }
     })
-    .then(function() {
+    .then(()=> {
         return userCore.changePassword(req.user, req.header('newpassword'));
     })
-    .then(function() {
+    .then(()=> {
         res.status(200);
         res.send();
     })
-    .fail(function(error) {
+    .fail((error)=> {
         var err = packError(error);
         res.status(error.status||400).json(err);
     });
@@ -75,10 +75,10 @@ module.exports.changePassword = function(req, res) {
 // /user/events/[role]
 var getEventList = function(req, res, eventListPromise) {
     return eventListPromise
-    .then(function(eventList) {
+    .then((eventList)=> {
         res.status(200).json(eventList);
     })
-    .catch(function(error) {
+    .catch((error)=> {
         res.status(error.status).json(error.message);
     });
 };
@@ -91,10 +91,10 @@ module.exports.getEventMembershipsByRole = function(req, res) {
 };
 module.exports.getEventMembership = function(req, res) {
     return EventMembership.getMembershipByEventID(req.user, req.params.eventID)
-    .then(function(eventMembership) {
+    .then((eventMembership)=> {
         res.status(200).json(eventMembership);
     })
-    .catch(function(error) {
+    .catch((error)=> {
         //HACK: This needs to go. Really.
         if(error.message="No valid eventMembership object") return res.status(200).json({});
         res.status(error.status||400).json(error.message);
@@ -103,38 +103,38 @@ module.exports.getEventMembership = function(req, res) {
 
 module.exports.getSelfPosts = function(req, res) {
     return userCore.getSelfPosts(req.user)
-    .then(function(posts) {
+    .then((posts)=> {
         res.status(200).json({posts:posts})
     });
 };
 module.exports.getSelfMedia = function(req, res) {
     return userCore.getSelfMedia(req.user)
-    .then(function(media) {
+    .then((media)=> {
         res.status(200).json({media:media})
     });
 };
 module.exports.getSelfEventPosts = function(req, res) {
     return userCore.getSelfPosts(req.user, req.event)
-    .then(function(posts) {
+    .then((posts)=> {
         res.status(200).json({posts:posts})
     });
 };
 module.exports.getSelfEventMedia = function(req, res) {
     return userCore.getSelfMedia(req.user, req.event)
-    .then(function(media) {
+    .then((media)=> {
         res.status(200).json({media:media})
     });
 };
 
 module.exports.getEventPostVotes = function(req, res) {
     return userQueryCore.getUserPostVotes(req.user, req.event)
-    .then(function(votes) {
+    .then((votes)=> {
         res.status(200).json({votes: votes})
     })
 };
 module.exports.getAllPostVotes = function(req, res) {
     return userQueryCore.getUserPostVotes(req.user)
-    .then(function(votes) {
+    .then((votes)=> {
         res.status(200).json({votes: votes})
     })
 }

@@ -9,10 +9,10 @@ const URL = url.URL;
 
 // Media Creation
 var getUniqueMediaURLinEvent = function(length, event) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var url = urlCore.generateRandomUrl(length);
         return Media.findOne({url: url, event: event._id})
-        .then(function(media) {
+        .then((media)=> {
             if(!media) return url;
             return getUniqueMediaURLinEvent(length, event);
         });
@@ -40,10 +40,10 @@ var saveMedia = function(media) {
     .then(returnMediaOrError);
 };
 module.exports.createMedia = function(mediaConfig) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         return getUniqueMediaURLinEvent(6, mediaConfig.event);
     })
-    .then(function(newMediaURL) {
+    .then((newMediaURL)=> {
         mediaConfig.url = newMediaURL;
         var newMedia = createMediaDocument(mediaConfig);
         return newMedia;

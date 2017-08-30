@@ -14,10 +14,10 @@ const Event = mongoose.model('Event');
 
 // Create Event
 var getUniqueEventURL = function(length) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var url = urlCore.generateRandomUrl(length);
         return Event.findOne({url: url})
-        .then(function(event) {
+        .then((event)=> {
             if(!event) {
                 return url;
             }
@@ -51,7 +51,7 @@ var saveEvent = function(event) {
 var createEvent = function(eventConfig) {
     var user = eventConfig.user;
     return getUniqueEventURL(6)
-    .then(function(newEventURL) {
+    .then((newEventURL)=> {
         eventConfig.url = newEventURL;
         var newEvent = createEventDocument(eventConfig, user);
         return saveEvent(newEvent);
@@ -63,17 +63,17 @@ var createEvent = function(eventConfig) {
         var promises = [];
         promises.push(collectionCore.createSuperCollection(event));
         // promises.push(eventMembershipCore.addModerator(user, event));
-        promises.push(Q.fcall(function() {
+        promises.push(Q.fcall(()=> {
             var eventMembership = EventMembership.createUnsavedMembership(user, event);
             return eventMembership.addRoles(["organizer", "moderator"]);
         }))
         // promises.push(userListCore.createDefaultUserLists(event));
         return Q.all(promises)
-        .then(function(results) {
+        .then((results)=> {
             event.superCollection = results[0];
             // event.assignUserLists(results[1]);
         })
-        .then(function() {
+        .then(()=> {
             return event.save();
         });
     });
@@ -128,13 +128,13 @@ module.exports.getEventIfAttendee = function(user, eventID) {
 };
 
 module.exports.setEventBackground = function(event, mediaConfig) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         return mediaCore.createMedia(mediaConfig);
     })
-    .then(function(media) {
+    .then((media)=> {
         event.setBackgroundImage(media);
         return event.save()
-        .then(function(event) {
+        .then((event)=> {
             return media;
         });
     });

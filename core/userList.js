@@ -11,26 +11,26 @@ module.exports.createDefaultUserLists = function(event) {
     var userListPromises = [];
     if(visibility=="private") {
         userListPromises.push(module.exports.createViewerList(event)
-        .then(function(viewerlist) {
+        .then((viewerlist)=> {
             return UserLists.viewer = viewerlist;
         }));
     }
     if(ingress=="invite") {
         userListPromises.push(module.exports.createInviteList(event)
-        .then(function(invitelist) {
+        .then((invitelist)=> {
             return UserLists.invite = invitelist;
         }));
     }
     userListPromises.push(module.exports.createModeratorList(event)
-    .then(function(moderatorlist) {
+    .then((moderatorlist)=> {
         return UserLists.moderator = moderatorlist;
     }));
     userListPromises.push(module.exports.createAttendeeList(event)
-    .then(function(attendeelist) {
+    .then((attendeelist)=> {
         return UserLists.attendee = attendeelist;
     }));
     return Q.allSettled(userListPromises)
-    .then(function(results) {
+    .then((results)=> {
         return UserLists;
     });
 };
@@ -67,7 +67,7 @@ module.exports.createAttendeeList = function(event) {
 //Add
 module.exports.addUserToAttendeeList = function(user, event) {
     return UserList.findOne({_id: event.userLists.attendee.list})
-    .then(function(userlist) {
+    .then((userlist)=> {
         //TODO: Hacky way
         if(!userlist) throw Error("No list");
         if(userlist.list.indexOf(user._id) != -1) {
@@ -83,7 +83,7 @@ module.exports.addUserToAttendeeList = function(user, event) {
 //Verify
 module.exports.isUserAttendee = function(user, event) {
     return UserList.findOne({_id: event.userLists.attendee.list, list: user._id})
-    .then(function(userlist) {
+    .then((userlist)=> {
         if(!userlist) throw Error("No userlist"); //TODO: Wrong error
         return userlist;
     });
@@ -91,7 +91,7 @@ module.exports.isUserAttendee = function(user, event) {
 
 module.exports.isUserViewer = function(user, event) {
     return UserList.findOne({_id: event.userLists.viewer.list, list: user._id})
-    .then(function(userlist) {
+    .then((userlist)=> {
         if(!userlist) throw Error("No userlist"); //TODO: Wrong error
         return userlist;
     });
@@ -99,7 +99,7 @@ module.exports.isUserViewer = function(user, event) {
 
 module.exports.isUserInvited = function(user, event) {
     return UserList.findOne({_id: event.userLists.invite.list, list: user._id})
-    .then(function(userlist) {
+    .then((userlist)=> {
         if(!userlist) throw Error("No userlist"); //TODO: Wrong error
         return userlist;
     });

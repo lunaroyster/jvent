@@ -4,7 +4,7 @@ const Q = require('q');
 const Vote = mongoose.model('Vote');
 
 module.exports.getUserPostVotes = function(user, event) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var deferred = Q.defer();
         var postVotes = [];
         var $matchStage = {
@@ -30,7 +30,7 @@ module.exports.getUserPostVotes = function(user, event) {
             }
         ])
         .cursor({batchSize:2}).exec();
-        cursor.on('data', function(postVotes) {
+        cursor.on('data', (postVotes)=> {
             deferred.resolve(postVotes.votes);
         });
         return deferred.promise;

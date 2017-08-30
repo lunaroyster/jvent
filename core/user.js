@@ -55,18 +55,18 @@ module.exports.getSelfMedia = function(user, event) {
 };
 
 module.exports.changePassword = function(user, password) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         //TODO: Check password validity
         return password;
     })
-    .then(function(Password) {
+    .then((Password)=> {
         return user.setPassword(Password);
     })
-    .then(function() {
+    .then(()=> {
         //TODO: Perform JWT invalidation stuff || setPassword sets passwordChangeDate. Change anything if required here.
         return;
     })
-    .then(function() {
+    .then(()=> {
         return user.save();
     });
 };
@@ -75,7 +75,7 @@ module.exports.generateToken = function(user) {
     var token = jwt.sign({
         sub: user._id
     }, "debug");
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         return token;
     });
 };

@@ -23,7 +23,7 @@ module.exports.addPostToSuperCollection = function(post, superCollection) {
 
 module.exports.addPostToCollectionByID = function(post, collectionID) {
     return Collection.findOne({_id: collectionID})
-    .then(function(collection) {
+    .then((collection)=> {
         collection.posts.addToSet(post._id);
         return collection.save();
     });

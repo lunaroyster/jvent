@@ -12,29 +12,29 @@ const createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
 const EventMembership = eventMembershipCore.EventMembership;
 
 var checkCreateMediaPrivilege = function(req) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         if(!req.user.privileges.createMedia) throw new Error("Bad privileges");
         return;
     })
-    .then(function() {
+    .then(()=> {
         return req.getEventMembership()
-        .then(function(eventMembership) {
+        .then((eventMembership)=> {
             assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
             return;
         })
     })
 };
 module.exports.createEventMedia = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, mediaRequestSchema.createMedia)
     })
-    .then(function() {
+    .then(()=> {
         return checkCreateMediaPrivilege(req);
     })         //Check user privileges
-    .then(function() {
+    .then(()=> {
         return mediaCore.createEventMedia(createMediaTemplateFromRequest(req));
     })         //Create media (using authenticated user)
-    .then(function(media) {
+    .then((media)=> {
         var state = {
             status: "Created",
             media: {
@@ -44,7 +44,7 @@ module.exports.createEventMedia = function(req, res) {
         res.status(201).json(state);
         return;
     })    //Send media creation success
-    .catch(function(error) {
+    .catch((error)=> {
         var err = packError(error);
         res.status(400).json(err);
     });

@@ -14,23 +14,23 @@ module.exports.getEventBackground = function(req, res) {
     //  TODO: Implement
 };
 module.exports.setEventBackground = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, eventSettingsRequestSchema.setEventBackground);
     })
-    .then(function() {
+    .then(()=> {
         // Check user privileges
         return req.getEventMembership()
-        .then(function(eventMembership) {
+        .then((eventMembership)=> {
             assert(eventMembership.hasRole("organizer"), "User is not an organizer"); //TODO: Change role test to privilege test
             return;
         })
     })
-    .then(function() {
+    .then(()=> {
         // setEventBackground
         var mediaTemplate = createMediaTemplateFromRequest(req, req.body.media);
         return eventCore.setEventBackground(req.event, mediaTemplate);
     })
-    .then(function(eventBackground) {
+    .then((eventBackground)=> {
         var state = {
             status: "Created"
         };
@@ -38,7 +38,7 @@ module.exports.setEventBackground = function(req, res) {
         return;
         // Send success response (with either media link or entire event)
     })
-    .catch(function(error) {
+    .catch((error)=> {
         // console.log(error.stack);
         var err = packError(error);
         res.status(400).json(err);

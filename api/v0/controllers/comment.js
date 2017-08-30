@@ -12,13 +12,13 @@ const EventMembership = eventMembershipCore.EventMembership;
 
 // /comment/
 var checkCreateCommentPrivilege = function(req) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         if(!req.user.privileges.createPost) throw new Error("Bad privileges");
         return;
     })
-    .then(function() {
+    .then(()=> {
         return req.getEventMembership()
-        .then(function(eventMembership) {
+        .then((eventMembership)=> {
             assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
             return;
         });
@@ -35,17 +35,17 @@ var createCommentTemplateFromRequest = function(req, comment) {
     };
 };
 module.exports.createComment = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return validateRequest(req, commentRequestSchema.createComment);
     })
-    .then(function() {
+    .then(()=> {
         return checkCreateCommentPrivilege(req);
     })
-    .then(function() {
+    .then(()=> {
         var commentConfig = createCommentTemplateFromRequest(req, req.body.comment);
         return commentCore.createComment(commentConfig);
     })
-    .then(function(comment) {
+    .then((comment)=> {
         var state = {
             status: "Created",
             comment: {
@@ -55,7 +55,7 @@ module.exports.createComment = function(req, res) {
         res.status(201).json(state);
         return;
     })
-    .catch(function(error) {
+    .catch((error)=> {
         var err = packError(error);
         console.log(error.stack);
         res.status(400).json(err);
@@ -63,13 +63,13 @@ module.exports.createComment = function(req, res) {
 };
 
 module.exports.getComments = function(req, res) {
-    Q.fcall(function() {
+    Q.fcall(()=> {
         return commentCore.getComments(req.event, req.post)
     })
-    .then(function(comments) {
+    .then((comments)=> {
         res.status(200).json({comments: comments});
     })
-    .catch(function(error) {
+    .catch((error)=> {
         res.status(400).json(error.message);
     });
 };
@@ -97,7 +97,7 @@ module.exports.appendCommentURL = function(req, res, next) {
 }
 module.exports.appendComment = function(req, res, next) {
     commentCore.getCommentByURL(req.event, req.post, req.commentURL)
-    .then(function(comment) {
+    .then((comment)=> {
         req.comment = comment;
         next();
     });

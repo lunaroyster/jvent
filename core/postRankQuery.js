@@ -4,7 +4,7 @@ const Q = require('q');
 const Vote = mongoose.model('Vote');
 
 module.exports.topPosts = function(event) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var deferred = Q.defer();
         var posts = [];
         var cursor = Vote.aggregate([
@@ -50,10 +50,10 @@ module.exports.topPosts = function(event) {
             //Return top scorers
         ])
         .cursor({batchSize:100}).exec();
-        cursor.on('data', function(post) {
+        cursor.on('data', (post)=> {
             posts.push(post);
         });
-        cursor.on('end', function() {
+        cursor.on('end', ()=> {
             deferred.resolve(posts);
         });
         return deferred.promise;
@@ -61,7 +61,7 @@ module.exports.topPosts = function(event) {
 };
 
 module.exports.hotPosts = function(event) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var deferred = Q.defer();
         var posts = [];
         var cursor = Vote.aggregate([
@@ -124,10 +124,10 @@ module.exports.hotPosts = function(event) {
             //Return top scorers
         ])
         .cursor({batchSize:100}).exec();
-        cursor.on('data', function(post) {
+        cursor.on('data', (post)=> {
             posts.push(post);
         });
-        cursor.on('end', function() {
+        cursor.on('end', ()=> {
             deferred.resolve(posts);
         });
         return deferred.promise;
@@ -135,7 +135,7 @@ module.exports.hotPosts = function(event) {
 };
 
 module.exports.newPosts = function(event) {
-    return Q.fcall(function() {
+    return Q.fcall(()=> {
         var deferred = Q.defer();
         var posts = [];
         var cursor = Vote.aggregate([
@@ -181,10 +181,10 @@ module.exports.newPosts = function(event) {
             //Return top scorers
         ])
         .cursor({batchSize:100}).exec();
-        cursor.on('data', function(post) {
+        cursor.on('data', (post)=> {
             posts.push(post);
         });
-        cursor.on('end', function() {
+        cursor.on('end', ()=> {
             deferred.resolve(posts);
         });
         return deferred.promise;

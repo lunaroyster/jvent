@@ -4,7 +4,7 @@ module.exports.blockingjwtAuth = passport.authenticate('jwt', { session: false})
 module.exports.localAuth = passport.authenticate('local', { session: false });
 
 module.exports.nonblockingjwtAuth = function(req, res, next) {
-    passport.authenticate('jwt', {session:false}, function(err, user, info) {
+    passport.authenticate('jwt', {session:false}, (err, user, info)=> {
         if(err) { next(err); }
         if(user) {
             req.user = user;
