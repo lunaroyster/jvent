@@ -8,18 +8,32 @@ const urlCore = require("./url");
 const URL = url.URL;
 
 const sources = require('../config/sources');
+
 var aliases = {};
-(function(sources, aliases) {
+((sources, aliases)=> {
     for(let source in sources) {
-        for(let alias of sources[source].alias) {
+        for(let alias in sources[source].aliases) {
             aliases[alias] = source;
         }
     }
 })(sources, aliases);
 
+var types = {};
+((sources, types)=> {
+    for(let source in sources) {
+        let sourceType = sources[source].type;
+        if(sourceType) types[source] = sourceType;
+        for(let alias in sources[source].aliases) {
+            let aliasType = sources[source].aliases[alias].type;
+            if(aliasType) types[alias] = aliasType;
+        }
+    }
+})(sources, types);
+
+
 // Media Creation
 module.exports.createMedia = function(mediaConfig) {
-    var getUniqueMediaURLinEvent = function(length, event) {
+    var getUniqueMediaURLinEvent = (length, event)=> {
         return Q.fcall(()=> {
             let url = urlCore.generateRandomUrl(length);
             return Media.findOne({url: url, event: event._id})
@@ -29,13 +43,13 @@ module.exports.createMedia = function(mediaConfig) {
             });
         });
     };
-    var createMediaDocument = function(mediaConfig) {
-        var getSource = function(url) {
+    var createMediaDocument = (mediaConfig)=> {
+        var getSource = (url)=> {
             let sourceURL = url.host;
             if(aliases[sourceURL]!=undefined) sourceURL = aliases[sourceURL];
             return sourceURL;
         };
-        // var getType = function(url) {
+        // var getType = (url)=> {
         //     //Look at known types to figure out data type. 
         //     //If that fails, try opengraph
         // };
@@ -50,7 +64,7 @@ module.exports.createMedia = function(mediaConfig) {
         newMedia.assignUser(mediaConfig.user);
         return newMedia;
     };
-    var saveMedia = function(media) {
+    var saveMedia = (media)=> {
         return media.save()
         .then(returnMediaOrError);
     };
