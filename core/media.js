@@ -49,14 +49,20 @@ module.exports.createMedia = function(mediaConfig) {
             if(aliases[sourceURL]!=undefined) sourceURL = aliases[sourceURL];
             return sourceURL;
         };
-        // var getType = (url)=> {
-        //     //Look at known types to figure out data type. 
-        //     //If that fails, try opengraph
-        // };
+        var getType = (url, source)=> {
+            let hostURL = url.host;
+            let type = types[source];
+            if(!type) type = types[hostURL];
+            return type;
+            //Look at known types to figure out data type. 
+            //If that fails, try opengraph
+        };
         let ResolvedURL = URL(mediaConfig.url);
         let source = getSource(ResolvedURL);
+        let type = getType(ResolvedURL, source);
         var newMedia = new Media({
             source: source,
+            type: type,
             link: mediaConfig.link,
             url: mediaConfig.url
         });
