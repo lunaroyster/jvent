@@ -12,6 +12,7 @@
     "test": "istanbul cover ./bin/test"
   },
   "dependencies": {
+    "amqplib": "^0.5.1",
     "async": "^2.1.4",
     "aws-sdk": "^2.94.0",
     "body-parser": "~1.17.2",
