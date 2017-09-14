@@ -30,7 +30,6 @@ var types = {};
     }
 })(sources, types);
 
-
 // Media Creation
 module.exports.createMedia = function(mediaConfig) {
     var getUniqueMediaURLinEvent = (length, event)=> {
@@ -57,9 +56,10 @@ module.exports.createMedia = function(mediaConfig) {
             //Look at known types to figure out data type. 
             //If that fails, try opengraph
         };
-        let ResolvedURL = URL(mediaConfig.url);
-        let source = getSource(ResolvedURL);
-        let type = getType(ResolvedURL, source);
+        console.log(mediaConfig.link);
+        let ResolvedLink = new URL(mediaConfig.link);
+        let source = getSource(ResolvedLink);
+        let type = getType(ResolvedLink, source);
         var newMedia = new Media({
             source: source,
             type: type,
@@ -107,7 +107,7 @@ module.exports.getMediaByID = function(event, mediaID) {
     .then(returnMediaOrError);
 };
 module.exports.getMediaByURL = function(event, mediaURL) {
-    var mediaQuery = Media.findOne({event: event._id, _id: mediaID});
+    var mediaQuery = Media.findOne({event: event._id, url: mediaURL});
     return mediaQuery.exec()
     .then(returnMediaOrError);
 };
