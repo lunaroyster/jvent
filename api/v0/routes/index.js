@@ -3,8 +3,10 @@ const router = express.Router();
 
 const authController = require('../controllers/auth');
 
-router.use('/event', authController.nonblockingjwtAuth, require('./event'));
-router.use('/user', authController.nonblockingjwtAuth, require('./user'));
-router.use('/service', authController.nonblockingjwtAuth, require('./service'));
+router.use(authController.nonblockingjwtAuth);
+
+router.use('/event', require('./event'));
+router.use('/user', require('./user'));
+router.use('/service', require('./service'));
 
 module.exports = router;

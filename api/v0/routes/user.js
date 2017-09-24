@@ -24,16 +24,18 @@ router.use('/events', AuthOnly, eventsRouter);
 var meRouter = express.Router();
     meRouter.get('/', userController.returnAuthenticatedUser);
     meRouter.post('/changepassword', userController.changePassword);
-    meRouter.get('/event', userController.getAllEventMemberships);
-    meRouter.get('/event/role/:role', userController.getEventMembershipsByRole);
     var meEventRouter = express.Router();
-        meEventRouter.get('/', userController.getEventMembership);
-        meEventRouter.get('/post', userController.getSelfEventPosts);
-        meEventRouter.get('/post/votes', userController.getEventPostVotes);
-        meEventRouter.get('/media', userController.getSelfEventMedia);
-    meRouter.use('/event/:eventID', commonController.appendEventID, commonController.appendEventIfVisible, meEventRouter)
+        meEventRouter.get('/', userController.getAllEventMemberships);
+        meEventRouter.get('/role/:role', userController.getEventMembershipsByRole);
+        var meEventContextRouter = express.Router();
+            meEventContextRouter.get('/', userController.getEventMembership);
+            meEventContextRouter.get('/post', userController.getSelfEventPosts);
+            meEventContextRouter.get('/post/votes', userController.getEventPostVotes);
+            meEventContextRouter.get('/media', userController.getSelfEventMedia);
+        meEventRouter.use('/:eventID', commonController.appendEventID, commonController.appendEventIfVisible, meEventContextRouter);
+    meRouter.use('/event', meEventRouter);
     meRouter.get('/post', userController.getSelfPosts);
-    meRouter.get('/post/votes', userController.getAllPostVotes)
+    meRouter.get('/post/votes', userController.getAllPostVotes);
     meRouter.get('/media', userController.getSelfMedia);
 router.use('/me', AuthOnly, meRouter);
 
