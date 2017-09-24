@@ -32,7 +32,8 @@ module.exports.setEventBackground = function(req, res) {
     })
     .then((eventBackground)=> {
         var state = {
-            status: "Created"
+            status: "Created",
+            media: eventBackground.url
         };
         res.status(201).json(state);
         return;

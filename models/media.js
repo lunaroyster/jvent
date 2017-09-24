@@ -8,20 +8,24 @@ var mediaSchema = new Schema({
             type: Date
         }
     },
-    // For Later {
-    type: String, //image/video/gif/link
-    strategy: String, //jvent/imgur/other
-    access: {
-        type: Schema.Types.Mixed //Whatever required to access the resource
+    
+    source: String,
+    type: String,
+    meta: {
+        type: Schema.Types.Mixed
     },
-    // }
+    
     // Temporary implementation {
     link: String,
     // }
+    
+    thumbnail: {
+        type: String
+    },
+    
     url: {
         type: String,
-        index: true,
-        unique: true
+        index: true
     },
     event: {
         type: Schema.Types.ObjectId,
