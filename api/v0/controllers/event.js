@@ -1,4 +1,3 @@
-const Q = require('q');
 const eventCore = require('../../../core/event');
 const eventMembershipCore = require('../../../core/eventMembership');
 const eventRequestSchema = require('../requests').event;
