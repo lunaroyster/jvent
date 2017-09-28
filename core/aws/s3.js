@@ -7,7 +7,7 @@ const S3_BUCKET = "jvent-media";
 const S3_REGION = "us-east-2"
 const urlCore = require('../url');
 
-module.exports.generateImageUploadToken = function(fileName, fileType) {
+var generateImageUploadToken = function(fileName, fileType) {
     var generateFileName = ()=> {
         return `${Date.now()}-${urlCore.generateRandomUrl(6)}.${mime.extension(fileType)}`;
     };
@@ -33,4 +33,8 @@ module.exports.generateImageUploadToken = function(fileName, fileType) {
         });
         return deferred.promise;
     });
+};
+
+module.exports = {
+    generateImageUploadToken: generateImageUploadToken
 };

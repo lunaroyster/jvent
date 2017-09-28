@@ -13,19 +13,15 @@ const EventMembership = eventMembershipCore.EventMembership;
 const Event = mongoose.model('Event');
 
 // Create Event
-var getUniqueEventURL = function(length) {
-    return Q.fcall(()=> {
-        var url = urlCore.generateRandomUrl(length);
-        return Event.findOne({url: url})
-        .then((event)=> {
-            if(!event) {
-                return url;
-            }
-            else {
-                return getUniqueEventURL(length);
-            }
-        });
-    });
+var getUniqueEventURL = async function(length) {
+    let url = urlCore.generateRandomUrl(length);
+    let event = await Event.findOne({url: url});
+    if(!event) {
+        return url;
+    }
+    else {
+        return await getUniqueEventURL(length);
+    }
 };
 var createEventDocument = function(eventConfig, user) {
     var newEvent = new Event({
@@ -44,55 +40,24 @@ var createEventDocument = function(eventConfig, user) {
     newEvent.assignOrganizer(user);
     return newEvent;
 };
-var saveEvent = function(event) {
-    return event.save()
-    .then(returnEventOrError);
+var saveEvent = async function(event) {
+    return returnEventOrError(await event.save());
 };
-var createEvent = function(eventConfig) {
-    var user = eventConfig.user;
-    return getUniqueEventURL(6)
-    .then((newEventURL)=> {
-        eventConfig.url = newEventURL;
-        var newEvent = createEventDocument(eventConfig, user);
-        return saveEvent(newEvent);
-        // TODO: Remove unnecessary event save if possible.
-    })
-    .then(function(event) {
-        //TODO: Rewrite this abomination of a code block
-        //TODO: Remove promise array and simplify as needed
-        var promises = [];
-        promises.push(collectionCore.createSuperCollection(event));
-        // promises.push(eventMembershipCore.addModerator(user, event));
-        promises.push(Q.fcall(()=> {
-            var eventMembership = EventMembership.createUnsavedMembership(user, event);
-            return eventMembership.addRoles(["organizer", "moderator"]);
-        }))
-        // promises.push(userListCore.createDefaultUserLists(event));
-        return Q.all(promises)
-        .then((results)=> {
-            event.superCollection = results[0];
-            // event.assignUserLists(results[1]);
-        })
-        .then(()=> {
-            return event.save();
-        });
-    });
+var createEvent = async function(eventConfig) {
+    let user = eventConfig.user;
+    eventConfig.url = await getUniqueEventURL(6);
+    let event = await saveEvent(createEventDocument(eventConfig, user));
+    
+    event.superCollection = await collectionCore.createSuperCollection(event); // Can be removed
+    
+    let eventMembership = EventMembership.createUnsavedMembership(user, event);
+    await eventMembership.addRoles(["organizer", "moderator"]);
+    event = saveEvent(event);
+    return event;
 };
-module.exports.createEvent = function(eventConfig, mediaConfig) {
-    // return Q.fcall(function() {
-    //     if(mediaConfig) {
-    //         return mediaCore.createMedia(mediaConfig);
-    //     }
-    // })
-    // .then(function(mediaDelegate) {
-    //     // return [createEvent(eventConfig, mediaDelegate), mediaDelegate];
-    //     return createEvent(eventConfig, mediaDelegate);
-    // })
-    return createEvent(eventConfig);
-}
 
 // Get Events
-module.exports.getPublicEvents = function() {
+var getPublicEvents = async function() {
     // TODO: query to select events based on time/location/rating/uploader etc
     var eventQuery = Event
     .find({visibility: "public"})
@@ -100,44 +65,38 @@ module.exports.getPublicEvents = function() {
     .select('-_id name description byline url organizer.name ingress backgroundImage');
     return eventQuery.exec();
 };
-module.exports.queryEvents = function(query) {
+var queryEvents = function(query) {
     //TODO
 };
 
 // Get Event
-module.exports.getEventByID = function(eventID) {
+var getEventByID = async function(eventID) {
     return Event.findOne({_id: eventID})
     .populate('backgroundImage')
     .select('name byline description url organizer.name ingress visibility timeOfCreation superCollection backgroundImage')
     .then(returnEventOrError);
 };
-module.exports.getEventByURL = function(url) {
+var getEventByURL = async function(url) {
     return Event.findOne({url: url})
     .populate('backgroundImage')
     .select('name byline description url organizer.name ingress visibility timeOfCreation superCollection backgroundImage')
     .then(returnEventOrError);
 };
-module.exports.getEventByURLAsModerator = function(url) {
+var getEventByURLAsModerator = async function(url) {
     return Event.findOne({url: url})
     .populate('backgroundImage')
     .select('name byline description url organizer.name ingress visibility timeOfCreation roles backgroundImage')
     .then(returnEventOrError);
 };
-module.exports.getEventIfAttendee = function(user, eventID) {
+var getEventIfAttendee = async function(user, eventID) {
 
 };
 
-module.exports.setEventBackground = function(event, mediaConfig) {
-    return Q.fcall(()=> {
-        return mediaCore.createMedia(mediaConfig);
-    })
-    .then((media)=> {
-        event.setBackgroundImage(media);
-        return event.save()
-        .then((event)=> {
-            return media;
-        });
-    });
+var setEventBackground = async function(event, mediaConfig) {
+    let media = await mediaCore.createMedia(mediaConfig);
+    event.setBackgroundImage(media);
+    await event.save();
+    return media;
 };
 
 var returnEventOrError = function(event) {
@@ -147,4 +106,16 @@ var returnEventOrError = function(event) {
         throw err;
     }
     return event;
+};
+
+
+module.exports = {
+    createEvent: createEvent,
+    getPublicEvents: getPublicEvents,
+    queryEvents: queryEvents,
+    getEventByID: getEventByID,
+    getEventByURL: getEventByURL,
+    getEventByURLAsModerator: getEventByURLAsModerator,
+    getEventIfAttendee: getEventIfAttendee,
+    setEventBackground: setEventBackground
 };
