@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Q = require('q');
 
 // const User = mongoose.model('User');
 const eventCore = require('./event');
