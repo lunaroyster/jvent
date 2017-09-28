@@ -1,7 +1,7 @@
 const passport = require('passport');
 
-module.exports.blockingjwtAuth = passport.authenticate('jwt', { session: false});
-module.exports.localAuth = passport.authenticate('local', { session: false });
+var blockingjwtAuth = passport.authenticate('jwt', { session: false});
+var localAuth = passport.authenticate('local', { session: false });
 
 var nonblockingjwtAuth = function(req, res, next) {
     passport.authenticate('jwt', {session:false}, (err, user, info)=> {
@@ -26,5 +26,7 @@ var AuthOnly = function(req, res, next) {
 
 module.exports = {
     nonblockingjwtAuth: nonblockingjwtAuth,
-    AuthOnly: AuthOnly
+    AuthOnly: AuthOnly,
+    blockingjwtAuth: blockingjwtAuth,
+    localAuth: localAuth
 };

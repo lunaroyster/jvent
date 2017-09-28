@@ -33,18 +33,21 @@ var createEventMedia = async function(req, res) {
     }
 };
 
-module.exports.getEventMedia = function(req, res) {
+var getEventMedia = function(req, res) {
 
 };
-module.exports.getEventMediaByURL = function (req, res) {
+var getEventMediaByURL = function (req, res) {
 
 };
 
-module.exports.appendMediaURL = function(req, res, next) {
+var appendMediaURL = function(req, res, next) {
     req.mediaURL = req.params.mediaURL;
     next();
 };
 
 module.exports = {
-    createEventMedia: createEventMedia
+    createEventMedia: createEventMedia,
+    getEventMedia: getEventMedia,
+    getEventMediaByURL: getEventMediaByURL,
+    appendMediaURL: appendMediaURL
 };

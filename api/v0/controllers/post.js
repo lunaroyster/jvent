@@ -20,7 +20,7 @@ const EventMembership = eventMembershipCore.EventMembership;
 // /post/
 var checkCreatePostPrivilege = async function(req) {
     if(!req.user.privileges.createPost) throw new Error("Bad privileges");
-    let eventMembership = req.getEventMembership();
+    let eventMembership = await req.getEventMembership();
     assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
 };
 var createPostTemplateFromRequest = function(req, post) {
