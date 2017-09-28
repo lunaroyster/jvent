@@ -1,13 +1,13 @@
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var expressValidator = require('express-validator');
-var passport = require('passport');
-var helmet = require('helmet');
-var Raven = require('raven');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');
+const passport = require('passport');
+const helmet = require('helmet');
+const Raven = require('raven');
 
 Raven.config(process.env.__DSN__).install();
 
@@ -57,18 +57,14 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    var fs = require('fs');
-    app.use(function(err, req, res, next) {
+    const fse = require('fs-extra');
+    app.use(async function(err, req, res, next) {
         res.status(err.status || 500);
-        res.render('error', {
+        res.json({
             message: err.message,
             error: err
         });
-        // if(res.status==500) {
-        fs.writeFile('logs/' + Date.now(), JSON.stringify({message:err.message, stacktrace: err.stack}), {flag:'wx'}, function(err) {
-        // console.log("Logged error");
-        });
-        // }
+        await fse.outputFile(`logs/${Date.now()}`, JSON.stringify({message:err.message, stacktrace: err.stack}), {flag:'wx'});
     });
 }
 
