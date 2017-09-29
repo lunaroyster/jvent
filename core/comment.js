@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Q = require('q');
 
 const urlCore = require('./url');
 
@@ -26,55 +25,46 @@ var createCommentDocument = function(commentConfig) {
     newComment.setSubmitter(commentConfig.user);
     return newComment;
 };
-var saveComment = function(comment) {
-    return comment.save()
-    .then(returnCommentOrError);
+var saveComment = async function(comment) {
+    return returnCommentOrError(await comment.save());
 };
-var getUniqueCommentURL = function(length, event, post) {
-    return Q.fcall(()=> {
-        var url = urlCore.generateRandomUrl(length);
-        return Comment.findOne({url: url, event: event._id, post: post._id})
-        .then((comment)=> {
-            if(!comment) return url;
-            return getUniqueCommentURL(length, event, post);
-        });
-    });
+var getUniqueCommentURL = async function(length, event, post) {
+    let url = urlCore.generateRandomUrl(length);
+    let comment = await Comment.findOne({url: url, event: event._id, post: post._id});
+    if(!comment) return url;
+    return getUniqueCommentURL(length, event, post);
 };
-module.exports.createComment = function(commentConfig) {
-    return Q.fcall(()=> {
-        return getUniqueCommentURL(4, commentConfig.event, commentConfig.post);
-    })
-    .then((newCommentUrl)=> {
-        commentConfig.url = newCommentUrl;
-        if(!commentConfig.parent) return;
-        return getCommentByID(commentConfig.event, commentConfig.post, commentConfig.parent)
-        .then((parentComment)=> {
-            commentConfig.parentComment = parentComment;
-        });
-    })
-    .then(()=> {
-        var newComment = createCommentDocument(commentConfig);
-        return saveComment(newComment);
-    });
+var createComment = async function(commentConfig) {
+    commentConfig.url = await getUniqueCommentURL(4, commentConfig.event, commentConfig.post);
+    if(commentConfig.parent) {
+        let parentComment = await getCommentByID(commentConfig.event, commentConfig.post, commentConfig.parent);
+        commentConfig.parentComment = parentComment;
+    }
+    let newComment = createCommentDocument(commentConfig);
+    return saveComment(newComment);
 };
 
 //Comment fetching
-module.exports.getComments = function(event, post) {
+var getComments = async function(event, post) {
     var commentQuery = Comment
     .find({event: event._id, post: post._id});
     return commentQuery.exec();
 };
 
-var getCommentByID = function(event, post, commentID) {
+var getCommentByID = async function(event, post, commentID) {
     var commentQuery = Comment.findOne({event: event._id, post: post._id, _id: commentID});
-    return commentQuery.exec()
-    .then(returnCommentOrError);
+    return returnCommentOrError(await commentQuery.exec());
 };
-module.exports.getCommentByID = getCommentByID;
 
-module.exports.getCommentByURL = function(event, post, commentURL) {
+var getCommentByURL = async function(event, post, commentURL) {
     var commentQuery = Comment.findOne({event: event._id, post: post._id, url: commentURL});
-    return commentQuery.exec()
-    .then(returnCommentOrError);
+    return returnCommentOrError(await commentQuery.exec());
 };
 //Comment vote
+
+module.exports = {
+    createComment: createComment,
+    getComments: getComments,
+    getCommentByID: getCommentByID,
+    getCommentByURL: getCommentByURL
+};

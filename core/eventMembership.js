@@ -18,29 +18,23 @@ var EventMembership = class EventMembership {
         return(this._eventMembership.hasRole(role));
     }
 
-    addRole(role) {
+    async addRole(role) {
         //TODO verify role.
-        var eventMembership = this._eventMembership;
-        return Q.fcall(()=> {
-            var addRoleSuccess = eventMembership.addRole(role);
-            if(addRoleSuccess) return eventMembership.save();
-            throw new Error("Already has role " + role);
-        })
+        let eventMembership = this._eventMembership;
+        let addRoleSuccess = eventMembership.addRole(role);
+        if(addRoleSuccess) return eventMembership.save();
+        throw new Error(`Already has role ${role}`);
     }
-    addRoles(roles) {
-        var eventMembership = this._eventMembership;
-        return Q.fcall(()=> {
-            var addedRoles = eventMembership.addRoles(roles);
-            if(addedRoles.length>0) return eventMembership.save();
-            throw new Error("The roles " + roles + " already exist");
-        });
+    async addRoles(roles) {
+        let eventMembership = this._eventMembership;
+        let addedRoles = eventMembership.addRoles(roles);
+        if(addedRoles.length>0) return eventMembership.save();
+        throw new Error(`The roles ${roles} already exist`);
     }
 
-    forceSave() {
-        this._eventMembership.save()
-        .then((eventMembershipModel)=> {
-            return this;
-        })
+    async forceSave() {
+        let eventMembershipModel = await this._eventMembership.save();
+        return this;
     }
 
     static getMembership(user, event) {
