@@ -62,7 +62,7 @@ if (app.get('env') === 'development') {
         res.status(err.status || 500);
         res.json({
             message: err.message,
-            error: err
+            error: err.stack
         });
         await fse.outputFile(`logs/${Date.now()}`, JSON.stringify({message:err.message, stacktrace: err.stack}), {flag:'wx'});
     });
