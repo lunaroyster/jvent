@@ -1,5 +1,4 @@
 const postCore = require('../../../core/post');
-const Q = require('q');
 const assert = require('chai').assert;
 
 // const eventCore = require('../../../core/event');
@@ -14,22 +13,15 @@ const postRankQueryCore = require('../../../core/postRankQuery');
 const common = require('./common');
 const validateRequest = common.validateRequest;
 const packError = common.packError;
+const asyncWrap = common.asyncWrap;
 const createMediaTemplateFromRequest = common.createMediaTemplateFromRequest;
 const EventMembership = eventMembershipCore.EventMembership;
 
 // /post/
-var checkCreatePostPrivilege = function(req) {
-    return Q.fcall(()=> {
-        if(!req.user.privileges.createPost) throw new Error("Bad privileges");
-        return;
-    })
-    .then(()=> {
-        return req.getEventMembership()
-        .then((eventMembership)=> {
-            assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
-            return;
-        })
-    })
+var checkCreatePostPrivilege = async function(req) {
+    if(!req.user.privileges.createPost) throw new Error("Bad privileges");
+    let eventMembership = await req.getEventMembership();
+    assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
 };
 var createPostTemplateFromRequest = function(req, post) {
     if(!post) return;
@@ -43,137 +35,88 @@ var createPostTemplateFromRequest = function(req, post) {
         event: req.event
     };
 };
-module.exports.createPost = function(req, res) {
-    Q.fcall(()=> {
-        return validateRequest(req, postRequestSchema.createPost);
-    })
-    .then(()=> {
-        return checkCreatePostPrivilege(req)
-        .then(()=> {
-            return req.event;
-        });
-    }) // Checks create post privilege.
-    .then(()=> {
-        var postTemplate = createPostTemplateFromRequest(req, req.body.post);
-        var mediaTemplate = undefined;
-        if(req.body.media) {
-            mediaTemplate = createMediaTemplateFromRequest(req, req.body.media);
-        }
-        return postCore.createPost(postTemplate, mediaTemplate);
-        // .then((post)=> {
-        //     return collectionCore.addPostToCollectionByID(post, req.user.posts)
-        //     .then((collection)=> {
-        //         return post;
-        //     });
-        // }); //TODO: secondary collections
-    })    //Create post and add to collections
-    .spread((post, media)=> {
-        var state = {
+var createPost = async function(req, res) {
+    try {
+        await validateRequest(req, postRequestSchema.createPost);
+        await checkCreatePostPrivilege(req);
+        let postTemplate = await createPostTemplateFromRequest(req, req.body.post);
+        let mediaTemplate = undefined;
+        if(req.body.media) mediaTemplate = createMediaTemplateFromRequest(req, req.body.media);
+        let [postPromise, mediaPromise] = await postCore.createPost(postTemplate, mediaTemplate);
+        let post = await postPromise;
+        let media = await mediaPromise;
+        let state = {
             status: "Created",
-            post: {
-                url: post.url
-            }
+            post: {url: post.url}
         };
         if(media) {
-            state.media = {
-                url: media.url
-            };
+            state.media = {url: media.url};
         }
         res.status(201).json(state);
-        return;
-    })     //Send post creation success
-    .catch((error)=> {
+    }
+    catch (error) {
         var err = packError(error);
         // console.log(error.stack);
         res.status(400).json(err);
-    });
+    }
 };
 
-// module.exports.getPosts = function(req, res) {
-//     // get a promise
-//     // check req for querystring or parameters and format query
-//     var responseObject = {};
-//     return postCore.getEventPosts(req.event)
-//     .then(function(posts) {
-//         responseObject.posts = posts;
-//         res.status(200);
-//         res.json(responseObject);
-//     });
-// };
-module.exports.getEventPosts = function(req, res) {
-    return Q.fcall(()=> {
-        var rankType = req.query.rank || "hot";
+var getEventPosts = async function(req, res) {
+    try {
+        let rankType = req.query.rank || "hot";
         assert.include(["hot", "top"], rankType, "Not a valid rank");
-        return(postCore.getRankedEventPosts(req.event, rankType));
-    })
-    .then((posts)=> {
+        let posts = await postCore.getRankedEventPosts(req.event, rankType);
         res.status(200).json({posts: posts});
-    })
-    .catch((error)=> {
+    }
+    catch (error) {
         //TODO
-        // res.status(400).json(error)
         res.status(400).json(error.message);
-    });
+    }
 };
 
 // /post/:postURL
 
-module.exports.getPostByID = function(req, res) {
+var getPostByID = async function(req, res) {
     // Check user privilege
     // Perhaps check querystring (for comment sorting maybe?)
-    return postCore.getPostByID(req.event._id, req.params.postURL)
-    .then((post)=> {
-        res.status(200);
-        res.json(post);
-    });
+    let post = await postCore.getPostByID(req.event._id, req.params.postURL);
+    res.status(200).json(post);
 };
-module.exports.getPost = function(req, res) {
-    var responseObject = {};
-    responseObject.post = req.post;
-    res.status(200).json(responseObject);
+var getPost = function(req, res) {
+    res.status(200).json({post: req.post});
 };
 
-
-// module.exports.updatePost = function(req, res) {
-//     res.json(req);
-//     res.send();
-// };
-// module.exports.deletePost = function(req, res) {
-//     res.json(req);
-//     res.send();
-// };
-
-module.exports.appendPostURL = function(req, res, next) {
+var appendPostURL = function(req, res, next) {
     req.postURL = req.params.postURL;
     next();
 };
-module.exports.appendPost = function(req, res, next) {
-    postCore.getPostByURL(req.event, req.postURL)
-    .then((post)=> {
-        req.post = post;
-        next();
-    });
+var appendPost = async function(req, res, next) {
+    let post = await postCore.getPostByURL(req.event, req.postURL);
+    req.post = post;
+    next();
 };
 
 // /post/:postURL/vote
 
-module.exports.vote = function(req, res) {
-    Q.fcall(()=> {
-        return validateRequest(req, postRequestSchema.vote);
-    })
-    .then(()=> {
-        return postCore.vote(req.user, req.post, req.body.direction);
-    })
-    .then((response)=> {
-        if(response.change) {
-            res.status(200).json(response);
-        }
-        else {
-            res.status(400).json(response);
-        }
-    })
-    .catch((error)=> {
+var vote = async function(req, res) {
+    try {
+        await validateRequest(req, postRequestSchema.vote);
+        let voteResponse = await postCore.vote(req.user, req.post, req.body.direction);
+        if(voteResponse.change) return res.status(200).json(voteResponse);
+        res.status(400).json(voteResponse);
+    }
+    catch (error) {
         var err = packError(error);
         res.status(400).json(err);
-    });
+    }
+};
+
+module.exports = {
+    createPost: asyncWrap(createPost),
+    getEventPosts: asyncWrap(getEventPosts),
+    getPostByID: asyncWrap(getPostByID),
+    getPost: asyncWrap(getPost),
+    appendPostURL: appendPostURL,
+    appendPost: appendPost,
+    vote: asyncWrap(vote)
 };

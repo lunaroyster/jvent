@@ -22,7 +22,7 @@ var ceRouter = express.Router(); //contextEvent Router
     ceRouter.use('/users', AuthOnly, commonController.appendEventIfVisible, usersRouter);
 
     var mediaRouter = express.Router();
-        mediaRouter.post('/', mediaController.createEventMedia);
+        mediaRouter.post('/', AuthOnly, mediaController.createEventMedia);
         mediaRouter.get('/', mediaController.getEventMedia);
 
         var cmRouter = express.Router(); //contextEvent/media Router
@@ -33,8 +33,8 @@ var ceRouter = express.Router(); //contextEvent Router
     var settingsRouter = express.Router();
         // settingsRouter.get('/', eventSettingsController.getSettings);
 
-        settingsRouter.get('/eventBackground', eventSettingsController.getEventBackground)
-        settingsRouter.post('/eventBackground', eventSettingsController.setEventBackground)
+        settingsRouter.get('/eventBackground', eventSettingsController.getEventBackground);
+        settingsRouter.post('/eventBackground', eventSettingsController.setEventBackground);
     ceRouter.use('/settings', AuthOnly, commonController.appendEventIfVisible, settingsRouter);
 
     ceRouter.use('/post', commonController.appendEventIfVisible, require('./post'));

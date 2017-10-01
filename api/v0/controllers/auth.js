@@ -1,9 +1,9 @@
 const passport = require('passport');
 
-module.exports.blockingjwtAuth = passport.authenticate('jwt', { session: false});
-module.exports.localAuth = passport.authenticate('local', { session: false });
+var blockingjwtAuth = passport.authenticate('jwt', { session: false});
+var localAuth = passport.authenticate('local', { session: false });
 
-module.exports.nonblockingjwtAuth = function(req, res, next) {
+var nonblockingjwtAuth = function(req, res, next) {
     passport.authenticate('jwt', {session:false}, (err, user, info)=> {
         if(err) { next(err); }
         if(user) {
@@ -13,7 +13,7 @@ module.exports.nonblockingjwtAuth = function(req, res, next) {
     })(req, res, next);
 };
 
-module.exports.AuthOnly = function(req, res, next) {
+var AuthOnly = function(req, res, next) {
     if(req.user) {
         next();
     }
@@ -22,4 +22,11 @@ module.exports.AuthOnly = function(req, res, next) {
         err.status = 401;
         next(err);
     }
+};
+
+module.exports = {
+    nonblockingjwtAuth: nonblockingjwtAuth,
+    AuthOnly: AuthOnly,
+    blockingjwtAuth: blockingjwtAuth,
+    localAuth: localAuth
 };

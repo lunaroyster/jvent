@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const url = require('url');
-const Q = require('q');
 
 const Media = mongoose.model('Media');
 
@@ -31,18 +30,15 @@ var types = {};
 })(sources, types);
 
 // Media Creation
-module.exports.createMedia = function(mediaConfig) {
-    var getUniqueMediaURLinEvent = (length, event)=> {
-        return Q.fcall(()=> {
-            let url = urlCore.generateRandomUrl(length);
-            return Media.findOne({url: url, event: event._id})
-            .then((media)=> {
-                if(!media) return url;
-                return getUniqueMediaURLinEvent(length, event);
-            });
-        });
+var createMedia = async function(mediaConfig) {
+    var getUniqueMediaURLinEvent = async (length, event)=> {
+        let url = urlCore.generateRandomUrl(length);
+        let media = await Media.findOne({url: url, event: event._id});
+        if(!media) return url;
+        return getUniqueMediaURLinEvent(length, event);
     };
     var createMediaDocument = (mediaConfig)=> {
+        // Clean this.
         var getSource = (url)=> {
             let sourceURL = url.host;
             if(aliases[sourceURL]!=undefined) sourceURL = aliases[sourceURL];
@@ -70,22 +66,13 @@ module.exports.createMedia = function(mediaConfig) {
         newMedia.assignUser(mediaConfig.user);
         return newMedia;
     };
-    var saveMedia = (media)=> {
-        return media.save()
-        .then(returnMediaOrError);
-    };
-    return Q.fcall(()=> {
-        return getUniqueMediaURLinEvent(6, mediaConfig.event);
-    })
-    .then((newMediaURL)=> {
-        mediaConfig.url = newMediaURL;
-        var newMedia = createMediaDocument(mediaConfig);
-        return newMedia;
-    })
-    .then(saveMedia);
+    
+    mediaConfig.url = await getUniqueMediaURLinEvent(6, mediaConfig.event);
+    let newMedia = createMediaDocument(mediaConfig);
+    return returnMediaOrError(await newMedia.save());
 };
 
-module.exports.createEventMedia = function(mediaConfig) {
+var createEventMedia = function(mediaConfig) {
 
 };
 // Media Retrieval
@@ -97,17 +84,23 @@ var returnMediaOrError = function(media) {
     }
     return media;
 };
-module.exports.getEventMedia = function(event) {
+var getEventMedia = async function(event) {
     var mediaQuery = Media.find({event: event._id});
     return mediaQuery.exec();
 };
-module.exports.getMediaByID = function(event, mediaID) {
+var getMediaByID = async function(event, mediaID) {
     var mediaQuery = Media.findOne({event: event._id, _id: mediaID});
-    return mediaQuery.exec()
-    .then(returnMediaOrError);
+    return returnMediaOrError(await mediaQuery.exec());
 };
-module.exports.getMediaByURL = function(event, mediaURL) {
+var getMediaByURL = async function(event, mediaURL) {
     var mediaQuery = Media.findOne({event: event._id, url: mediaURL});
-    return mediaQuery.exec()
-    .then(returnMediaOrError);
+    return returnMediaOrError(await mediaQuery.exec());
+};
+
+module.exports = {
+    createMedia: createMedia,
+    createEventMedia: createEventMedia,
+    getEventMedia: getEventMedia,
+    getMediaByID: getMediaByID,
+    getMediaByURL: getMediaByURL
 };
