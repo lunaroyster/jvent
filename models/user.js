@@ -31,10 +31,6 @@ var userSchema = new Schema({
             type: Date
         }
     },
-    posts: {
-        type: Schema.Types.ObjectId,
-        ref: 'Collection'
-    },
     privileges: {
         createEvent: {
             type: Boolean,

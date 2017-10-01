@@ -2,9 +2,6 @@
 require('./event');
 require('./post');
 require('./comment')
-require('./collection');
-require('./supercollection');
-require('./compilation');
 require('./user');
 require('./vote');
 require('./eventmembership');

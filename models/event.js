@@ -17,14 +17,6 @@ var eventSchema = new Schema({
         type: String,
         required: true
     },
-    collections: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Collection'
-    }],
-    superCollection: {
-        type: Schema.Types.ObjectId,
-        ref: 'SuperCollection'
-    },
     userLists: {
         moderator: {
             enabled: { type: Boolean },

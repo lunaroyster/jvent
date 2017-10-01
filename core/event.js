@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Q = require('q');
 // const User = mongoose.model('User');
 const urlCore = require('./url');
-const collectionCore = require('./collection');
 const userListCore = require('./userList');
 const eventMembershipCore = require('./eventMembership');
 const eventFindQuery = require('./eventFindQuery');
@@ -47,8 +46,6 @@ var createEvent = async function(eventConfig) {
     let user = eventConfig.user;
     eventConfig.url = await getUniqueEventURL(6);
     let event = await saveEvent(createEventDocument(eventConfig, user));
-    
-    event.superCollection = await collectionCore.createSuperCollection(event); // Can be removed
     
     let eventMembership = EventMembership.createUnsavedMembership(user, event);
     await eventMembership.addRoles(["organizer", "moderator"]);
