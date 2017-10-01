@@ -98,18 +98,6 @@ var EventMembership = class EventMembership {
     static createUnsavedMembership(user, event) {
         return new EventMembership(EventMembership.createMembershipModel(user, event));
     }
-    // static createEventMembershipObject(eventMembershipConfig) {
-    //     //TODO: Verify roles.
-    //     var newEventMembership = new EventMembershipModel({
-    //         roles: eventMembershipConfig.roles
-    //     });
-    //     newEventMembership.setUser(eventMembershipConfig.user);
-    //     newEventMembership.setEvent(eventMembershipConfig.event);
-    //     return newEventMembership.save()
-    //     .t   hen(function(eventMembership) {
-    //         return new EventMembership(eventMembership);
-    //     });
-    // }
 
     static deserializeObject(eventMembershipObject) {
         return new EventMembership(eventMembershipObject);

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Q = require('q');
-const collectionCore = require('./collection');
 const UserList = mongoose.model('UserList');
 
 //Create

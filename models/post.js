@@ -35,14 +35,6 @@ var postSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'Event'
     },
-    parentCollections: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Collection'
-    },
-    superCollection: {
-        type: Schema.Types.ObjectId,
-        ref: 'SuperCollection'
-    },
     submitter: {
         user: {
             type: Schema.Types.ObjectId,
@@ -58,10 +50,6 @@ var postSchema = new Schema({
         unique: true
     }
 });
-
-postSchema.methods.collectionCount = function() {
-    return this.parentCollections.length;
-};
 
 postSchema.methods.setMedia = function(media) {
     this.media.media = media._id;

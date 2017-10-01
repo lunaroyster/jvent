@@ -1,5 +1,4 @@
 module.exports = {
-    collection: require("./collection"),
     event: require("./event"),
     passport: require("./passport"),
     post: require("./post"),

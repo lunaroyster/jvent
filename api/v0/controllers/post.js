@@ -3,7 +3,6 @@ const assert = require('chai').assert;
 
 // const eventCore = require('../../../core/event');
 const userListCore = require('../../../core/userList');
-const collectionCore = require('../../../core/collection');
 const mediaCore = require('../../../core/media');
 const eventMembershipCore = require('../../../core/eventMembership');
 const postRequestSchema = require('../requests').post;

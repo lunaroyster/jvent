@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 // const User = mongoose.model('User');
 const eventCore = require('./event');
 const urlCore = require('./url');
-const collectionCore = require('./collection');
 const mediaCore = require('./media');
 const postRankQuery = require('./postRankQuery');
 
@@ -41,16 +40,9 @@ var getUniquePostURL = async function(length, event) {
 };
 var _createPost = async function(postConfig, mediaDelegate) {
     postConfig.url = await getUniquePostURL(6, postConfig.event);
-    
-    let sc = await collectionCore.getSuperCollectionByID(postConfig.event.superCollection);
-    
     let newPost = createPostDocument(postConfig, mediaDelegate);
-    newPost.sc = sc;
-    
     let post = await savePost(newPost);
-    sc.addPost(post);
     await vote(postConfig.user, post, 1);
-    await sc.save();
     return post;
 };
 var createPost = async function(postConfig, mediaConfig) {
@@ -64,7 +56,6 @@ var createPost = async function(postConfig, mediaConfig) {
 // Post Retrieval
 var getEventPosts = async function(event) {
     //TODO: Queries
-    // Can use either supercollection or direct. Change this implementation if required.
     var postQuery = Post.find({event: event._id});
     return postQuery.exec();
 };
