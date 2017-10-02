@@ -97,7 +97,7 @@ var getAllUsers = function(req, res) {
     return getUserList(req, res, EventMembership.getAllMembershipsForEvent(req.event));
 };
 var getUsersByRole = function(req, res) {
-    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, req.params.role));
+    return getUserList(req, res, EventMembership.getAllMembershipsForEvent(req.event, req.params.role));
 };
 
 // /event/:eventID/join

@@ -69,7 +69,7 @@ var getAllEventMemberships = async function(req, res) {
     return await getEventList(req, res, EventMembership.getAllMembershipsForUser(req.user));
 };
 var getEventMembershipsByRole = async function(req, res) {
-    return await getEventList(req, res, EventMembership.getAllMembershipsForUserByRole(req.user, req.params.role));
+    return await getEventList(req, res, EventMembership.getAllMembershipsForUser(req.user, req.params.role));
 };
 var getEventMembership = async function(req, res) {
     try {
