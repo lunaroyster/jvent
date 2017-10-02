@@ -13,13 +13,13 @@ router.post('/', AuthOnly, eventController.createEvent);
 router.get('/', eventController.getEvents);
 
 var ceRouter = express.Router(); //contextEvent Router
-    ceRouter.get('/', commonController.appendEventIfVisible, eventController.getEvent);
-    ceRouter.patch('/join', AuthOnly, commonController.appendEventIfVisible, eventController.joinEvent);
+    ceRouter.get('/', eventController.getEvent);
+    ceRouter.patch('/join', AuthOnly, eventController.joinEvent);
 
     var usersRouter = express.Router(); //contextEvent/users Router
         usersRouter.get('/', eventController.getAllUsers);
         usersRouter.get('/:role', eventController.getUsersByRole);
-    ceRouter.use('/users', AuthOnly, commonController.appendEventIfVisible, usersRouter);
+    ceRouter.use('/users', AuthOnly, usersRouter);
 
     var mediaRouter = express.Router();
         mediaRouter.post('/', AuthOnly, mediaController.createEventMedia);
@@ -28,17 +28,17 @@ var ceRouter = express.Router(); //contextEvent Router
         var cmRouter = express.Router(); //contextEvent/media Router
             cmRouter.get('/', mediaController.getEventMediaByURL);
         mediaRouter.use('/:mediaURL', mediaController.appendMediaURL, cmRouter);
-    ceRouter.use('/media', commonController.appendEventIfVisible, mediaRouter);
+    ceRouter.use('/media', mediaRouter);
 
     var settingsRouter = express.Router();
         // settingsRouter.get('/', eventSettingsController.getSettings);
 
         settingsRouter.get('/eventBackground', eventSettingsController.getEventBackground);
         settingsRouter.post('/eventBackground', eventSettingsController.setEventBackground);
-    ceRouter.use('/settings', AuthOnly, commonController.appendEventIfVisible, settingsRouter);
+    ceRouter.use('/settings', AuthOnly, settingsRouter);
 
-    ceRouter.use('/post', commonController.appendEventIfVisible, require('./post'));
+    ceRouter.use('/post', require('./post'));
 
-router.use('/:eventURL', commonController.appendEventURL, commonController.appendEventMembershipGetter, ceRouter);
+router.use('/:eventURL', commonController.appendEventURL, commonController.appendEventGetter, commonController.appendEventMembershipGetter, ceRouter);
 
 module.exports = router;

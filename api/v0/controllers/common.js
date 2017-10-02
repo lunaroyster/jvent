@@ -49,7 +49,14 @@ module.exports.appendEventID = function(req, res, next) {
 module.exports.appendEventGetter = function(req, res, next) {
     var EventGetter = async ()=> {
         if(req.event) return req.event;
-        let event = await eventCore.getEventByURL(req.eventURL || req.params.eventURL);
+        
+        let eventID = req.eventID || req.params.eventID;
+        let eventURL = req.eventURL || req.params.eventURL;
+        // console.log(eventID, eventURL)
+        let event;
+        if(eventURL) event = await eventCore.getEventByURL(eventURL);
+        if(eventID) event = await eventCore.getEventByID(eventID);
+
         if(event.visibility=="public") {
             req.event = event;
         }
@@ -59,20 +66,22 @@ module.exports.appendEventGetter = function(req, res, next) {
         }
         else if(event.visibility=="private") {
             if(!req.user) throw badAuthError;
-            let eventMembership = await req.getEventMembership();
+            let eventMembership = await req.getEventMembership(event);
             if(!eventMembership.hasRole("viewer")) throw badAuthError;
             req.event = event;
         }
+        return req.event;
     };
     req.getEvent = EventGetter;
     next();
 };
 
 module.exports.appendEventMembershipGetter = function(req, res, next) {
-    var EventMembershipGetter = async ()=> {
+    var EventMembershipGetter = async (fetchedEvent)=> {
         if(req.EventMembership) return req.EventMembership;
-        if(!req.user || !req.event) throw Error("Failed to resolve memberships");
-        let eventMembership = await EventMembership.getOrCreateMembership(req.user, req.event);
+        let event = fetchedEvent || await req.getEvent();
+        if(!req.user || !event) throw Error("Failed to resolve memberships");
+        let eventMembership = await EventMembership.getOrCreateMembership(req.user, event);
         req.EventMembership = eventMembership;
         return eventMembership;
     };
@@ -81,31 +90,7 @@ module.exports.appendEventMembershipGetter = function(req, res, next) {
 };
 
 module.exports.appendEventIfVisible = async function(req, res, next) {
-    try {
-        let eventID = req.eventID || req.params.eventID;
-        let eventURL = req.eventURL || req.params.eventURL;
-        // console.log(eventID, eventURL)
-        let event;
-        if(eventURL) event = await eventCore.getEventByURL(eventURL);
-        if(eventID) event = await eventCore.getEventByID(eventID);
-        
-        if(event.visibility=="public") {
-            req.event = event;
-        }
-        else if(event.visibility=="unlisted") {
-            if(!req.user) throw badAuthError;
-            req.event = event;
-        }
-        else if(event.visibility=="private") {
-            let eventMembership = await req.getEventMembership();
-            if(!eventMembership.hasRole("viewer")) throw badAuthError;
-            req.event = event;
-        }
-        next();
-    }
-    catch (error) {
-        next(error);
-    }
+    return req.getEvent();
 };
 
 module.exports.asyncWrap = fn => (req, res, next) => {

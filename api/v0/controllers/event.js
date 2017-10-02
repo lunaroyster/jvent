@@ -61,7 +61,7 @@ var getEvents = async function(req, res) {
 
 var getEventAsModerator = async function(req, res) {
     try {
-        let event = await eventCore.getEventByURLAsModerator(req.eventURL);
+        let event = await req.getEvent();
         let eventMembership = await req.getEventMembership();
         let isModerator = await eventMembership.hasRole("moderator");
         if(!isModerator) throw Error();
@@ -73,9 +73,9 @@ var getEventAsModerator = async function(req, res) {
 };
 var getEventAsRegular = async function(req, res) {
     try {
-        let event = await eventCore.getEventByURL(req.eventURL);
-        let visibleEvent = await returnEventIfVisible(req.user, event);
-        res.status(200).json({event: visibleEvent});
+        let event = await req.getEvent();
+        // let visibleEvent = await returnEventIfVisible(req.user, event);
+        res.status(200).json({event: event});
     }
     catch (error) {
         res.status(400).json(error);
@@ -115,15 +115,15 @@ var getUsersByRole = function(req, res) {
 var canJoin = async function(req, res) {
     let ingress = req.event.ingress;
     if(ingress=="everyone") {
-        return;
+        return true;
     }
     else if(ingress=="link") {
         assert.equal(req.query.c, event.joinUrl, "Bad link");
-        return;
+        return true;
     }
     else if(ingress=="invite") {
         let eventMembership = await req.getEventMembership();
-        if(eventMembership.hasRole("invite")) return;
+        if(eventMembership.hasRole("invite")) return true;
     }
 };
 var joinEvent = async function(req, res) {
@@ -138,21 +138,21 @@ var joinEvent = async function(req, res) {
     }
 };
 
-var returnEventIfVisible = async function(user, event) {
-    if(event.visibility=="public") {
-        return event;
-    }
-    else if(event.visibility=="unlisted") {
-        if(!user) throw badAuthError;
-        return event;
-    }
-    else if(event.visibility=="private") {
-        let eventMembership = await EventMembership.getMembership(user, event);
-        let isViewer = eventMembership.hasRole("viewer");
-        if(!isViewer) throw badAuthError;
-        return event;
-    }
-};
+// var returnEventIfVisible = async function(user, event) {
+//     if(event.visibility=="public") {
+//         return event;
+//     }
+//     else if(event.visibility=="unlisted") {
+//         if(!user) throw badAuthError;
+//         return event;
+//     }
+//     else if(event.visibility=="private") {
+//         let eventMembership = await EventMembership.getMembership(user, event);
+//         let isViewer = eventMembership.hasRole("viewer");
+//         if(!isViewer) throw badAuthError;
+//         return event;
+//     }
+// };
 
 var moderatorOnly = async function(req, res, next) {
     let eventMembership = await req.getEventMembership();
