@@ -92,7 +92,7 @@ var EventMembership = class EventMembership {
             return eventMembershipModel.save();
         })
         .then((eventMembershipModel)=> {
-            return newEventMembership(eventMembershipModel);
+            return new EventMembership(eventMembershipModel);
         });
     }
     static createUnsavedMembership(user, event) {
