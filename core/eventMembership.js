@@ -47,24 +47,18 @@ var EventMembership = class EventMembership {
         .populate('event', 'url')
         .then(EventMembership.deserializeObject);
     }
-    static getAllMembershipsForUser(user) {
-        return EventMembershipModel.find({user: user._id})
+    static getAllMembershipsForUser(user, role) {
+        let query = {user: user._id};
+        if(role) query.role = role;
+        return EventMembershipModel.find(query)
         .populate('event', 'url')
         .then(EventMembership.deserializeObjectArray);
     }
-    static getAllMembershipsForEvent(event) {
-        return EventMembershipModel.find({event: event._id})
+    static getAllMembershipsForEvent(event, role) {
+        let query = {event: event._id};
+        if(role) query.role = role;
+        return EventMembershipModel.find(query)
         .populate('user', 'username')
-        .then(EventMembership.deserializeObjectArray);
-    }
-    static getAllMembershipsForEventByRole(event, role) {
-        return EventMembershipModel.find({event: event._id, roles: role})
-        .populate('user', 'username')
-        .then(EventMembership.deserializeObjectArray);
-    }
-    static getAllMembershipsForUserByRole(user, role) {
-        return EventMembershipModel.find({user: user._id, roles: role})
-        .populate('event', 'url')
         .then(EventMembership.deserializeObjectArray);
     }
 
@@ -92,7 +86,7 @@ var EventMembership = class EventMembership {
             return eventMembershipModel.save();
         })
         .then((eventMembershipModel)=> {
-            return newEventMembership(eventMembershipModel);
+            return new EventMembership(eventMembershipModel);
         });
     }
     static createUnsavedMembership(user, event) {

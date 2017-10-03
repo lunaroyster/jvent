@@ -60,26 +60,15 @@ var getEvents = async function(req, res) {
 // /event/:eventID
 
 var getEventAsModerator = async function(req, res) {
-    try {
-        let event = await eventCore.getEventByURLAsModerator(req.eventURL);
-        let eventMembership = await req.getEventMembership();
-        let isModerator = await eventMembership.hasRole("moderator");
-        if(!isModerator) throw Error();
-        res.status(200).json({event: event});
-    }
-    catch (error) {
-        res.status(400).json(error);
-    }
+    let event = await req.getEvent();
+    let eventMembership = await req.getEventMembership();
+    let isModerator = await eventMembership.hasRole("moderator");
+    if(!isModerator) throw Error();
+    res.status(200).json({event: event});
 };
 var getEventAsRegular = async function(req, res) {
-    try {
-        let event = await eventCore.getEventByURL(req.eventURL);
-        let visibleEvent = await returnEventIfVisible(req.user, event);
-        res.status(200).json({event: visibleEvent});
-    }
-    catch (error) {
-        res.status(400).json(error);
-    }
+    let event = await req.getEvent();
+    res.status(200).json({event: event});
 };
 
 var getEvent = async function(req, res) {
@@ -108,49 +97,33 @@ var getAllUsers = function(req, res) {
     return getUserList(req, res, EventMembership.getAllMembershipsForEvent(req.event));
 };
 var getUsersByRole = function(req, res) {
-    return getUserList(req, res, EventMembership.getAllMembershipsForEventByRole(req.event, req.params.role));
+    return getUserList(req, res, EventMembership.getAllMembershipsForEvent(req.event, req.params.role));
 };
 
 // /event/:eventID/join
 var canJoin = async function(req, res) {
-    let ingress = req.event.ingress;
-    if(ingress=="everyone") {
-        return;
+    let event = await req.getEvent();
+    if(event.ingress=="everyone") {
+        return true;
     }
-    else if(ingress=="link") {
+    else if(event.ingress=="link") {
         assert.equal(req.query.c, event.joinUrl, "Bad link");
-        return;
+        return true;
     }
-    else if(ingress=="invite") {
+    else if(event.ingress=="invite") {
         let eventMembership = await req.getEventMembership();
-        if(eventMembership.hasRole("invite")) return;
+        if(eventMembership.hasRole("invite")) return true;
     }
 };
 var joinEvent = async function(req, res) {
     try {
-        await canJoin(req, res);
-        let eventMembership = await req.getEventMembership();
+        assert(await canJoin(req, res));
+        let eventMembership = await req.getEventMembership(true);
         await eventMembership.addRole("attendee");
         res.status(200).send();
     }
     catch (error) {
         res.status(400).json({error: error.message});
-    }
-};
-
-var returnEventIfVisible = async function(user, event) {
-    if(event.visibility=="public") {
-        return event;
-    }
-    else if(event.visibility=="unlisted") {
-        if(!user) throw badAuthError;
-        return event;
-    }
-    else if(event.visibility=="private") {
-        let eventMembership = await EventMembership.getMembership(user, event);
-        let isViewer = eventMembership.hasRole("viewer");
-        if(!isViewer) throw badAuthError;
-        return event;
     }
 };
 

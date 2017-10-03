@@ -28,7 +28,7 @@ var meRouter = express.Router();
             meEventContextRouter.get('/post', userController.getSelfEventPosts);
             meEventContextRouter.get('/post/votes', userController.getEventPostVotes);
             meEventContextRouter.get('/media', userController.getSelfEventMedia);
-        meEventRouter.use('/:eventID', commonController.appendEventID, commonController.appendEventIfVisible, meEventContextRouter);
+        meEventRouter.use('/:eventID', commonController.appendEventID, commonController.appendEventGetter, meEventContextRouter);
     meRouter.use('/event', meEventRouter);
     meRouter.get('/post', userController.getSelfPosts);
     meRouter.get('/post/votes', userController.getAllPostVotes);
