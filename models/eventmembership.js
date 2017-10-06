@@ -62,10 +62,13 @@ eventMembershipSchema.methods.removeAllRoles = function() {
 };
 
 eventMembershipSchema.methods.hasPrivilege = function(privilegeName) {
+    return this.getPrivilege(privilegeName) ? true:false;
+};
+eventMembershipSchema.methods.getPrivilege = function(privilegeName) {
     let overriddenPrivilege = this.overriddenPrivileges.find((privilege)=> {
         return privilege.name == privilegeName;
     });
-    return overriddenPrivilege ? true:false;
+    return overriddenPrivilege;
 };
 eventMembershipSchema.methods.setPrivilege = function(...privileges) {
     for(let privilege of privileges) {
@@ -120,10 +123,13 @@ eventMembershipSchema.methods.removeAllOptions = function() {
 };
 
 eventMembershipSchema.methods.hasEffect = function(effectName) {
+    return this.getEffect(effectName) ? true:false;
+};
+eventMembershipSchema.methods.getEffect = function(effectName) {
     let statusEffect = this.statusEffects.find((effect)=> {
         return effect.name == effectName;
     });
-    return statusEffect ? true:false;
+    return statusEffect;
 };
 eventMembershipSchema.methods.setEffect = function(...effects) {
     for(let effect of effects) {
