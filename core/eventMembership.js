@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Q = require('q');
 
+const roleSettings = require('../config/roleSettings');
+
 const EventMembershipModel = mongoose.model('EventMembership');
 
 var EventMembership = class EventMembership {
@@ -17,23 +19,37 @@ var EventMembership = class EventMembership {
     hasRole(role) {
         return(this._eventMembership.hasRole(role));
     }
-
-    async addRole(role) {
-        //TODO verify role.
-        let eventMembership = this._eventMembership;
-        let addRoleSuccess = eventMembership.addRole(role);
-        if(addRoleSuccess) return eventMembership.save();
-        throw new Error(`Already has role ${role}`);
+    
+    can(privilegeName) {
+        let privilege = false;
+        for(let role of this._eventMembership.roles) {
+            if(!roleSettings[role] || !roleSettings[role].privileges || !roleSettings[role].privileges[privilegeName]) continue;
+            privilege = roleSettings[role].privileges[privilegeName];
+        }
+        privilege = this._eventMembership.getPrivilege(privilegeName).value;
+        return(privilege);
     }
-    async addRoles(roles) {
+    is(roleName) {
+        return(this._eventMembership.hasRole(roleName));
+    }
+    may(optionName) {
+        return(this._eventMembership.hasOption(optionName));
+    }
+    hasBeen(statusEffectName) {
+        return(this._eventMembership.hasEffect(statusEffectName));
+    }
+
+    async addRole(...roles) {
+        //TODO verify roles.
         let eventMembership = this._eventMembership;
-        let addedRoles = eventMembership.addRoles(roles);
-        if(addedRoles.length>0) return eventMembership.save();
-        throw new Error(`The roles ${roles} already exist`);
+        let addedRoles = eventMembership.addRole(roles);
+        if(addedRoles.length>0) await eventMembership.save();
+        return addedRoles;
+        // throw new Error(`Already has role ${role}`);
     }
 
     async forceSave() {
-        let eventMembershipModel = await this._eventMembership.save();
+        await this._eventMembership.save();
         return this;
     }
 
@@ -97,8 +113,8 @@ var EventMembership = class EventMembership {
         return new EventMembership(eventMembershipObject);
     }
     static deserializeObjectArray(eventMembershipObjectArray) {
-        var EventMembershipArray = [];
-        for(var eventMembershipObject of eventMembershipObjectArray) {
+        let EventMembershipArray = [];
+        for(let eventMembershipObject of eventMembershipObjectArray) {
             EventMembershipArray.push(new EventMembership(eventMembershipObject));
         }
         return EventMembershipArray;
