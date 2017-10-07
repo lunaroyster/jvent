@@ -62,7 +62,7 @@ var getEvents = async function(req, res) {
 var getEventAsModerator = async function(req, res) {
     let event = await req.getEvent();
     let eventMembership = await req.getEventMembership();
-    let isModerator = await eventMembership.hasRole("moderator");
+    let isModerator = await eventMembership.is("moderator");
     if(!isModerator) throw Error();
     res.status(200).json({event: event});
 };
@@ -112,7 +112,7 @@ var canJoin = async function(req, res) {
     }
     else if(event.ingress=="invite") {
         let eventMembership = await req.getEventMembership();
-        if(eventMembership.hasRole("invite")) return true;
+        if(eventMembership.may("joinEvent")) return true;
     }
 };
 var joinEvent = async function(req, res) {
@@ -129,7 +129,7 @@ var joinEvent = async function(req, res) {
 
 var moderatorOnly = async function(req, res, next) {
     let eventMembership = await req.getEventMembership();
-    let isModerator = eventMembership.hasRole("moderator");
+    let isModerator = eventMembership.is("moderator");
     if(!isModerator) {
         throw badAuthError;
     }

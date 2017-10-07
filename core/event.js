@@ -48,7 +48,7 @@ var createEvent = async function(eventConfig) {
     let event = await saveEvent(createEventDocument(eventConfig, user));
     
     let eventMembership = EventMembership.createUnsavedMembership(user, event);
-    await eventMembership.addRoles(["organizer", "moderator"]);
+    await eventMembership.addRole("organizer", "moderator");
     event = saveEvent(event);
     return event;
 };

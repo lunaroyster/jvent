@@ -19,7 +19,7 @@ var setEventBackground = async function(req, res) {
         await validateRequest(req, eventSettingsRequestSchema.setEventBackground);
         // Check user privileges
         let eventMembership = await req.getEventMembership();
-        assert(eventMembership.hasRole("organizer"), "User is not an organizer"); //TODO: Change role test to privilege test
+        assert(eventMembership.can("setEventBackground"), "User doesn't have sufficient privileges");
         // setEventBackground
         let mediaTemplate = createMediaTemplateFromRequest(req, req.body.media);
         let eventBackground = await eventCore.setEventBackground(req.event, mediaTemplate);

@@ -67,7 +67,7 @@ module.exports.appendEventGetter = function(req, res, next) {
         else if(event.visibility=="private") {
             if(!req.user) throw badAuthError;
             let eventMembership = await req.getEventMembership(false, event);
-            if(!eventMembership.hasRole("viewer")) throw badAuthError;
+            if(!eventMembership.is("viewer")) throw badAuthError;
             req.event = event;
         }
         return req.event;

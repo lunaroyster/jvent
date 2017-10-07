@@ -14,7 +14,7 @@ const EventMembership = eventMembershipCore.EventMembership;
 var checkCreateMediaPrivilege = async function(req) {
     if(!req.user.privileges.createMedia) throw new Error("Bad privileges");
     let eventMembership = await req.getEventMembership();
-    assert(eventMembership.hasRole("attendee"), "User is not an attendee"); //TODO: Change role test to privilege test
+    assert(eventMembership.can("createMedia"), "User doesn't have sufficient privileges");
 };
 var createEventMedia = async function(req, res) {
     try {
